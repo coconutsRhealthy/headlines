@@ -13,10 +13,6 @@ public class RetrieveBuzzwords {
 
     private Connection con;
 
-//    public static void main(String[] args) throws Exception {
-//        new RetrieveBuzzwords().retrieveBuzzWordsFromDb("buzzwords_new");
-//    }
-
     public List<BuzzWord> retrieveBuzzWordsFromDb(String database) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
 
