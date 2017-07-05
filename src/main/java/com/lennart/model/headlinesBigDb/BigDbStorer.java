@@ -78,62 +78,64 @@ public class BigDbStorer {
     private Document document60;
 
     public void overallMethodServer() {
-        while(true) {
-            //empty the the update table
+//        while(true) {
+//            //empty the the update table
             try {
                 clearNewsWordsUpdateTable();
             } catch (Exception e) {
-                overallMethodServer();
+                //overallMethodServer();
             }
-
-            //update the update table
+//
+//            //update the update table
             try {
-                for(int i = 1; i <= 60; i++) {
-                    updateDatabase(i);
-                }
+//                for(int i = 1; i <= 60; i++) {
+                    updateDatabase(1);
+
             } catch (Exception e) {
-                overallMethodServer();
+//                overallMethodServer();
             }
-
-            //wait for 45 minutes
-            try {
-                TimeUnit.MINUTES.sleep(45);
-            } catch (Exception e) {
-
-            }
-
-            //rename current production table to dummy
-            try {
-                renameOldTableToDummy();
-            } catch (Exception e) {
-
-            }
-
-            //rename updated table to news_words -> production table
-            try {
-                renameUpdatedTableToNewsWords();
-            } catch (Exception e) {
-
-            }
-
-            //rename the previous production table (now dummy) to news_words_update
-            try {
-                renameDummyTableToNewsWordsUpdate();
-            } catch (Exception e) {
-
-            }
-
-            //wait for 10 hours
-            try {
-                TimeUnit.HOURS.sleep(10);
-            } catch (Exception e) {
-
-            }
-        }
+//
+//            //wait for 45 minutes
+//            try {
+//                TimeUnit.MINUTES.sleep(45);
+//            } catch (Exception e) {
+//
+//            }
+//
+//            //rename current production table to dummy
+//            try {
+//                renameOldTableToDummy();
+//            } catch (Exception e) {
+//
+//            }
+//
+//            //rename updated table to news_words -> production table
+//            try {
+//                renameUpdatedTableToNewsWords();
+//            } catch (Exception e) {
+//
+//            }
+//
+//            //rename the previous production table (now dummy) to news_words_update
+//            try {
+//                renameDummyTableToNewsWordsUpdate();
+//            } catch (Exception e) {
+//
+//            }
+//
+//            //wait for 10 hours
+//            try {
+//                TimeUnit.HOURS.sleep(10);
+//            } catch (Exception e) {
+//
+//            }
+//        }
     }
 
     private void updateDatabase(int number) throws Exception {
-        initializeDocuments(number);
+        for(int i = 1; i <= 60; i++) {
+            initializeDocuments(i);
+        }
 
         Map<String, Integer> occurrenceMapMultiple = getOccurrenceMapMultiple();
         Map<String, Integer> occurrenceMapSingle = getOccurrenceMapSingle();

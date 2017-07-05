@@ -18,24 +18,24 @@ public class BuzzWordsManager {
     private double numberOfSites = 59.0;
 
     public void overallMethodServer() {
-        //while(true) {
+        while(true) {
 //            try {
-//                //deleteEntriesOlderThan24Hours();
+//                deleteEntriesOlderThan24Hours();
 //            } catch(Exception e) {
-//                //overallMethodServer();
+//                overallMethodServer();
 //            }
 
             try {
                 Map<String, Map<String, List<String>>> dataForAllBuzzWords = compareCurrentWithLastDbEntry();
 
-//                if(dataForAllBuzzWords != null) {
-//                    new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
-//                }
+                if(dataForAllBuzzWords != null) {
+                    new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
+                }
             } catch (Exception e) {
-                //overallMethodServer();
+                overallMethodServer();
             }
 
-        //}
+        }
     }
 
     private void deleteEntriesOlderThan24Hours() throws Exception {
@@ -105,18 +105,15 @@ public class BuzzWordsManager {
             return null;
         }
 
-        getTop50HighestIncreaseWordCountCurrent(bigDbStorer);
+        initializeDbConnection();
 
-        //initializeDbConnection();
+        Map<String, Double> buzzWords = getBuzzWords(getTop50HighestIncreaseWordCountCurrent(bigDbStorer), getTop50HighestIncreaseSiteCountCurrent(bigDbStorer));
+        System.out.println("Size buzzwords: "+ buzzWords.size());
 
-//        Map<String, Double> buzzWords = getBuzzWords(getTop50HighestIncreaseWordCountCurrent(bigDbStorer), getTop50HighestIncreaseSiteCountCurrent(bigDbStorer));
-//        System.out.println("Size buzzwords: "+ buzzWords.size());
-//
-//        Map<String, Map<String, List<String>>> dataForAllBuzzWords = new DataForAllBuzzWordsProvider().getDataForAllBuzzWords(buzzWords, bigDbStorer);
-//        //closeDbConnection();
+        Map<String, Map<String, List<String>>> dataForAllBuzzWords = new DataForAllBuzzWordsProvider().getDataForAllBuzzWords(buzzWords, bigDbStorer);
+        closeDbConnection();
 
-//        return dataForAllBuzzWords;
-        return null;
+        return dataForAllBuzzWords;
     }
 
     private Map<String, Double> getTop50HighestIncreaseWordCountCurrent(BigDbStorer bigDbStorer) throws Exception {
@@ -134,37 +131,35 @@ public class BuzzWordsManager {
         rs.close();
         closeDbConnection();
 
-        return null;
+        Map<String, Double> map2 = convertIntegerMapToDoubleWithSiteDivide(bigDbStorer.getOccurrenceMapMultiple());
 
-//        Map<String, Double> map2 = convertIntegerMapToDoubleWithSiteDivide(bigDbStorer.getOccurrenceMapMultiple());
-//
-//        for (Map.Entry<String, Double> entry : map2.entrySet()) {
-//            String word = entry.getKey();
-//
-//            double oldWordPerSite;
-//
-//            if(map1.get(entry.getKey()) != null) {
-//                oldWordPerSite = map1.get(entry.getKey());
-//            } else {
-//                oldWordPerSite = 0;
-//            }
-//
-//            double newWordPerSite = entry.getValue();
-//
-//            if(oldWordPerSite >= 0.033 || newWordPerSite >= 0.033) {
-//                wordIncreaseMap.put(word, newWordPerSite / oldWordPerSite);
-//            }
-//        }
-//
-//        Map<String, Double> filteredMap = new HashMap<>();
-//
-//        for (Map.Entry<String, Double> entry : wordIncreaseMap.entrySet()) {
-//            if(entry.getValue() >= 1.3) {
-//                filteredMap.put(entry.getKey(), entry.getValue());
-//            }
-//        }
-//
-//        return sortByValue(filteredMap);
+        for (Map.Entry<String, Double> entry : map2.entrySet()) {
+            String word = entry.getKey();
+
+            double oldWordPerSite;
+
+            if(map1.get(entry.getKey()) != null) {
+                oldWordPerSite = map1.get(entry.getKey());
+            } else {
+                oldWordPerSite = 0;
+            }
+
+            double newWordPerSite = entry.getValue();
+
+            if(oldWordPerSite >= 0.033 || newWordPerSite >= 0.033) {
+                wordIncreaseMap.put(word, newWordPerSite / oldWordPerSite);
+            }
+        }
+
+        Map<String, Double> filteredMap = new HashMap<>();
+
+        for (Map.Entry<String, Double> entry : wordIncreaseMap.entrySet()) {
+            if(entry.getValue() >= 1.3) {
+                filteredMap.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return sortByValue(filteredMap);
     }
 
     private Map<String, Double> getTop50HighestIncreaseSiteCountCurrent(BigDbStorer bigDbStorer) throws Exception {
