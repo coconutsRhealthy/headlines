@@ -1,4 +1,4 @@
-package com.lennart.model;
+package com.lennart.model.headlinesBigDb;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
