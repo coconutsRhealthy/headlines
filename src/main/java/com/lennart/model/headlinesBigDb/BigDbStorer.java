@@ -1,5 +1,6 @@
 package com.lennart.model.headlinesBigDb;
 
+import com.lennart.model.headlinesBuzzDb.JsoupElementsProcessor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -78,61 +79,60 @@ public class BigDbStorer {
     private Document document60;
 
     public void overallMethodServer() {
-//        while(true) {
-//            //empty the the update table
+        while(true) {
+            //empty the the update table
             try {
                 clearNewsWordsUpdateTable();
+                clearAtextsUpdateTable();
             } catch (Exception e) {
-                //overallMethodServer();
+                overallMethodServer();
             }
-//
-//            //update the update table
+
+            //update the update table
             try {
 //                for(int i = 1; i <= 60; i++) {
                     updateDatabase(1);
-
             } catch (Exception e) {
-//                overallMethodServer();
+                overallMethodServer();
             }
-//
-//            //wait for 45 minutes
-//            try {
-//                TimeUnit.MINUTES.sleep(45);
-//            } catch (Exception e) {
-//
-//            }
-//
-//            //rename current production table to dummy
-//            try {
-//                renameOldTableToDummy();
-//            } catch (Exception e) {
-//
-//            }
-//
-//            //rename updated table to news_words -> production table
-//            try {
-//                renameUpdatedTableToNewsWords();
-//            } catch (Exception e) {
-//
-//            }
-//
-//            //rename the previous production table (now dummy) to news_words_update
-//            try {
-//                renameDummyTableToNewsWordsUpdate();
-//            } catch (Exception e) {
-//
-//            }
-//
-//            //wait for 10 hours
-//            try {
-//                TimeUnit.HOURS.sleep(10);
-//            } catch (Exception e) {
-//
-//            }
-//        }
+
+            //wait for 35 minutes
+            try {
+                TimeUnit.MINUTES.sleep(35);
+            } catch (Exception e) {
+
+            }
+
+            //rename current production table to dummy
+            try {
+                renameOldTableToDummy();
+                renameAtextOldTableToDummy();
+            } catch (Exception e) {
+
+            }
+
+            //rename updated table to news_words -> production table
+            try {
+                renameUpdatedTableToNewsWords();
+                renameAtextUpdatedTableToAtexts();
+            } catch (Exception e) {
+
+            }
+
+            //rename the previous production table (now dummy) to news_words_update
+            try {
+                renameDummyTableToNewsWordsUpdate();
+                renameAtextDummyTableToAtextsUpdate();
+            } catch (Exception e) {
+
+            }
+        }
     }
 
     private void updateDatabase(int number) throws Exception {
+        List<String> aTexts = new JsoupElementsProcessor().getTextFromAllAElements(getListOfAllDocuments());
+        updateAllOldATextsDatabase(aTexts);
+
         for(int i = 1; i <= 60; i++) {
             initializeDocuments(i);
         }
@@ -149,6 +149,41 @@ public class BigDbStorer {
 
             storeOrUpdateWordInDatabase("news_words_update", entry.getKey(), avNoOccurrences, avPercentageSites);
         }
+        closeDbConnection();
+    }
+
+    private void updateAllOldATextsDatabase(List<String> aTexts) throws Exception {
+        initializeDbConnection();
+
+        for(String aText : aTexts) {
+            Statement st = con.createStatement();
+            st.executeUpdate("INSERT INTO a_texts_update (atext) VALUES ('" + aText + "')");
+            st.close();
+        }
+        closeDbConnection();
+    }
+
+    private void renameAtextUpdatedTableToAtexts() throws Exception {
+        initializeDbConnection();
+        Statement st = con.createStatement();
+        st.executeUpdate("ALTER TABLE a_texts_update RENAME TO a_texts");
+        st.close();
+        closeDbConnection();
+    }
+
+    private void renameAtextDummyTableToAtextsUpdate() throws Exception {
+        initializeDbConnection();
+        Statement st = con.createStatement();
+        st.executeUpdate("ALTER TABLE a_texts_dummy RENAME TO a_texts_update");
+        st.close();
+        closeDbConnection();
+    }
+
+    private void renameAtextOldTableToDummy() throws Exception {
+        initializeDbConnection();
+        Statement st = con.createStatement();
+        st.executeUpdate("ALTER TABLE a_texts RENAME TO a_texts_dummy");
+        st.close();
         closeDbConnection();
     }
 
@@ -180,6 +215,14 @@ public class BigDbStorer {
         initializeDbConnection();
         Statement st = con.createStatement();
         st.executeUpdate("DELETE FROM news_words_update");
+        st.close();
+        closeDbConnection();
+    }
+
+    private void clearAtextsUpdateTable() throws Exception {
+        initializeDbConnection();
+        Statement st = con.createStatement();
+        st.executeUpdate("DELETE FROM a_texts_update");
         st.close();
         closeDbConnection();
     }
@@ -261,6 +304,18 @@ public class BigDbStorer {
             joinedMaps.put(entry.getKey(), listOccurrencesAndSites);
         }
         return joinedMaps;
+    }
+
+    public List<String> retrieveAllOldAtexts() throws Exception{
+        List<String> allOldATexts = new ArrayList<>();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM a_texts;");
+
+        while(rs.next()) {
+            allOldATexts.add(rs.getString("atext"));
+        }
+        return allOldATexts;
     }
 
     public Map<String, Integer> getOccurrenceMapSingle() throws Exception {

@@ -35,6 +35,18 @@ public class StoreBuzzwords {
         closeDbConnection();
     }
 
+    public void storeBuzzwordsInDeclinedDb(String wordAndHeadline) throws Exception {
+        String database = "buzzwords_new_declined";
+
+        initializeDbConnection();
+        Statement st = con.createStatement();
+
+        st.executeUpdate("INSERT INTO " + database + " (date, word_headline) VALUES ('" + getCurrentDateTime() + "', '" + wordAndHeadline + "')");
+
+        st.close();
+        closeDbConnection();
+    }
+
     private void addNewBuzzwordToDb(String database, String buzzWord, List<String> headlines, List<String> links) throws Exception {
         String headlinesAsOneString = createOneStringOfList(headlines);
         String linksAsOneString = createOneStringOfList(links);

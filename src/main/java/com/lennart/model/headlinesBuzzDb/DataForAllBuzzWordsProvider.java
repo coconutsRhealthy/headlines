@@ -20,10 +20,33 @@ public class DataForAllBuzzWordsProvider {
             List<String> headLinesForWord = dataForBuzzword.get("correctedHeadlines");
 
             if(headLinesForWord.size() >= 3) {
-                dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
+                headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord);
+
+                if(headLinesForWord.size() >= 3) {
+                    dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
+                } else {
+                    new StoreBuzzwords().storeBuzzwordsInDeclinedDb(entry.getKey() + "---" + headLinesForWord.get(0));
+                }
             }
         }
         return dataForAllBuzzWords;
+    }
+
+    private List<String> removeHeadlinesThatWerePresentInPreviousIteration(List<String> headLinesForWord) throws Exception {
+        List<String> headlinesThatShouldBeRemoved = new ArrayList<>();
+        BigDbStorer bigDbStorer = new BigDbStorer();
+
+        List<String> allOldATexts = bigDbStorer.retrieveAllOldAtexts();
+
+        for(String headline : headLinesForWord) {
+            for(String oldAText : allOldATexts) {
+                if(oldAText.contains(headline)) {
+                    headlinesThatShouldBeRemoved.add(headline);
+                }
+            }
+        }
+        headLinesForWord.removeAll(headlinesThatShouldBeRemoved);
+        return headLinesForWord;
     }
 
     private Map<String, List<String>> myNewOwnCompareLastNew(String word, BigDbStorer bigDbStorer) throws Exception {

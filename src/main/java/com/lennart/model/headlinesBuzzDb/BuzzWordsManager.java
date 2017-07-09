@@ -19,11 +19,11 @@ public class BuzzWordsManager {
 
     public void overallMethodServer() {
         while(true) {
-//            try {
-//                deleteEntriesOlderThan24Hours();
-//            } catch(Exception e) {
-//                overallMethodServer();
-//            }
+            try {
+                deleteEntriesOlderThan24Hours();
+            } catch(Exception e) {
+                overallMethodServer();
+            }
 
             try {
                 Map<String, Map<String, List<String>>> dataForAllBuzzWords = compareCurrentWithLastDbEntry();
@@ -32,7 +32,7 @@ public class BuzzWordsManager {
                     new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
                 }
             } catch (Exception e) {
-                overallMethodServer();
+
             }
 
         }

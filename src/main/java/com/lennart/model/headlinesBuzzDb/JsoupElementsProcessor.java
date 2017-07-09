@@ -203,8 +203,7 @@ public class JsoupElementsProcessor {
         return trimmedHeadlines;
     }
 
-    public void getTextFromAllAElements(List<Document> allDocument) {
-        List<Element> aElements = new ArrayList<>();
+    public List<String> getTextFromAllAElements(List<Document> allDocument) {
         List<String> aTexts = new ArrayList<>();
 
         for(Document document : allDocument) {
@@ -216,52 +215,7 @@ public class JsoupElementsProcessor {
                 }
             }
         }
-
-        String testA = "Rob Kardashian and Blac Chyna throw down (and dirty) on...";
-        String testB = "Egyptian soldiers killed Sinai suicide attack";
-        String testC = "Fighter jets escort plane back to Montreal due to 'unruly passenger' report";
-        String testD = "Xi calls on BRICS members to promote common development";
-        String testE = "Microsoft to lay off thousands in sales, marketing reshuffle";
-
-        boolean a = false;
-        boolean b = false;
-        boolean c = false;
-        boolean d = false;
-        boolean e = false;
-
-        for(String s : aTexts) {
-            if(!a) {
-                if(s.contains(testA)) {
-                    a = true;
-                }
-            }
-            if(!b) {
-                if(s.contains(testB)) {
-                    b = true;
-                }
-            }
-            if(!c) {
-                if(s.contains(testC)) {
-                    c = true;
-                }
-            }
-            if(!d) {
-                if(s.contains(testD)) {
-                    d = true;
-                }
-            }
-            if(!e) {
-                if(s.contains(testE)) {
-                    e = true;
-                }
-            }
-        }
-
-        System.out.println(a);
-        System.out.println(b);
-        System.out.println(c);
-        System.out.println(d);
-        System.out.println(e);
+        return aTexts;
     }
 }
 
