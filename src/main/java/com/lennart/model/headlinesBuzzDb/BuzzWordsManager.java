@@ -22,7 +22,7 @@ public class BuzzWordsManager {
             try {
                 deleteEntriesOlderThan24Hours();
             } catch(Exception e) {
-                overallMethodServer();
+                //overallMethodServer();
             }
 
             try {

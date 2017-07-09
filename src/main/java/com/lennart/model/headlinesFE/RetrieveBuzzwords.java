@@ -22,7 +22,7 @@ public class RetrieveBuzzwords {
         ResultSet rs = st.executeQuery("SELECT * FROM " + database);
 
         while(rs.next()) {
-            String dateTime = rs.getString("date");
+            String dateTime = rs.getString("date").split(" ")[1];
             String word = rs.getString("word");
             List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
             List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));

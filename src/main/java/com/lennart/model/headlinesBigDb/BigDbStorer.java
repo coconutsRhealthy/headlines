@@ -85,7 +85,7 @@ public class BigDbStorer {
                 clearNewsWordsUpdateTable();
                 clearAtextsUpdateTable();
             } catch (Exception e) {
-                overallMethodServer();
+                //overallMethodServer();
             }
 
             //update the update table
@@ -93,12 +93,12 @@ public class BigDbStorer {
 //                for(int i = 1; i <= 60; i++) {
                     updateDatabase(1);
             } catch (Exception e) {
-                overallMethodServer();
+                //overallMethodServer();
             }
 
-            //wait for 35 minutes
+            //wait for 40 minutes
             try {
-                TimeUnit.MINUTES.sleep(35);
+                TimeUnit.MINUTES.sleep(40);
             } catch (Exception e) {
 
             }
