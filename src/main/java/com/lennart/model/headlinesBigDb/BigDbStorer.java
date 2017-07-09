@@ -315,12 +315,17 @@ public class BigDbStorer {
     public List<String> retrieveAllOldAtexts() throws Exception{
         List<String> allOldATexts = new ArrayList<>();
 
+        initializeDbConnection();
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery("SELECT * FROM a_texts;");
 
         while(rs.next()) {
             allOldATexts.add(rs.getString("atext"));
         }
+        rs.close();
+        st.close();
+        closeDbConnection();
+
         return allOldATexts;
     }
 
