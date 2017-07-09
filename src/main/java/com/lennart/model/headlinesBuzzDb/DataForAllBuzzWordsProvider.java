@@ -17,7 +17,8 @@ public class DataForAllBuzzWordsProvider {
         for (Map.Entry<String, Double> entry : buzzWords.entrySet()) {
             Map<String, List<String>> dataForBuzzword = myNewOwnCompareLastNew(entry.getKey(), bigDbStorer);
 
-            List<String> headLinesForWord = dataForBuzzword.get("correctedHeadlines");
+            List<String> headLinesForWord = new ArrayList<>();
+            headLinesForWord.addAll(dataForBuzzword.get("rawHeadlines"));
 
             if(headLinesForWord.size() >= 3) {
                 headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord);

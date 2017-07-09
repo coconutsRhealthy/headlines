@@ -98,7 +98,7 @@ public class BigDbStorer {
 
             //wait for 40 minutes
             try {
-                TimeUnit.MINUTES.sleep(40);
+                TimeUnit.MINUTES.sleep(53);
             } catch (Exception e) {
 
             }
@@ -130,12 +130,12 @@ public class BigDbStorer {
     }
 
     private void updateDatabase(int number) throws Exception {
-        List<String> aTexts = new JsoupElementsProcessor().getTextFromAllAElements(getListOfAllDocuments());
-        updateAllOldATextsDatabase(aTexts);
-
         for(int i = 1; i <= 60; i++) {
             initializeDocuments(i);
         }
+
+        List<String> aTexts = new JsoupElementsProcessor().getTextFromAllAElements(getListOfAllDocuments());
+        updateAllOldATextsDatabase(aTexts);
 
         Map<String, Integer> occurrenceMapMultiple = getOccurrenceMapMultiple();
         Map<String, Integer> occurrenceMapSingle = getOccurrenceMapSingle();
@@ -156,8 +156,14 @@ public class BigDbStorer {
         initializeDbConnection();
 
         for(String aText : aTexts) {
+            String correctedAText = doStringReplacementsForDb(aText);
+
             Statement st = con.createStatement();
-            st.executeUpdate("INSERT INTO a_texts_update (atext) VALUES ('" + aText + "')");
+            try {
+                st.executeUpdate("INSERT INTO a_texts_update (atext) VALUES ('" + correctedAText + "')");
+            } catch (Exception e) {
+
+            }
             st.close();
         }
         closeDbConnection();
@@ -604,6 +610,12 @@ public class BigDbStorer {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
+    }
+
+    private String doStringReplacementsForDb(String string) {
+        String correctString = string.replace("'", "''");
+        correctString = correctString.replace("\"", "\\\"");
+        return correctString;
     }
 
     private Set<String> getSetOfWordsFromDocument(Document document) {
