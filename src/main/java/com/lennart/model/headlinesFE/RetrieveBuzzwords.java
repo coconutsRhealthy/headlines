@@ -25,7 +25,9 @@ public class RetrieveBuzzwords {
             String dateTime = rs.getString("date").split(" ")[1];
             String word = rs.getString("word");
             List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
+            headlines = removeEmptyStrings(headlines);
             List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
+            links = removeEmptyStrings(links);
 
             buzzWords.add(new BuzzWord(dateTime, word, headlines, links));
         }
@@ -36,6 +38,17 @@ public class RetrieveBuzzwords {
 
         Collections.reverse(buzzWords);
         return buzzWords;
+    }
+
+    private List<String> removeEmptyStrings(List<String> strings) {
+        List<String> nonEmptyStrings = new ArrayList<>();
+
+        for(String string : strings) {
+            if(!string.isEmpty()) {
+                nonEmptyStrings.add(string);
+            }
+        }
+        return nonEmptyStrings;
     }
 
     private void initializeDbConnection() throws Exception {

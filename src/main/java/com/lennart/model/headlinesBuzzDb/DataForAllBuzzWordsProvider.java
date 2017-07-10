@@ -20,10 +20,10 @@ public class DataForAllBuzzWordsProvider {
             List<String> headLinesForWord = new ArrayList<>();
             headLinesForWord.addAll(dataForBuzzword.get("rawHeadlines"));
 
-            if(headLinesForWord.size() >= 3) {
+            if(headLinesForWord.size() >= 2) {
                 headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord);
 
-                if(headLinesForWord.size() >= 3) {
+                if(headLinesForWord.size() >= 2) {
                     dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
                 } else {
                     new StoreBuzzwords().storeBuzzwordsInDeclinedDb(entry.getKey() + "---" + headLinesForWord.get(0));

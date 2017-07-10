@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>News buzzwords</title>
+        <link rel="stylesheet" type="text/css" href="/css/stylesheet.css" />
         <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
         <script src="js/script.js"></script>
 
@@ -17,9 +18,14 @@
                 <div ng-repeat="buzzWord in buzzWords">
                     <span>{{buzzWord.dateTime}}</span>
                     <span><a href="" ng-click="testfunctie(buzzWord)">{{buzzWord.word}}</a></span>
-                    <div ng-show="check(buzzWord)" ng-repeat="headline in buzzWord.headlines track by $index">
-                        <a href={{buzzWord.links[$index]}}>{{headline}}</a>
-                    </div>
+                    <ul class="custom-bullet">
+                        <div ng-show="check(buzzWord)" ng-repeat="headline in buzzWord.headlines track by $index">
+                            <li>
+                                <div><a href={{buzzWord.links[$index]}}>{{headline}}</a></div>
+                                <div><small class="text-muted">LA Times</small></div>
+                            </li>
+                        </div>
+                    </ul>
                 </div>
             </div>
         </div>
