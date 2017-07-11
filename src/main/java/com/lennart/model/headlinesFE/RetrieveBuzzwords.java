@@ -51,6 +51,32 @@ public class RetrieveBuzzwords {
         return nonEmptyStrings;
     }
 
+    private List<String> getNewsSitesFromLinks(List<String> links) {
+        List<String> newsSites = new ArrayList<>();
+
+        for(String link : links) {
+            if(link.contains("cbc.")) {
+                newsSites.add("CBC");
+            } else if(link.contains("thestar.")) {
+                newsSites.add("The Star");
+            } else if(link.contains("nytimes.")) {
+                newsSites.add("NY Times");
+            } else if(link.contains("washingtonpost.")) {
+                newsSites.add("Washington Post");
+            } else if(link.contains("huffingtonpost.")) {
+                newsSites.add("Huffington Post");
+            } else if(link.contains("latimes.")) {
+                newsSites.add("LA Times");
+            } else if(link.contains("cnn.")) {
+                newsSites.add("CNN");
+            } else if(link.contains("foxnews.")) {
+                newsSites.add("FOX News");
+            }
+
+        }
+        return null;
+    }
+
     private void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words", "root", "Vuurwerk00");
