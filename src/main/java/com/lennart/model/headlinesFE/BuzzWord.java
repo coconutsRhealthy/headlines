@@ -11,12 +11,14 @@ public class BuzzWord {
     private String word;
     private List<String> headlines;
     private List<String> links;
+    private List<String> sites;
 
-    public BuzzWord(String dateTime, String word, List<String> headlines, List<String> links) {
+    public BuzzWord(String dateTime, String word, List<String> headlines, List<String> links, List<String> sites) {
         this.dateTime = dateTime;
         this.word = word;
         this.headlines = headlines;
         this.links = links;
+        this.sites = sites;
     }
 
     public String getDateTime() {
@@ -49,5 +51,13 @@ public class BuzzWord {
 
     public void setLinks(List<String> links) {
         this.links = links;
+    }
+
+    public List<String> getSites() {
+        return sites;
+    }
+
+    public void setSites(List<String> sites) {
+        this.sites = sites;
     }
 }

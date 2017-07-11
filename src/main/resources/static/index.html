@@ -22,7 +22,7 @@
                         <div ng-show="check(buzzWord)" ng-repeat="headline in buzzWord.headlines track by $index">
                             <li>
                                 <div><a href={{buzzWord.links[$index]}}>{{headline}}</a></div>
-                                <div><small class="text-muted">LA Times</small></div>
+                                <div><small class="text-muted">{{buzzWord.sites[$index]}}</small></div>
                             </li>
                         </div>
                     </ul>
