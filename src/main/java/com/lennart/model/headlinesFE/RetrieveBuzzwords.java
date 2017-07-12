@@ -23,6 +23,7 @@ public class RetrieveBuzzwords {
 
         while(rs.next()) {
             String dateTime = rs.getString("date").split(" ")[1];
+            dateTime = getCorrectTimeString(dateTime);
             String word = rs.getString("word");
             List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
             headlines = removeEmptyStrings(headlines);
@@ -50,6 +51,13 @@ public class RetrieveBuzzwords {
             }
         }
         return nonEmptyStrings;
+    }
+
+    private String getCorrectTimeString(String rawDateTime) {
+        String correctTime = rawDateTime.split(" ")[1];
+        correctTime = correctTime.substring(0, correctTime.lastIndexOf(":"));
+        correctTime = correctTime + " CEST";
+        return correctTime;
     }
 
     private List<String> getNewsSitesFromLinks(List<String> links) {

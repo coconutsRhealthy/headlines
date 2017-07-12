@@ -1,5 +1,7 @@
 package com.lennart.model.headlinesBuzzDb;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -151,10 +153,10 @@ public class StoreBuzzwords {
 
     private String getCurrentDateTime() {
         java.util.Date date = new java.util.Date();
+        date = DateUtils.addHours(date, 2);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.format(date);
     }
-
 
     private void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
