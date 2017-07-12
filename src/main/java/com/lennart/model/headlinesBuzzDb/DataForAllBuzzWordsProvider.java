@@ -145,37 +145,6 @@ public class DataForAllBuzzWordsProvider {
         return wordsRankedByOccurenceTwoOrMore;
     }
 
-//    public static void main(String[] args) {
-//        DataForAllBuzzWordsProvider d = new DataForAllBuzzWordsProvider();
-//
-//        Map<String, List<String>> dataTotalForWord = new HashMap<>();
-//
-//        List<String> hrefs = new ArrayList<>();
-//        List<String> correctedHeadlines = new ArrayList<>();
-//        List<String> rawHeadlines = new ArrayList<>();
-//
-//        hrefs.add("https://www.thetimes.co.uk/edition/news/dozens-of-firefighters-summoned-to-battle-camden-blaze-bjrnww8pl");
-//        hrefs.add("http://www.japantimes.co.jp/news/2017/07/10/world/60-london-firefighters-battling-blaze-popular-camden-lock-market/");
-//        hrefs.add("http://news.xinhuanet.com/english/2017-07/10/c_136431321.htm");
-//        hrefs.add("http://news.xinhuanet.com/english/2017-07/10/c_136431374.htm");
-//
-//        correctedHeadlines.add("een");
-//        correctedHeadlines.add("twee");
-//        correctedHeadlines.add("drie");
-//        correctedHeadlines.add("vier");
-//
-//        rawHeadlines.add("Dozens of firefighters battle Camden blaze");
-//        rawHeadlines.add("60 London firefighters battling blaze at popular Camden Lock Market");
-//        rawHeadlines.add("Firefighters battling blaze in London's Camden Market");
-//        rawHeadlines.add("Firefighters battling blaze in London's Camden Market");
-//
-//        dataTotalForWord.put("correctedHeadlines", correctedHeadlines);
-//        dataTotalForWord.put("rawHeadlines", rawHeadlines);
-//        dataTotalForWord.put("hrefs", hrefs);
-//
-//        d.removeHeadlinesThatAreFromSameSite(dataTotalForWord);
-//    }
-
     private Map<String, List<String>> removeHeadlinesThatAreFromSameSite(Map<String, List<String>> dataTotalForWord) {
         List<String> hrefsCopy = new ArrayList<>();
         hrefsCopy.addAll(dataTotalForWord.get("hrefs"));

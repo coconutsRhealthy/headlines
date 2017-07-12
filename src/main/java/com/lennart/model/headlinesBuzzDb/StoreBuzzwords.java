@@ -5,6 +5,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -20,20 +21,35 @@ public class StoreBuzzwords {
         String database = "buzzwords_new";
 
         initializeDbConnection();
-        for (Map.Entry<String, Map<String, List<String>>> entry : dataForAllBuzzwords.entrySet()) {
-            List<String> headlinesForWord = entry.getValue().get("rawHeadlines");
-            List<String> linksForWord = entry.getValue().get("hrefs");
 
-            if(!isWordInDatabase(database, entry.getKey())) {
-                addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
-            } else {
-                for(int i = 0; i < linksForWord.size(); i++) {
-                    if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
-                        addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
+        if(dataForAllBuzzwords.isEmpty()) {
+            List<String> headlinesForWord = new ArrayList<>();
+            List<String> linksForWord = new ArrayList<>();
+
+            headlinesForWord.add("Test headline 1");
+            headlinesForWord.add("Test headline 2");
+
+            linksForWord.add("www.nu.nl");
+            linksForWord.add("www.efteling.nl");
+
+            addNewBuzzwordToDb(database, "noWords", headlinesForWord, linksForWord);
+        } else {
+            for (Map.Entry<String, Map<String, List<String>>> entry : dataForAllBuzzwords.entrySet()) {
+                List<String> headlinesForWord = entry.getValue().get("rawHeadlines");
+                List<String> linksForWord = entry.getValue().get("hrefs");
+
+                if(!isWordInDatabase(database, entry.getKey())) {
+                    addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
+                } else {
+                    for(int i = 0; i < linksForWord.size(); i++) {
+                        if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
+                            addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
+                        }
                     }
                 }
             }
         }
+
         closeDbConnection();
     }
 
