@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by LennartMac on 25/06/17.
@@ -14,32 +15,63 @@ public class RetrieveBuzzwords {
     private Connection con;
 
     public List<BuzzWord> retrieveBuzzWordsFromDb(String database) throws Exception {
-        List<BuzzWord> buzzWords = new ArrayList<>();
+        try {
+            List<BuzzWord> buzzWords = new ArrayList<>();
 
-        initializeDbConnection();
+            initializeDbConnection();
 
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM " + database);
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM " + database);
 
-        while(rs.next()) {
-            String dateTime = rs.getString("date").split(" ")[1];
-            dateTime = getCorrectTimeString(dateTime);
-            String word = rs.getString("word");
-            List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
-            headlines = removeEmptyStrings(headlines);
-            List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
-            links = removeEmptyStrings(links);
-            List<String> sites = getNewsSitesFromLinks(links);
+            while(rs.next()) {
+                String dateTime = rs.getString("date").split(" ")[1];
+                dateTime = getCorrectTimeString(dateTime);
+                String word = rs.getString("word");
+                List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
+                headlines = removeEmptyStrings(headlines);
+                List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
+                links = removeEmptyStrings(links);
+                List<String> sites = getNewsSitesFromLinks(links);
 
-            buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
+                buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
+            }
+
+            rs.close();
+            st.close();
+            closeDbConnection();
+
+            Collections.reverse(buzzWords);
+            return buzzWords;
+        } catch (Exception e) {
+            TimeUnit.SECONDS.sleep(10);
+
+            List<BuzzWord> buzzWords = new ArrayList<>();
+
+            initializeDbConnection();
+
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM " + database);
+
+            while(rs.next()) {
+                String dateTime = rs.getString("date").split(" ")[1];
+                dateTime = getCorrectTimeString(dateTime);
+                String word = rs.getString("word");
+                List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
+                headlines = removeEmptyStrings(headlines);
+                List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
+                links = removeEmptyStrings(links);
+                List<String> sites = getNewsSitesFromLinks(links);
+
+                buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
+            }
+
+            rs.close();
+            st.close();
+            closeDbConnection();
+
+            Collections.reverse(buzzWords);
+            return buzzWords;
         }
-
-        rs.close();
-        st.close();
-        closeDbConnection();
-
-        Collections.reverse(buzzWords);
-        return buzzWords;
     }
 
     private List<String> removeEmptyStrings(List<String> strings) {

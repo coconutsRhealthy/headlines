@@ -34,6 +34,8 @@ public class StoreBuzzwords {
 
             addNewBuzzwordToDb(database, "noWords", headlinesForWord, linksForWord);
         } else {
+            //de fout moet zowat wel hier zitten... want er worden wel declined woorden gestored...
+
             for (Map.Entry<String, Map<String, List<String>>> entry : dataForAllBuzzwords.entrySet()) {
                 List<String> headlinesForWord = entry.getValue().get("rawHeadlines");
                 List<String> linksForWord = entry.getValue().get("hrefs");
@@ -43,6 +45,8 @@ public class StoreBuzzwords {
                 } else {
                     for(int i = 0; i < linksForWord.size(); i++) {
                         if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
+                            //it could be that the sizes of headlinesForWord and linksForWord differ, because of empty headlines removal, and
+                            //thus nullpointer...
                             addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
                         }
                     }
@@ -65,7 +69,7 @@ public class StoreBuzzwords {
         closeDbConnection();
     }
 
-    private void addNewBuzzwordToDb(String database, String buzzWord, List<String> headlines, List<String> links) throws Exception {
+    public void addNewBuzzwordToDb(String database, String buzzWord, List<String> headlines, List<String> links) throws Exception {
         String headlinesAsOneString = createOneStringOfList(headlines);
         String linksAsOneString = createOneStringOfList(links);
 
