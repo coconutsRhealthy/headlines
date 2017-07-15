@@ -15,7 +15,7 @@ public class RetrieveBuzzwords {
     private Connection con;
 
     public List<BuzzWord> retrieveBuzzWordsFromDb(String database) throws Exception {
-        try {
+        //try {
             List<BuzzWord> buzzWords = new ArrayList<>();
 
             initializeDbConnection();
@@ -25,7 +25,7 @@ public class RetrieveBuzzwords {
 
             while(rs.next()) {
                 String dateTime = rs.getString("date").split(" ")[1];
-                dateTime = getCorrectTimeString(dateTime);
+                //dateTime = getCorrectTimeString(dateTime);
                 String word = rs.getString("word");
                 List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
                 headlines = removeEmptyStrings(headlines);
@@ -42,36 +42,36 @@ public class RetrieveBuzzwords {
 
             Collections.reverse(buzzWords);
             return buzzWords;
-        } catch (Exception e) {
-            TimeUnit.SECONDS.sleep(10);
-
-            List<BuzzWord> buzzWords = new ArrayList<>();
-
-            initializeDbConnection();
-
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + database);
-
-            while(rs.next()) {
-                String dateTime = rs.getString("date").split(" ")[1];
-                dateTime = getCorrectTimeString(dateTime);
-                String word = rs.getString("word");
-                List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
-                headlines = removeEmptyStrings(headlines);
-                List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
-                links = removeEmptyStrings(links);
-                List<String> sites = getNewsSitesFromLinks(links);
-
-                buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
-            }
-
-            rs.close();
-            st.close();
-            closeDbConnection();
-
-            Collections.reverse(buzzWords);
-            return buzzWords;
-        }
+//        } catch (Exception e) {
+//            TimeUnit.SECONDS.sleep(10);
+//
+//            List<BuzzWord> buzzWords = new ArrayList<>();
+//
+//            initializeDbConnection();
+//
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM " + database);
+//
+//            while(rs.next()) {
+//                String dateTime = rs.getString("date").split(" ")[1];
+//                //dateTime = getCorrectTimeString(dateTime);
+//                String word = rs.getString("word");
+//                List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
+//                headlines = removeEmptyStrings(headlines);
+//                List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
+//                links = removeEmptyStrings(links);
+//                List<String> sites = getNewsSitesFromLinks(links);
+//
+//                buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
+//            }
+//
+//            rs.close();
+//            st.close();
+//            closeDbConnection();
+//
+//            Collections.reverse(buzzWords);
+//            return buzzWords;
+//        }
     }
 
     private List<String> removeEmptyStrings(List<String> strings) {

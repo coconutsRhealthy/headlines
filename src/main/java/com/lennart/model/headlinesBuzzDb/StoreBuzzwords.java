@@ -22,37 +22,37 @@ public class StoreBuzzwords {
 
         initializeDbConnection();
 
-        if(dataForAllBuzzwords.isEmpty()) {
-            List<String> headlinesForWord = new ArrayList<>();
-            List<String> linksForWord = new ArrayList<>();
+        //if(dataForAllBuzzwords.isEmpty()) {
+            List<String> headlinesForWord22 = new ArrayList<>();
+            List<String> linksForWord22 = new ArrayList<>();
 
-            headlinesForWord.add("Test headline 1");
-            headlinesForWord.add("Test headline 2");
+            headlinesForWord22.add("Test headline 1");
+            headlinesForWord22.add("Test headline 2");
 
-            linksForWord.add("www.nu.nl");
-            linksForWord.add("www.efteling.nl");
+            linksForWord22.add("www.nu.nl");
+            linksForWord22.add("www.efteling.nl");
 
-            addNewBuzzwordToDb(database, "noWords", headlinesForWord, linksForWord);
-        } else {
+            addNewBuzzwordToDb(database, "noWords", headlinesForWord22, linksForWord22);
+        //} else {
             //de fout moet zowat wel hier zitten... want er worden wel declined woorden gestored...
 
             for (Map.Entry<String, Map<String, List<String>>> entry : dataForAllBuzzwords.entrySet()) {
                 List<String> headlinesForWord = entry.getValue().get("rawHeadlines");
                 List<String> linksForWord = entry.getValue().get("hrefs");
 
-                if(!isWordInDatabase(database, entry.getKey())) {
+                //if(!isWordInDatabase(database, entry.getKey())) {
                     addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
-                } else {
-                    for(int i = 0; i < linksForWord.size(); i++) {
-                        if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
-                            //it could be that the sizes of headlinesForWord and linksForWord differ, because of empty headlines removal, and
-                            //thus nullpointer...
-                            addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
-                        }
-                    }
-                }
+//                } else {
+//                    for(int i = 0; i < linksForWord.size(); i++) {
+//                        if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
+//                            //it could be that the sizes of headlinesForWord and linksForWord differ, because of empty headlines removal, and
+//                            //thus nullpointer...
+//                            addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
+//                        }
+//                    }
+//                }
             }
-        }
+        //}
 
         closeDbConnection();
     }

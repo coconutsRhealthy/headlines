@@ -26,7 +26,7 @@ public class DataForAllBuzzWordsProvider {
                 if(headLinesForWord.size() >= 2) {
                     dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
                 } else {
-                    new StoreBuzzwords().storeBuzzwordsInDeclinedDb(entry.getKey() + "---" + headLinesForWord.get(0));
+                    //new StoreBuzzwords().storeBuzzwordsInDeclinedDb(entry.getKey() + "---" + headLinesForWord.get(0));
                 }
             }
         }
