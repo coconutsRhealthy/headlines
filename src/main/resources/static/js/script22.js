@@ -18,7 +18,7 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
         var sizeBuzzWords = $scope.buzzWords.length - 1;
         $scope.lastBuzzWord = $scope.buzzWords[sizeBuzzWords].word;
 
-        $http.post('/loadMoreBuzzWords', $scope.lastBuzzWord).success(function(data) {
+        $http.post('http://nieuws-statistieken.nl:8080/headlines-1.0-SNAPSHOT/loadMoreBuzzWords', $scope.lastBuzzWord).success(function(data) {
             for(var i = 0; i < data.length; i++) {
                 $scope.buzzWords.push(data[i]);
             }
