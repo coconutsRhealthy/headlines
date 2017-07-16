@@ -5,9 +5,15 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.buzzWords;
     $scope.words = [];
     $scope.lastBuzzWord;
+    $scope.headline;
+    $scope.subHeadline;
+    $scope.showMoreButton = false;
 
     $http.get('http://nieuws-statistieken.nl:8080/headlines-1.0-SNAPSHOT/getBuzzWords').success(function(data) {
         $scope.buzzWords = data;
+        $scope.headline = "News Buzzwords";
+        $scope.subHeadline = "Trending in news right now:";
+        $scope.showMoreButton = true;
     })
 
     $scope.testfunctie = function(word) {
