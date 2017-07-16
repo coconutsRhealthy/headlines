@@ -5,10 +5,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by LennartMac on 24/06/17.
@@ -22,38 +19,35 @@ public class StoreBuzzwords {
 
         initializeDbConnection();
 
-        //if(dataForAllBuzzwords.isEmpty()) {
-            List<String> headlinesForWord22 = new ArrayList<>();
-            List<String> linksForWord22 = new ArrayList<>();
+        List<String> headlinesForWord22 = new ArrayList<>();
+        List<String> linksForWord22 = new ArrayList<>();
 
-            headlinesForWord22.add("Test headline 1");
-            headlinesForWord22.add("Test headline 2");
+        headlinesForWord22.add("Test headline 1");
+        headlinesForWord22.add("Test headline 2");
 
-            linksForWord22.add("www.nu.nl");
-            linksForWord22.add("www.efteling.nl");
+        linksForWord22.add("www.nu.nl");
+        linksForWord22.add("www.efteling.nl");
 
-            addNewBuzzwordToDb(database, "noWords", headlinesForWord22, linksForWord22);
-        //} else {
-            //de fout moet zowat wel hier zitten... want er worden wel declined woorden gestored...
+        addNewBuzzwordToDb(database, "noWords", headlinesForWord22, linksForWord22);
 
-            for (Map.Entry<String, Map<String, List<String>>> entry : dataForAllBuzzwords.entrySet()) {
-                List<String> headlinesForWord = entry.getValue().get("rawHeadlines");
-                List<String> linksForWord = entry.getValue().get("hrefs");
+        for (Map.Entry<String, Map<String, List<String>>> entry : dataForAllBuzzwords.entrySet()) {
+            List<String> headlinesForWord = entry.getValue().get("rawHeadlines");
+            List<String> linksForWord = entry.getValue().get("hrefs");
 
-                //if(!isWordInDatabase(database, entry.getKey())) {
-                    addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
-//                } else {
-//                    for(int i = 0; i < linksForWord.size(); i++) {
-//                        if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
-//                            //it could be that the sizes of headlinesForWord and linksForWord differ, because of empty headlines removal, and
-//                            //thus nullpointer...
-//                            addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
-//                        }
-//                    }
-//                }
+            if(!isWordInDatabase(database, entry.getKey())) {
+                addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
+            } else {
+                for(int i = 0; i < linksForWord.size(); i++) {
+                    if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
+                        try {
+                            addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
             }
-        //}
-
+        }
         closeDbConnection();
     }
 
@@ -91,10 +85,10 @@ public class StoreBuzzwords {
 
     private void addHeadlineAndLinkToExistingBuzzword(String database, String word, String headlineToAdd, String linkToAdd) throws Exception {
         String headlines = retrieveHeadlinesOrLinksFromDatabase(database, word, "headlines");
-        headlines = headlines + " ---- " + headlineToAdd;
+        headlines = headlines + headlineToAdd + " ---- ";
 
         String links = retrieveHeadlinesOrLinksFromDatabase(database, word, "links");
-        links = links + " ---- " + linkToAdd;
+        links = links + linkToAdd + " ---- ";
 
         headlines = doStringReplacementsForDb(headlines);
         links = doStringReplacementsForDb(links);
