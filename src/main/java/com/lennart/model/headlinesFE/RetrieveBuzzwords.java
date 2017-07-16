@@ -14,18 +14,68 @@ public class RetrieveBuzzwords {
 
     private Connection con;
 
-    public List<BuzzWord> retrieveBuzzWordsFromDb(String database) throws Exception {
-        //try {
-            List<BuzzWord> buzzWords = new ArrayList<>();
+    public List<BuzzWord> retrieveBuzzWordsFromDbInitial(String database) throws Exception {
+        List<BuzzWord> buzzWords = new ArrayList<>();
 
-            initializeDbConnection();
+        initializeDbConnection();
 
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + database);
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " ORDER BY entry DESC;");
 
-            while(rs.next()) {
+        int counter = 0;
+
+        while(rs.next()) {
+            if(counter >= 20) {
+                break;
+            }
+
+            counter++;
+            String dateTime = rs.getString("date").split(" ")[1];
+            dateTime = getCorrectTimeString(dateTime);
+            String word = rs.getString("word");
+            List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
+            headlines = removeEmptyStrings(headlines);
+            List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
+            links = removeEmptyStrings(links);
+            List<String> sites = getNewsSitesFromLinks(links);
+
+            buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
+        }
+
+        rs.close();
+        st.close();
+        closeDbConnection();
+
+        //Collections.reverse(buzzWords);
+        return buzzWords;
+    }
+
+    public List<BuzzWord> retrieveExtraBuzzWordsFromDb(String database, String latestWord) throws Exception {
+        List<BuzzWord> buzzWords = new ArrayList<>();
+
+        initializeDbConnection();
+
+        Statement stFirst = con.createStatement();
+        ResultSet rsFirst = stFirst.executeQuery("SELECT * FROM " + database + " WHERE word = '" + latestWord + "';");
+
+        rsFirst.next();
+
+        int latestWordOnSiteEntry = rsFirst.getInt("entry");
+
+        stFirst.close();
+        rsFirst.close();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database);
+
+        int targetEntryNumber = latestWordOnSiteEntry - 20;
+
+        while(rs.next()) {
+            int rsEntryNumber = rs.getInt("entry");
+
+            if(rsEntryNumber < latestWordOnSiteEntry && rsEntryNumber >= targetEntryNumber) {
                 String dateTime = rs.getString("date").split(" ")[1];
-                //dateTime = getCorrectTimeString(dateTime);
+                dateTime = getCorrectTimeString(dateTime);
                 String word = rs.getString("word");
                 List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
                 headlines = removeEmptyStrings(headlines);
@@ -35,43 +85,14 @@ public class RetrieveBuzzwords {
 
                 buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
             }
+        }
 
-            rs.close();
-            st.close();
-            closeDbConnection();
+        rs.close();
+        st.close();
+        closeDbConnection();
 
-            Collections.reverse(buzzWords);
-            return buzzWords;
-//        } catch (Exception e) {
-//            TimeUnit.SECONDS.sleep(10);
-//
-//            List<BuzzWord> buzzWords = new ArrayList<>();
-//
-//            initializeDbConnection();
-//
-//            Statement st = con.createStatement();
-//            ResultSet rs = st.executeQuery("SELECT * FROM " + database);
-//
-//            while(rs.next()) {
-//                String dateTime = rs.getString("date").split(" ")[1];
-//                //dateTime = getCorrectTimeString(dateTime);
-//                String word = rs.getString("word");
-//                List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
-//                headlines = removeEmptyStrings(headlines);
-//                List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
-//                links = removeEmptyStrings(links);
-//                List<String> sites = getNewsSitesFromLinks(links);
-//
-//                buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
-//            }
-//
-//            rs.close();
-//            st.close();
-//            closeDbConnection();
-//
-//            Collections.reverse(buzzWords);
-//            return buzzWords;
-//        }
+        Collections.reverse(buzzWords);
+        return buzzWords;
     }
 
     private List<String> removeEmptyStrings(List<String> strings) {
@@ -86,9 +107,8 @@ public class RetrieveBuzzwords {
     }
 
     private String getCorrectTimeString(String rawDateTime) {
-        String correctTime = rawDateTime.split(" ")[1];
-        correctTime = correctTime.substring(0, correctTime.lastIndexOf(":"));
-        correctTime = correctTime + " CEST";
+        String correctTime = rawDateTime.substring(0, rawDateTime.lastIndexOf(":"));
+        //correctTime = correctTime + " CEST";
         return correctTime;
     }
 

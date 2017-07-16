@@ -39,9 +39,14 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     @RequestMapping(value = "/getBuzzWords", method = RequestMethod.GET)
-    public @ResponseBody
-    List<BuzzWord> sendBuzzWordsToClient() throws Exception {
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDb("buzzwords_new");
+    public @ResponseBody List<BuzzWord> sendBuzzWordsToClient() throws Exception {
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitial("buzzwords_new");
+        return buzzWords;
+    }
+
+    @RequestMapping(value = "/loadMoreBuzzWords", method = RequestMethod.POST)
+    public @ResponseBody List<BuzzWord> sendMoreBuzzWordsToClient(@RequestBody String lastWord) throws Exception {
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDb("buzzwords_new", lastWord);
         return buzzWords;
     }
 }

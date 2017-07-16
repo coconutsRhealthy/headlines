@@ -12,9 +12,11 @@
     </head>
 
     <body>
-        <div class="container-fluid">
-            <h1>Trending news words</h1>
-            <div ng-app = "mainApp" ng-controller = "buzzwordsController">
+    <div class="container-fluid">
+        <div ng-app = "mainApp" ng-controller = "buzzwordsController">
+            <div ng-cloak>
+                <h1 style="color:rgb(66, 188, 147)">News Buzzwords</h1>
+                <h4>Trending in news right now:</h4>
                 <div ng-repeat="buzzWord in buzzWords">
                     <span>{{buzzWord.dateTime}}</span>
                     <span><a href="" ng-click="testfunctie(buzzWord)">{{buzzWord.word}}</a></span>
@@ -27,7 +29,11 @@
                         </div>
                     </ul>
                 </div>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-default" ng-click="loadMoreBuzzWords()">More</button>
+                </div>
             </div>
         </div>
+    </div>
     </body>
 </html>
