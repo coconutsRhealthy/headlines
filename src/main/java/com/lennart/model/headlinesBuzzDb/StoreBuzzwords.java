@@ -19,17 +19,6 @@ public class StoreBuzzwords {
 
         initializeDbConnection();
 
-        List<String> headlinesForWord22 = new ArrayList<>();
-        List<String> linksForWord22 = new ArrayList<>();
-
-        headlinesForWord22.add("Test headline 1");
-        headlinesForWord22.add("Test headline 2");
-
-        linksForWord22.add("www.nu.nl");
-        linksForWord22.add("www.efteling.nl");
-
-        addNewBuzzwordToDb(database, "noWords", headlinesForWord22, linksForWord22);
-
         for (Map.Entry<String, Map<String, List<String>>> entry : dataForAllBuzzwords.entrySet()) {
             List<String> headlinesForWord = entry.getValue().get("rawHeadlines");
             List<String> linksForWord = entry.getValue().get("hrefs");
