@@ -1,7 +1,8 @@
 package com.lennart.model.headlinesBuzzDb;
 
-import com.lennart.controller.Controller;
 import com.lennart.model.headlinesBigDb.BigDbStorer;
+import com.lennart.model.headlinesFE.BuzzWord;
+import com.lennart.model.headlinesFE.RetrieveBuzzwords;
 import org.jsoup.nodes.Element;
 
 import java.util.*;
@@ -22,11 +23,10 @@ public class DataForAllBuzzWordsProvider {
 
             if(headLinesForWord.size() >= 2) {
                 headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord);
+                headLinesForWord = removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(headLinesForWord);
 
                 if(headLinesForWord.size() >= 2) {
                     dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
-                } else {
-                    //new StoreBuzzwords().storeBuzzwordsInDeclinedDb(entry.getKey() + "---" + headLinesForWord.get(0));
                 }
             }
         }
@@ -48,6 +48,80 @@ public class DataForAllBuzzWordsProvider {
         }
         headLinesForWord.removeAll(headlinesThatShouldBeRemoved);
         return headLinesForWord;
+    }
+
+    private List<String> removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(List<String> headLinesForWord) throws Exception {
+        List<String> headLinesForWordCopy = new ArrayList<>();
+        headLinesForWordCopy.addAll(headLinesForWord);
+
+        //get all buzzwords older than 3 hours
+        List<BuzzWord> buzzWordsOlderThan3Hours = new RetrieveBuzzwords().retrieveBuzzWordsFromDbUntillHour("buzzwords_new", 3);
+
+        List<String> olderHeadlinesList = new ArrayList<>();
+
+        //check if your headline contains any of these buzzwords
+        //for each buzzword that it contains, get all the headlines that belong to this buzzword
+        //put all these headlines together in a list
+        for(String headline : headLinesForWord) {
+            for(BuzzWord buzzWord : buzzWordsOlderThan3Hours) {
+                String word = buzzWord.getWord();
+
+                if(headline.toLowerCase().contains(word.toLowerCase())) {
+                    List<String> headlinesOfOlderBuzzWord = buzzWord.getHeadlines();
+
+                    for(String olderHeadline : headlinesOfOlderBuzzWord) {
+                        olderHeadlinesList.add(olderHeadline.toLowerCase());
+                    }
+                }
+            }
+        }
+
+        List<String> headlinesToRemove = new ArrayList<>();
+
+        if(!olderHeadlinesList.isEmpty()) {
+            loop: for(String headline : headLinesForWord) {
+                //maak een lijst van woorden van de headline
+                List<String> currentHeadlineSplittedList = new ArrayList<>();
+                currentHeadlineSplittedList.addAll(Arrays.asList(headline.toLowerCase().split(" ")));
+
+                //verwijder uit deze lijst de blacklist woorden
+                currentHeadlineSplittedList = removeBlackListWords(currentHeadlineSplittedList);
+
+                //maak set
+                Set<String> currentHeadlineSplittedListAsSet = new HashSet<>();
+                currentHeadlineSplittedListAsSet.addAll(currentHeadlineSplittedList);
+
+                for(String olderHeadline : olderHeadlinesList) {
+                    List<String> olderHeadlineSplittedList = new ArrayList<>();
+                    olderHeadlineSplittedList.addAll(Arrays.asList(olderHeadline.toLowerCase().split(" ")));
+
+                    olderHeadlineSplittedList = removeBlackListWords(olderHeadlineSplittedList);
+
+                    Set<String> olderHeadlineSplittedListAsSet = new HashSet<>();
+                    olderHeadlineSplittedListAsSet.addAll(olderHeadlineSplittedList);
+
+                    List<String> currentHeadlineBackToList = new ArrayList<>();
+                    currentHeadlineBackToList.addAll(currentHeadlineSplittedListAsSet);
+
+                    List<String> olderHeadlineBackToList = new ArrayList<>();
+                    olderHeadlineBackToList.addAll(olderHeadlineSplittedListAsSet);
+
+                    currentHeadlineBackToList.retainAll(olderHeadlineBackToList);
+
+                    if(currentHeadlineBackToList.size() >= 4) {
+                        headlinesToRemove.add(headline);
+                        continue loop;
+                    }
+                }
+            }
+        }
+        //if your headline contains in addition to the buzzword 3 other non blacklist words from any of these identified
+        //headlines
+
+        //your headline will be removed
+        headLinesForWordCopy.removeAll(headlinesToRemove);
+
+        return headLinesForWordCopy;
     }
 
     private Map<String, List<String>> myNewOwnCompareLastNew(String word, BigDbStorer bigDbStorer) throws Exception {

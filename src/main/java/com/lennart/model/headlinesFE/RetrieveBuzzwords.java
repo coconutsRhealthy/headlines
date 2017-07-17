@@ -1,10 +1,9 @@
 package com.lennart.model.headlinesFE;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -92,6 +91,40 @@ public class RetrieveBuzzwords {
         closeDbConnection();
 
         Collections.reverse(buzzWords);
+        return buzzWords;
+    }
+
+    public List<BuzzWord> retrieveBuzzWordsFromDbUntillHour(String database, int numberOfHours) throws Exception {
+        List<BuzzWord> buzzWords = new ArrayList<>();
+        long currentDate = new Date().getTime();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " ORDER BY entry DESC;");
+
+        while(rs.next()) {
+            String s = rs.getString("date");
+            Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
+
+            if(parsedDateTime.getTime() < currentDate - TimeUnit.HOURS.toMillis(numberOfHours)) {
+                String dateTime = rs.getString("date").split(" ")[1];
+                dateTime = getCorrectTimeString(dateTime);
+                String word = rs.getString("word");
+                List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
+                headlines = removeEmptyStrings(headlines);
+                List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
+                links = removeEmptyStrings(links);
+                List<String> sites = getNewsSitesFromLinks(links);
+
+                buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
+            }
+        }
+
+        rs.close();
+        st.close();
+        closeDbConnection();
+
         return buzzWords;
     }
 
