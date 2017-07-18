@@ -195,21 +195,12 @@ public class JsoupElementsProcessor {
         for(String headline : headlines) {
             if(headline.length() >= 78) {
                 String trimmedHeadline = headline.substring(0, 78);
-                trimmedHeadline = removeLastHalfWordFromString(trimmedHeadline);
                 trimmedHeadlines.add(trimmedHeadline);
             } else {
                 trimmedHeadlines.add(headline);
             }
         }
         return trimmedHeadlines;
-    }
-
-    private String removeLastHalfWordFromString(String stringToChange) {
-        if(stringToChange.length() == 78) {
-            stringToChange = stringToChange.substring(0, stringToChange.lastIndexOf(" "));
-            stringToChange = stringToChange + "...";
-        }
-        return stringToChange;
     }
 
     public List<String> getTextFromAllAElements(List<Document> allDocument) {
