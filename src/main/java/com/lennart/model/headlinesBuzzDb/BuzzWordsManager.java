@@ -32,19 +32,7 @@ public class BuzzWordsManager {
                     new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
                 }
             } catch (Exception q) {
-                try {
-                    List<String> list1 = new ArrayList<>();
-                    list1.add(q.toString());
 
-                    List<String> list2 = new ArrayList<>();
-                    list2.add(q.getStackTrace()[0].toString());
-
-                    initializeDbConnection();
-                    new StoreBuzzwords().addNewBuzzwordToDb("buzzwords_new", "error",  list1, list2);
-                    closeDbConnection();
-                } catch (Exception e) {
-
-                }
             }
         }
     }

@@ -34,7 +34,6 @@ public class RetrieveBuzzwords {
             String word = rs.getString("word");
             List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
             headlines = removeEmptyStrings(headlines);
-            headlines = removeLastHalfWordFromString(headlines);
             List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
             links = removeEmptyStrings(links);
             List<String> sites = getNewsSitesFromLinks(links);
@@ -79,7 +78,6 @@ public class RetrieveBuzzwords {
                 String word = rs.getString("word");
                 List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
                 headlines = removeEmptyStrings(headlines);
-                headlines = removeLastHalfWordFromString(headlines);
                 List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
                 links = removeEmptyStrings(links);
                 List<String> sites = getNewsSitesFromLinks(links);
@@ -115,7 +113,6 @@ public class RetrieveBuzzwords {
                 String word = rs.getString("word");
                 List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
                 headlines = removeEmptyStrings(headlines);
-                headlines = removeLastHalfWordFromString(headlines);
                 List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
                 links = removeEmptyStrings(links);
                 List<String> sites = getNewsSitesFromLinks(links);
@@ -140,19 +137,6 @@ public class RetrieveBuzzwords {
             }
         }
         return nonEmptyStrings;
-    }
-
-    private List<String> removeLastHalfWordFromString(List<String> stringsToChange) {
-        List<String> correctStrings = new ArrayList<>();
-
-        for(String stringToChange : stringsToChange) {
-            if(stringToChange.length() == 78) {
-                stringToChange = stringToChange.substring(0, stringToChange.lastIndexOf(" "));
-                stringToChange = stringToChange + "...";
-                correctStrings.add(stringToChange);
-            }
-        }
-        return correctStrings;
     }
 
     private String getCorrectTimeString(String rawDateTime) {

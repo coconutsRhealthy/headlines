@@ -21,11 +21,13 @@ public class DataForAllBuzzWordsProvider {
             List<String> headLinesForWord = new ArrayList<>();
             headLinesForWord.addAll(dataForBuzzword.get("rawHeadlines"));
 
-            if(headLinesForWord.size() >= 2) {
+            if(headLinesForWord.size() >= 3) {
                 headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord);
                 headLinesForWord = removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(headLinesForWord);
 
-                if(headLinesForWord.size() >= 2) {
+                dataForBuzzword.put("rawHeadlines", headLinesForWord);
+
+                if(headLinesForWord.size() >= 3) {
                     dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
                 }
             }
