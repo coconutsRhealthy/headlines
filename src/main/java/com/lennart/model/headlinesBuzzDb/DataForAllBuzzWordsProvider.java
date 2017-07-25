@@ -222,48 +222,71 @@ public class DataForAllBuzzWordsProvider {
     }
 
     private Map<String, List<String>> removeHeadlinesThatAreFromSameSite(Map<String, List<String>> dataTotalForWord) {
-        List<String> hrefsCopy = new ArrayList<>();
-        hrefsCopy.addAll(dataTotalForWord.get("hrefs"));
+        List<String> hrefs = new ArrayList<>();
+        hrefs.addAll(dataTotalForWord.get("hrefs"));
 
-        List<String> sites = new ArrayList<>();
+        List<String> correctedHeadlines = new ArrayList<>();
+        correctedHeadlines.addAll(dataTotalForWord.get("correctedHeadlines"));
 
-        for(String href : hrefsCopy) {
-            sites.add(href.split("\\.")[1]);
-        }
+        List<String> rawHeadlines = new ArrayList<>();
+        rawHeadlines.addAll(dataTotalForWord.get("rawHeadlines"));
 
-        Set<String> sitesMoreThanOne = new HashSet<>();
+        if(hrefs.size() == correctedHeadlines.size() && hrefs.size() == rawHeadlines.size()) {
+            List<String> sites = new ArrayList<>();
 
-        for(String site : sites) {
-            int frequency = Collections.frequency(sites, site);
-
-            if(frequency > 1) {
-                sitesMoreThanOne.add(site);
-            }
-        }
-
-        if(!sitesMoreThanOne.isEmpty()) {
-            List<String> sitesMoreThanOneAsList = new ArrayList<>();
-            sitesMoreThanOneAsList.addAll(sitesMoreThanOne);
-
-            List<Integer> indicesOfDuplicateOrMoreHrefs = new ArrayList<>();
-
-            for(int i = 0; i < dataTotalForWord.get("hrefs").size(); i++) {
-                for(String site : sitesMoreThanOneAsList) {
-                    if(dataTotalForWord.get("hrefs").get(i).contains(site)) {
-                        indicesOfDuplicateOrMoreHrefs.add(i);
-                    }
+            for(String href : hrefs) {
+                if(href.contains("www.")) {
+                    String site = href.split("\\.")[1];
+                    sites.add(site);
+                } else {
+                    String site = href.split("\\.")[0];
+                    sites.add(site);
                 }
             }
 
-            indicesOfDuplicateOrMoreHrefs.remove(indicesOfDuplicateOrMoreHrefs.size() - 1);
+            Set<String> sitesAsSet = new HashSet<>();
+            List<Integer> indicesToRemove = new ArrayList<>();
 
-            for(Integer i : indicesOfDuplicateOrMoreHrefs) {
-                dataTotalForWord.get("hrefs").remove((int) i);
-                dataTotalForWord.get("rawHeadlines").remove((int) i);
-                dataTotalForWord.get("correctedHeadlines").remove((int) i);
+            for(int i = 0; i < sites.size(); i++) {
+                if(!sitesAsSet.add(sites.get(i))) {
+                    indicesToRemove.add(i);
+                }
+            }
+
+            hrefs = removeIndicesFromStringList(hrefs, indicesToRemove);
+            correctedHeadlines = removeIndicesFromStringList(correctedHeadlines, indicesToRemove);
+            rawHeadlines = removeIndicesFromStringList(rawHeadlines, indicesToRemove);
+
+            Map<String, List<String>> dataTotalForWordToReturn = new HashMap<>();
+
+            dataTotalForWordToReturn.put("correctedHeadlines", correctedHeadlines);
+            dataTotalForWordToReturn.put("rawHeadlines", rawHeadlines);
+            dataTotalForWordToReturn.put("hrefs", hrefs);
+
+            return dataTotalForWordToReturn;
+        } else {
+            return dataTotalForWord;
+        }
+    }
+
+    private List<String> removeIndicesFromStringList(List<String> stringList, List<Integer> indices) {
+        List<String> cleanedStringList = new ArrayList<>();
+
+        for(int i = 0; i < stringList.size(); i++) {
+            boolean notToBeAdded = false;
+
+            for(Integer integer : indices) {
+                if(i == integer) {
+                    notToBeAdded = true;
+                    break;
+                }
+            }
+
+            if(!notToBeAdded) {
+                cleanedStringList.add(stringList.get(i));
             }
         }
-        return dataTotalForWord;
+        return cleanedStringList;
     }
 
     private List<String> removeBlackListWords(List<String> allWords) {

@@ -73,18 +73,36 @@ public class StoreBuzzwords {
     }
 
     private void addHeadlineAndLinkToExistingBuzzword(String database, String word, String headlineToAdd, String linkToAdd) throws Exception {
-        String headlines = retrieveHeadlinesOrLinksFromDatabase(database, word, "headlines");
-        headlines = headlines + headlineToAdd + " ---- ";
-
         String links = retrieveHeadlinesOrLinksFromDatabase(database, word, "links");
-        links = links + linkToAdd + " ---- ";
 
-        headlines = doStringReplacementsForDb(headlines);
-        links = doStringReplacementsForDb(links);
+        if(!linksAlreadyContainLinkOfThisSite(links, linkToAdd)) {
+            links = links + linkToAdd + " ---- ";
 
-        Statement st = con.createStatement();
-        st.executeUpdate("UPDATE " + database + " SET headlines = '" + headlines + "', links = '" + links + "' WHERE word = '" + word + "'");
-        st.close();
+            String headlines = retrieveHeadlinesOrLinksFromDatabase(database, word, "headlines");
+            headlines = headlines + headlineToAdd + " ---- ";
+
+            headlines = doStringReplacementsForDb(headlines);
+            links = doStringReplacementsForDb(links);
+
+            Statement st = con.createStatement();
+            st.executeUpdate("UPDATE " + database + " SET headlines = '" + headlines + "', links = '" + links + "' WHERE word = '" + word + "'");
+            st.close();
+        }
+    }
+
+    private boolean linksAlreadyContainLinkOfThisSite(String links, String linkToAdd) {
+        String site;
+
+        if(linkToAdd.contains("www.")) {
+            site = linkToAdd.split("\\.")[1];
+        } else {
+            site = linkToAdd.split("\\.")[0];
+        }
+
+        if(site != null) {
+            return links.contains(site);
+        }
+        return false;
     }
 
     private String createOneStringOfList(List<String> list) {
