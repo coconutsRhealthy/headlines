@@ -6,6 +6,7 @@
 
   <groupId>headlines</groupId>
   <artifactId>headlines</artifactId>
+  <version>1</version>
 
   <build>
     <plugins>

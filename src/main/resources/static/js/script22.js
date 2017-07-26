@@ -10,7 +10,7 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.showMoreButton = false;
     $scope.showPage = false;
 
-    $http.get('http://newsbuzzwords.com:8080/headlines/getBuzzWords').success(function(data) {
+    $http.get('http://newsbuzzwords.com:8080/headlines-1/getBuzzWords').success(function(data) {
         $scope.buzzWords = data;
         $scope.headline = "News Buzzwords";
         $scope.subHeadline = "Trending in news right now:";
@@ -26,7 +26,7 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
         var sizeBuzzWords = $scope.buzzWords.length - 1;
         $scope.lastBuzzWord = $scope.buzzWords[sizeBuzzWords].word;
 
-        $http.post('http://newsbuzzwords.com:8080/headlines/loadMoreBuzzWords', $scope.lastBuzzWord).success(function(data) {
+        $http.post('http://newsbuzzwords.com:8080/headlines-1/loadMoreBuzzWords', $scope.lastBuzzWord).success(function(data) {
             for(var i = 0; i < data.length; i++) {
                 $scope.buzzWords.push(data[i]);
             }
