@@ -26,11 +26,11 @@
 }
 
 div.col-xs-1 {
-    width: 50px;
+    width: 70px;
 }
 
 div.col-xs-2 {
-    width: 130px;
+    width: 187px;
 }
 
 div.col-xs-3 {
@@ -42,4 +42,16 @@ div.col-xs-3 {
 div.col-xs-12 {
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+#firstRow1 {
+    padding-bottom: 6px;
+}
+
+#firstRow2 {
+    padding-bottom: 6px;
+}
+
+#firstRow3 {
+    padding-bottom: 6px;
 }

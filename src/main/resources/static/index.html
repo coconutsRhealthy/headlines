@@ -16,12 +16,11 @@
     <div ng-app = "mainApp" ng-controller = "buzzwordsController">
         <div ng-show=showPage>
             <h1 style="color:rgb(66, 188, 147)">{{headline}}</h1>
-            <h4>{{subHeadline}}</h4>
 
             <div class="row">
-                <div class="col-xs-1"><font size="1">First encounter (CEST)</font></div>
-                <div class="col-xs-2"><font size="1">Buzzword</font></div>
-                <div class="col-xs-3"><font size="1">Trending strength</font></div>
+                <div id="firstRow1" class="col-xs-1"><font size="1"><b>Time (CEST)</b></font></div>
+                <div id="firstRow2" class="col-xs-2"><font size="1"><b>Buzzword</b></font></div>
+                <div id="firstRow3" class="col-xs-3"><font size="1"><b>Buzzing strength</b></font></div>
             </div>
 
             <div class="row" ng-repeat="buzzWord in buzzWords">

@@ -6,17 +6,24 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.words = [];
     $scope.lastBuzzWord;
     $scope.headline;
-    $scope.subHeadline;
     $scope.showMoreButton = false;
     $scope.showPage = false;
 
-    $http.get('http://newsbuzzwords.com:8080/headlines-1/getBuzzWords').success(function(data) {
-        $scope.buzzWords = data;
-        $scope.headline = "News Buzzwords";
-        $scope.subHeadline = "Trending in news right now:";
-        $scope.showMoreButton = true;
-        $scope.showPage = true;
-    })
+    if(window.location.href.includes("www.")) {
+        $http.get('http://www.newsbuzzwords.com/getBuzzWords').success(function(data) {
+            $scope.buzzWords = data;
+            $scope.headline = "News Buzzwords";
+            $scope.showMoreButton = true;
+            $scope.showPage = true;
+        })
+    } else {
+        $http.get('http://newsbuzzwords.com/getBuzzWords').success(function(data) {
+            $scope.buzzWords = data;
+            $scope.headline = "News Buzzwords";
+            $scope.showMoreButton = true;
+            $scope.showPage = true;
+        })
+    }
 
     $scope.testfunctie = function(word) {
         $scope.words.push(word);
@@ -26,11 +33,21 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
         var sizeBuzzWords = $scope.buzzWords.length - 1;
         $scope.lastBuzzWord = $scope.buzzWords[sizeBuzzWords].word;
 
-        $http.post('http://newsbuzzwords.com:8080/headlines-1/loadMoreBuzzWords', $scope.lastBuzzWord).success(function(data) {
-            for(var i = 0; i < data.length; i++) {
-                $scope.buzzWords.push(data[i]);
-            }
-        })
+        var currentUrl = window.location.href;
+
+        if(currentUrl.includes("www.")) {
+            $http.post('http://www.newsbuzzwords.com/loadMoreBuzzWords', $scope.lastBuzzWord).success(function(data) {
+                for(var i = 0; i < data.length; i++) {
+                    $scope.buzzWords.push(data[i]);
+                }
+            })
+        } else {
+            $http.post('http://newsbuzzwords.com/loadMoreBuzzWords', $scope.lastBuzzWord).success(function(data) {
+                for(var i = 0; i < data.length; i++) {
+                    $scope.buzzWords.push(data[i]);
+                }
+            })
+        }
     }
 
     $scope.check = function(word) {
@@ -47,23 +64,23 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
         var stringToReturn;
 
         if(bulletNumber == 1) {
-            stringToReturn = "color:rgb(180, 180, 180)";
+            stringToReturn = "color:rgb(66, 188, 147)";
 
         } else if(bulletNumber == 2) {
             if(numberOfHeadlines > 3) {
-                stringToReturn = "color:rgb(180, 180, 180)";
+                stringToReturn = "color:rgb(66, 188, 147)";
             } else {
                 stringToReturn = "color:rgb(225, 225, 225)";
             }
         } else if(bulletNumber == 3) {
             if(numberOfHeadlines > 5) {
-                stringToReturn = "color:rgb(180, 180, 180)";
+                stringToReturn = "color:rgb(66, 188, 147)";
             } else {
                 stringToReturn = "color:rgb(225, 225, 225)";
             }
         } else if(bulletNumber == 4) {
             if(numberOfHeadlines > 7) {
-                stringToReturn = "color:rgb(180, 180, 180)";
+                stringToReturn = "color:rgb(66, 188, 147)";
             } else {
                 stringToReturn = "color:rgb(225, 225, 225)";
             }
