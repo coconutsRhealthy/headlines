@@ -1,25 +1,38 @@
 <html>
-    <head>
-        <title>News buzzwords</title>
-        <link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
-        <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-        <script src="js/script22.js"></script>
+<head>
+    <title>News buzzwords</title>
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
+    <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="js/script22.js"></script>
 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
 
-    <body>
-    <div class="container-fluid">
-        <div ng-app = "mainApp" ng-controller = "buzzwordsController">
-            <div ng-cloak>
-                <h1 style="color:rgb(66, 188, 147)">{{headline}}</h1>
-                <h4>{{subHeadline}}</h4>
-                <div ng-repeat="buzzWord in buzzWords">
-                    <span>{{buzzWord.dateTime}}</span>
-                    <span><a href="" ng-click="testfunctie(buzzWord)">{{buzzWord.word}}</a></span>
+<body>
+<div class="container-fluid">
+    <div ng-app = "mainApp" ng-controller = "buzzwordsController">
+        <div ng-cloak>
+            <h1 style="color:rgb(66, 188, 147)">{{headline}}</h1>
+            <h4>{{subHeadline}}</h4>
+
+            <div class="row">
+                <div class="col-xs-1"><font size="1">First encounter (CEST)</font></div>
+                <div class="col-xs-2"><font size="1">Buzzword</font></div>
+                <div class="col-xs-3"><font size="1">Trending strength</font></div>
+            </div>
+
+            <div class="row" ng-repeat="buzzWord in buzzWords">
+                <div class="col-xs-1">{{buzzWord.dateTime}}</div>
+                <div class="col-xs-2"><a href="" ng-click="testfunctie(buzzWord)">{{buzzWord.word}}</a></div>
+
+                <div class="col-xs-3">
+                    <span ng-repeat="i in [1, 2, 3, 4]" style="{{getBulletColour(buzzWord.headlines, i)}}">●</span>
+                </div>
+
+                <div ng-show="check(buzzWord)" class="col-xs-12">
                     <ul class="custom-bullet">
                         <div ng-show="check(buzzWord)" ng-repeat="headline in buzzWord.headlines track by $index">
                             <li>
@@ -29,11 +42,13 @@
                         </div>
                     </ul>
                 </div>
-                <div class="btn-group btn-group-sm">
-                    <button ng-show=showMoreButton class="btn btn-default" ng-click="loadMoreBuzzWords()">More</button>
-                </div>
+
+            </div>
+            <div class="btn-group btn-group-sm">
+                <button ng-show=showMoreButton class="btn btn-default" ng-click="loadMoreBuzzWords()">More</button>
             </div>
         </div>
     </div>
-    </body>
+</div>
+</body>
 </html>

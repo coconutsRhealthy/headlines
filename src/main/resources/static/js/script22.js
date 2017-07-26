@@ -39,4 +39,33 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
         }
         return false;
     }
+
+    $scope.getBulletColour = function(headlines, bulletNumber) {
+        var numberOfHeadlines = headlines.length;
+        var stringToReturn;
+
+        if(bulletNumber == 1) {
+            stringToReturn = "color:rgb(180, 180, 180)";
+
+        } else if(bulletNumber == 2) {
+            if(numberOfHeadlines > 3) {
+                stringToReturn = "color:rgb(180, 180, 180)";
+            } else {
+                stringToReturn = "color:rgb(225, 225, 225)";
+            }
+        } else if(bulletNumber == 3) {
+            if(numberOfHeadlines > 5) {
+                stringToReturn = "color:rgb(180, 180, 180)";
+            } else {
+                stringToReturn = "color:rgb(225, 225, 225)";
+            }
+        } else if(bulletNumber == 4) {
+            if(numberOfHeadlines > 7) {
+                stringToReturn = "color:rgb(180, 180, 180)";
+            } else {
+                stringToReturn = "color:rgb(225, 225, 225)";
+            }
+        }
+        return stringToReturn;
+    }
 });
