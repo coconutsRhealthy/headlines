@@ -32,43 +32,16 @@
                         <!-- Collect the nav links, forms, and other content for toggling -->
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <ul class="nav navbar-nav">
-                                <li class="active"><a href="#">World News</a></li>
+                                <li><a href="index.html">World News</a></li>
                                 <li><a href="finance.html">Financial News</a></li>
-                                <li><a href="about.html">About</a></li>
+                                <li class="active"><a href="#">About</a></li>
                             </ul>
                         </div>
                     </div>
                 </nav>
 
-                <div class="row">
-                    <div id="firstRow1" class="col-xs-1"><font size="1"><b>Time (CEST)</b></font></div>
-                    <div id="firstRow2" class="col-xs-2"><font size="1"><b>Buzzword</b></font></div>
-                    <div id="firstRow3" class="col-xs-3"><font size="1"><b>Buzzing strength</b></font></div>
-                </div>
-
-                <div class="row" ng-repeat="buzzWord in buzzWords">
-                    <div class="col-xs-1">{{buzzWord.dateTime}}</div>
-                    <div class="col-xs-2"><a href="" ng-click="testfunctie(buzzWord)">{{buzzWord.word}}</a></div>
-
-                    <div class="col-xs-3">
-                        <span ng-repeat="i in [1, 2, 3, 4]" style="{{getBulletColour(buzzWord.headlines, i)}}">●</span>
-                    </div>
-
-                    <div ng-show="check(buzzWord)" class="col-xs-12">
-                        <ul class="custom-bullet">
-                            <div ng-show="check(buzzWord)" ng-repeat="headline in buzzWord.headlines track by $index">
-                                <li>
-                                    <div><a href={{buzzWord.links[$index]}}>{{headline}}</a></div>
-                                    <div><small class="text-muted">{{buzzWord.sites[$index]}}</small></div>
-                                </li>
-                            </div>
-                        </ul>
-                    </div>
-
-                </div>
-                <div class="btn-group btn-group-sm">
-                    <button ng-show=showMoreButton class="btn btn-default" ng-click="loadMoreBuzzWords()">More</button>
-                </div>
+                <p>Newsbuzzwords.com continuously scans a large group of news websites around the world in search for trending words. The identified words are visible for 24 hours. The quoted times are CEST and represent the initial identification time of a buzzword. All words that are displayed met the initial 'trending' requirements. Buzzing strength, varying from 1 to 4 green circles, shows the trending degree of each word.</p>
+                <p>For more information please contact me at: <b>newsbuzzwords@gmail.com</b></p>
 
                 <div class="push"></div>
             </div>

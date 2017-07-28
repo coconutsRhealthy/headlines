@@ -55,3 +55,30 @@ div.col-xs-12 {
 #firstRow3 {
     padding-bottom: 6px;
 }
+
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0px auto -50px; /* the bottom margin is the negative value of the footer's height */
+}
+.push {
+    height: 50px;
+}
+.footer {
+    height: 38px; /* .push must be the same height as .footer */
+    background-color: #f5f5f5;
+    margin-top: 12px;
+}
+
+.footer-text {
+    padding-left: 10px;
+    padding-top: 9px;
+    color:rgb(66, 188, 147);
+}

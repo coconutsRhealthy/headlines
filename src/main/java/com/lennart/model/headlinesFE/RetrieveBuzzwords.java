@@ -24,7 +24,7 @@ public class RetrieveBuzzwords {
         int counter = 0;
 
         while(rs.next()) {
-            if(counter >= 25) {
+            if(counter >= 21) {
                 break;
             }
 
