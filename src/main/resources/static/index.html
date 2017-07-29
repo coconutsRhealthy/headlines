@@ -41,9 +41,9 @@
                 </nav>
 
                 <div class="row">
-                    <a href="" ng-click="changeOrderType('-entry')" id="firstRow1" class="col-xs-1"><font size="1"><b>Time<br> (CEST)</b></font></a>
+                    <a href="" ng-click="changeOrderType('entry')" id="firstRow1" class="col-xs-1"><font size="1"><b>Time<br> (CEST)</b></font></a>
                     <a href="" ng-click="changeOrderType('word')" id="firstRow2" class="col-xs-2"><font size="1"><b>Buzzword</b></font></a>
-                    <a href="" ng-click="changeOrderType('-headlines.length')" id="firstRow3" class="col-xs-3"><font size="1"><b>Buzzing<br> strength</b></font></a>
+                    <a href="" ng-click="changeOrderType('headlines.length')" id="firstRow3" class="col-xs-3"><font size="1"><b>Buzzing<br> strength</b></font></a>
                 </div>
 
                 <div class="row" ng-repeat="buzzWord in buzzWords | orderBy : orderType">

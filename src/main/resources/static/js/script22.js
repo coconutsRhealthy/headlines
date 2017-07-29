@@ -8,7 +8,7 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.headline;
     $scope.showMoreButton = false;
     $scope.showPage = false;
-    $scope.orderType = "-headlines.length";
+    $scope.orderType = "-entry";
 
     if(window.location.href.includes("www.")) {
         $http.get('http://www.newsbuzzwords.com/getBuzzWords').success(function(data) {
@@ -27,7 +27,11 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     }
 
     $scope.testfunctie = function(word) {
-        $scope.words.push(word);
+        if($scope.words.indexOf(word) !== -1) {
+            $scope.words.splice($scope.words.indexOf(word), 1);
+        } else {
+            $scope.words.push(word);
+        }
     }
 
     $scope.loadMoreBuzzWords = function() {
@@ -90,6 +94,20 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     }
 
     $scope.changeOrderType = function(type) {
-        $scope.orderType = type;
+        if($scope.orderType.indexOf(type) === -1) {
+            if(type === "entry") {
+                $scope.orderType = "-entry";
+            } else if(type === "word") {
+                $scope.orderType = "word";
+            } else if(type === "headlines.length") {
+                $scope.orderType = "-headlines.length";
+            }
+        } else {
+            if($scope.orderType.indexOf("-") === -1) {
+                $scope.orderType = "-" + $scope.orderType;
+            } else {
+                $scope.orderType = $scope.orderType.replace('-', '');
+            }
+        }
     }
 });
