@@ -8,6 +8,7 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.headline;
     $scope.showMoreButton = false;
     $scope.showPage = false;
+    $scope.orderType = "-headlines.length";
 
     if(window.location.href.includes("www.")) {
         $http.get('http://www.newsbuzzwords.com/getBuzzWords').success(function(data) {
@@ -86,5 +87,9 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
             }
         }
         return stringToReturn;
+    }
+
+    $scope.changeOrderType = function(type) {
+        $scope.orderType = type;
     }
 });

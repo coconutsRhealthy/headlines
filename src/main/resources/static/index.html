@@ -41,12 +41,12 @@
                 </nav>
 
                 <div class="row">
-                    <div id="firstRow1" class="col-xs-1"><font size="1"><b>Time (CEST)</b></font></div>
-                    <div id="firstRow2" class="col-xs-2"><font size="1"><b>Buzzword</b></font></div>
-                    <div id="firstRow3" class="col-xs-3"><font size="1"><b>Buzzing strength</b></font></div>
+                    <a href="" ng-click="changeOrderType('-entry')" id="firstRow1" class="col-xs-1"><font size="1"><b>Time<br> (CEST)</b></font></a>
+                    <a href="" ng-click="changeOrderType('word')" id="firstRow2" class="col-xs-2"><font size="1"><b>Buzzword</b></font></a>
+                    <a href="" ng-click="changeOrderType('-headlines.length')" id="firstRow3" class="col-xs-3"><font size="1"><b>Buzzing<br> strength</b></font></a>
                 </div>
 
-                <div class="row" ng-repeat="buzzWord in buzzWords">
+                <div class="row" ng-repeat="buzzWord in buzzWords | orderBy : orderType">
                     <div class="col-xs-1">{{buzzWord.dateTime}}</div>
                     <div class="col-xs-2"><a href="" ng-click="testfunctie(buzzWord)">{{buzzWord.word}}</a></div>
 
