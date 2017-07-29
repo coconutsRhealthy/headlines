@@ -24,7 +24,9 @@ public class StoreBuzzwords {
             List<String> linksForWord = entry.getValue().get("hrefs");
 
             if(!isWordInDatabase(database, entry.getKey())) {
-                addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
+                if(!earlierWordsWithSame3Headlines(database, headlinesForWord)) {
+                    addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
+                }
             } else {
                 for(int i = 0; i < linksForWord.size(); i++) {
                     if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
@@ -141,6 +143,34 @@ public class StoreBuzzwords {
             }
         }
         return linkIsInDatabase;
+    }
+
+    private boolean earlierWordsWithSame3Headlines(String database, List<String> headlinesForWord) throws Exception {
+        boolean thereIsEarlierWordWithSame3Headlines = false;
+
+        Collections.sort(headlinesForWord);
+
+        if(headlinesForWord.size() == 3) {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM " + database + ";");
+
+            while(rs.next()) {
+                List<String> headlinesForWordFromDb = Arrays.asList(rs.getString("headlines").split(" ---- "));
+
+                if(headlinesForWordFromDb.size() == 3) {
+                    Collections.sort(headlinesForWordFromDb);
+
+                    if(headlinesForWord.equals(headlinesForWordFromDb)) {
+                        thereIsEarlierWordWithSame3Headlines = true;
+                        break;
+                    }
+                }
+            }
+
+            rs.close();
+            st.close();
+        }
+        return thereIsEarlierWordWithSame3Headlines;
     }
 
     private String retrieveHeadlinesOrLinksFromDatabase(String database, String word, String headlinesOrLinks) throws Exception {
