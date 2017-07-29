@@ -1,6 +1,9 @@
 package com.lennart.model.headlinesFE;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.sql.*;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
@@ -38,7 +41,9 @@ public class RetrieveBuzzwords {
             links = removeEmptyStrings(links);
             List<String> sites = getNewsSitesFromLinks(links);
 
-            buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
+            int entry = rs.getInt("entry");
+
+            buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites));
         }
 
         rs.close();
@@ -82,7 +87,9 @@ public class RetrieveBuzzwords {
                 links = removeEmptyStrings(links);
                 List<String> sites = getNewsSitesFromLinks(links);
 
-                buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
+                int entry = rs.getInt("entry");
+
+                buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites));
             }
         }
 
@@ -117,7 +124,9 @@ public class RetrieveBuzzwords {
                 links = removeEmptyStrings(links);
                 List<String> sites = getNewsSitesFromLinks(links);
 
-                buzzWords.add(new BuzzWord(dateTime, word, headlines, links, sites));
+                int entry = rs.getInt("entry");
+
+                buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites));
             }
         }
 
@@ -141,8 +150,34 @@ public class RetrieveBuzzwords {
 
     private String getCorrectTimeString(String rawDateTime) {
         String correctTime = rawDateTime.substring(0, rawDateTime.lastIndexOf(":"));
+
+        correctTime = addYtoTimeStringIfWordIsFromYesterday(correctTime);
+
         //correctTime = correctTime + " CEST";
         return correctTime;
+    }
+
+    private String addYtoTimeStringIfWordIsFromYesterday(String timeString) {
+        Integer hourOfGivenTimeString = Integer.valueOf(timeString.split(":")[0]);
+        Integer minuteOfGivenTimeString = Integer.valueOf(timeString.split(":")[1]);
+
+        Date currentDate = new Date();
+        currentDate = DateUtils.addHours(currentDate, 2);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentDateAsString = dateFormat.format(currentDate);
+        String timeOfCurrentDate = currentDateAsString.split(" ")[1];
+
+        Integer currentHour = Integer.valueOf(timeOfCurrentDate.split(":")[0]);
+        Integer currentMinute = Integer.valueOf(timeOfCurrentDate.split(":")[1]);
+
+        if(hourOfGivenTimeString > currentHour) {
+            timeString = timeString + " (y)";
+        } else if(hourOfGivenTimeString == currentHour) {
+            if(minuteOfGivenTimeString > currentMinute) {
+                timeString = timeString + " (y)";
+            }
+        }
+        return timeString;
     }
 
     private List<String> getNewsSitesFromLinks(List<String> links) {
