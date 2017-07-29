@@ -2,6 +2,7 @@ package com.lennart.model.headlinesBuzzDb;
 
 import com.lennart.controller.Controller;
 import com.lennart.model.headlinesBigDb.BigDbStorer;
+import org.apache.commons.lang3.time.DateUtils;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -38,7 +39,10 @@ public class BuzzWordsManager {
     }
 
     private void deleteEntriesOlderThan24Hours() throws Exception {
-        long currentDate = new Date().getTime();
+        Date date = new Date();
+        date = DateUtils.addHours(date, 2);
+        long currentDate = date.getTime();
+
         initializeDbConnection();
         ResultSet rs = getResultSetFromQuery("SELECT * FROM buzzwords_new");
 
