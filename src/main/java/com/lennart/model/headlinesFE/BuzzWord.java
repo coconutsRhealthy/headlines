@@ -7,13 +7,15 @@ import java.util.List;
  */
 public class BuzzWord {
 
+    private int entry;
     private String dateTime;
     private String word;
     private List<String> headlines;
     private List<String> links;
     private List<String> sites;
 
-    public BuzzWord(String dateTime, String word, List<String> headlines, List<String> links, List<String> sites) {
+    public BuzzWord(int entry, String dateTime, String word, List<String> headlines, List<String> links, List<String> sites) {
+        this.entry = entry;
         this.dateTime = dateTime;
         this.word = word;
         this.headlines = headlines;
@@ -59,5 +61,13 @@ public class BuzzWord {
 
     public void setSites(List<String> sites) {
         this.sites = sites;
+    }
+
+    public int getEntry() {
+        return entry;
+    }
+
+    public void setEntry(int entry) {
+        this.entry = entry;
     }
 }
