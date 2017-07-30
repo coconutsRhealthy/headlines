@@ -145,32 +145,36 @@ public class StoreBuzzwords {
         return linkIsInDatabase;
     }
 
-    private boolean earlierWordsWithSame3Headlines(String database, List<String> headlinesForWord) throws Exception {
-        boolean thereIsEarlierWordWithSame3Headlines = false;
+    private boolean earlierWordsWithSame3Headlines(String database, List<String> headlinesForWord) {
+        try {
+            boolean thereIsEarlierWordWithSame3Headlines = false;
 
-        Collections.sort(headlinesForWord);
+            Collections.sort(headlinesForWord);
 
-        if(headlinesForWord.size() == 3) {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM " + database + ";");
+            if(headlinesForWord.size() == 3) {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM " + database + ";");
 
-            while(rs.next()) {
-                List<String> headlinesForWordFromDb = Arrays.asList(rs.getString("headlines").split(" ---- "));
+                while(rs.next()) {
+                    List<String> headlinesForWordFromDb = Arrays.asList(rs.getString("headlines").split(" ---- "));
 
-                if(headlinesForWordFromDb.size() == 3) {
-                    Collections.sort(headlinesForWordFromDb);
+                    if(headlinesForWordFromDb.size() == 3) {
+                        Collections.sort(headlinesForWordFromDb);
 
-                    if(headlinesForWord.equals(headlinesForWordFromDb)) {
-                        thereIsEarlierWordWithSame3Headlines = true;
-                        break;
+                        if(headlinesForWord.equals(headlinesForWordFromDb)) {
+                            thereIsEarlierWordWithSame3Headlines = true;
+                            break;
+                        }
                     }
                 }
-            }
 
-            rs.close();
-            st.close();
+                rs.close();
+                st.close();
+            }
+            return thereIsEarlierWordWithSame3Headlines;
+        } catch (Exception e) {
+            return false;
         }
-        return thereIsEarlierWordWithSame3Headlines;
     }
 
     private String retrieveHeadlinesOrLinksFromDatabase(String database, String word, String headlinesOrLinks) throws Exception {
