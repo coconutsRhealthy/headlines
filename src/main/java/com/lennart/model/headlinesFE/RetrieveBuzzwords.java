@@ -16,6 +16,35 @@ public class RetrieveBuzzwords {
 
     private Connection con;
 
+    public List<BuzzWord> retrieveBuzzWordsFromDbInitialNewByHeadlineNumber(String database) throws Exception {
+        List<BuzzWord> buzzWords = new ArrayList<>();
+
+        long currentDate = new Date().getTime();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " ORDER BY no_of_headlines DESC;");
+
+        int counter = 0;
+
+        while(rs.next()) {
+            if(counter < 21) {
+                String s = rs.getString("date");
+                Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
+
+                if(parsedDateTime.getTime() > currentDate - TimeUnit.HOURS.toMillis(3)) {
+                    counter++;
+                    buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs);
+                }
+            } else {
+                break;
+            }
+        }
+        return buzzWords;
+    }
+
+
     public List<BuzzWord> retrieveBuzzWordsFromDbInitial(String database) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
 
@@ -32,18 +61,7 @@ public class RetrieveBuzzwords {
             }
 
             counter++;
-            String dateTime = rs.getString("date").split(" ")[1];
-            dateTime = getCorrectTimeString(dateTime);
-            String word = rs.getString("word");
-            List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
-            headlines = removeEmptyStrings(headlines);
-            List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
-            links = removeEmptyStrings(links);
-            List<String> sites = getNewsSitesFromLinks(links);
-
-            int entry = rs.getInt("entry");
-
-            buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites));
+            buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs);
         }
 
         rs.close();
@@ -51,6 +69,37 @@ public class RetrieveBuzzwords {
         closeDbConnection();
 
         //Collections.reverse(buzzWords);
+        return buzzWords;
+    }
+
+    public List<BuzzWord> retrieveExtraBuzzWordsFromDbNewByHeadlineNumber(String database, String latestWord) throws Exception {
+        List<BuzzWord> buzzWords = new ArrayList<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " ORDER BY no_of_headlines DESC;");
+
+        boolean latestWordHasBeenPassed = false;
+        int counter = 0;
+
+        while(rs.next()) {
+            if(!latestWordHasBeenPassed) {
+                if(rs.getString("word").equals(latestWord)) {
+                    latestWordHasBeenPassed = true;
+                }
+            } else {
+                if(counter < 20) {
+                    counter++;
+                    buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs);
+                }
+            }
+        }
+
+        rs.close();
+        st.close();
+        closeDbConnection();
+
         return buzzWords;
     }
 
@@ -78,18 +127,7 @@ public class RetrieveBuzzwords {
             int rsEntryNumber = rs.getInt("entry");
 
             if(rsEntryNumber < latestWordOnSiteEntry && rsEntryNumber >= targetEntryNumber) {
-                String dateTime = rs.getString("date").split(" ")[1];
-                dateTime = getCorrectTimeString(dateTime);
-                String word = rs.getString("word");
-                List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
-                headlines = removeEmptyStrings(headlines);
-                List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
-                links = removeEmptyStrings(links);
-                List<String> sites = getNewsSitesFromLinks(links);
-
-                int entry = rs.getInt("entry");
-
-                buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites));
+                buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs);
             }
         }
 
@@ -115,24 +153,30 @@ public class RetrieveBuzzwords {
             Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
 
             if(parsedDateTime.getTime() < currentDate - TimeUnit.HOURS.toMillis(numberOfHours)) {
-                String dateTime = rs.getString("date").split(" ")[1];
-                dateTime = getCorrectTimeString(dateTime);
-                String word = rs.getString("word");
-                List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
-                headlines = removeEmptyStrings(headlines);
-                List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
-                links = removeEmptyStrings(links);
-                List<String> sites = getNewsSitesFromLinks(links);
-
-                int entry = rs.getInt("entry");
-
-                buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites));
+                buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs);
             }
         }
 
         rs.close();
         st.close();
         closeDbConnection();
+
+        return buzzWords;
+    }
+
+    private List<BuzzWord> addBuzzWordToListFromResultSet(List<BuzzWord> buzzWords, ResultSet rs) throws Exception {
+        String dateTime = rs.getString("date").split(" ")[1];
+        dateTime = getCorrectTimeString(dateTime);
+        String word = rs.getString("word");
+        List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
+        headlines = removeEmptyStrings(headlines);
+        List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
+        links = removeEmptyStrings(links);
+        List<String> sites = getNewsSitesFromLinks(links);
+
+        int entry = rs.getInt("entry");
+
+        buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites));
 
         return buzzWords;
     }
