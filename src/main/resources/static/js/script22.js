@@ -9,6 +9,7 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.showMoreButton = false;
     $scope.showPage = false;
     $scope.orderType = "-entry";
+    $scope.numberOfHoursToShow = 3;
 
     if(window.location.href.includes("www.")) {
         $http.get('http://www.newsbuzzwords.com/getBuzzWords', 3).success(function(data) {
@@ -30,10 +31,12 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
         if(window.location.href.includes("www.")) {
             $http.post('http://www.newsbuzzwords.com/getBuzzWords', numberOfHours).success(function(data) {
                 $scope.buzzWords = data;
+                $scope.numberOfHoursToShow = numberOfHours;
             })
         } else {
             $http.post('http://newsbuzzwords.com/getBuzzWords', numberOfHours).success(function(data) {
                 $scope.buzzWords = data;
+                $scope.numberOfHoursToShow = numberOfHours;
             })
         }
     }

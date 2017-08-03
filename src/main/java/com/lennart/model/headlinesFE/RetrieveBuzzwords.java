@@ -72,8 +72,10 @@ public class RetrieveBuzzwords {
         return buzzWords;
     }
 
-    public List<BuzzWord> retrieveExtraBuzzWordsFromDbNewByHeadlineNumber(String database, String latestWord) throws Exception {
+    public List<BuzzWord> retrieveExtraBuzzWordsFromDbNewByHeadlineNumber(String database, String latestWord, int numberOfHours) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
+
+        long currentDate = new Date().getTime();
 
         initializeDbConnection();
 
@@ -90,8 +92,13 @@ public class RetrieveBuzzwords {
                 }
             } else {
                 if(counter < 20) {
-                    counter++;
-                    buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs);
+                    String s = rs.getString("date");
+                    Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
+
+                    if(parsedDateTime.getTime() > currentDate - TimeUnit.HOURS.toMillis(numberOfHours)) {
+                        counter++;
+                        buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs);
+                    }
                 }
             }
         }

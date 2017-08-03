@@ -45,8 +45,8 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     @RequestMapping(value = "/loadMoreBuzzWords", method = RequestMethod.POST)
-    public @ResponseBody List<BuzzWord> sendMoreBuzzWordsToClient(@RequestBody String lastWord) throws Exception {
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber("buzzwords_new", lastWord);
+    public @ResponseBody List<BuzzWord> sendMoreBuzzWordsToClient(@RequestBody String lastWord, int numberOfHours) throws Exception {
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber("buzzwords_new", lastWord, numberOfHours);
         return buzzWords;
     }
 }
