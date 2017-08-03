@@ -16,7 +16,7 @@ public class RetrieveBuzzwords {
 
     private Connection con;
 
-    public List<BuzzWord> retrieveBuzzWordsFromDbInitialNewByHeadlineNumber(String database) throws Exception {
+    public List<BuzzWord> retrieveBuzzWordsFromDbInitialNewByHeadlineNumber(String database, int numberOfHours) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
 
         long currentDate = new Date().getTime();
@@ -33,7 +33,7 @@ public class RetrieveBuzzwords {
                 String s = rs.getString("date");
                 Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
 
-                if(parsedDateTime.getTime() > currentDate - TimeUnit.HOURS.toMillis(3)) {
+                if(parsedDateTime.getTime() > currentDate - TimeUnit.HOURS.toMillis(numberOfHours)) {
                     counter++;
                     buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs);
                 }

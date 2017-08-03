@@ -38,15 +38,15 @@ public class Controller extends SpringBootServletInitializer {
         new BuzzWordsManager().overallMethodServer();
     }
 
-    @RequestMapping(value = "/getBuzzWords", method = RequestMethod.GET)
-    public @ResponseBody List<BuzzWord> sendBuzzWordsToClient() throws Exception {
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitial("buzzwords_new");
+    @RequestMapping(value = "/getBuzzWords", method = RequestMethod.POST)
+    public @ResponseBody List<BuzzWord> sendBuzzWordsToClient(@RequestBody int numberOfHours) throws Exception {
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialNewByHeadlineNumber("buzzwords_new", numberOfHours);
         return buzzWords;
     }
 
     @RequestMapping(value = "/loadMoreBuzzWords", method = RequestMethod.POST)
     public @ResponseBody List<BuzzWord> sendMoreBuzzWordsToClient(@RequestBody String lastWord) throws Exception {
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDb("buzzwords_new", lastWord);
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber("buzzwords_new", lastWord);
         return buzzWords;
     }
 }

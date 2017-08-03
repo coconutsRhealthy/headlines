@@ -11,19 +11,31 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.orderType = "-entry";
 
     if(window.location.href.includes("www.")) {
-        $http.get('http://www.newsbuzzwords.com/getBuzzWords').success(function(data) {
+        $http.get('http://www.newsbuzzwords.com/getBuzzWords', 3).success(function(data) {
             $scope.buzzWords = data;
             $scope.headline = "News Buzzwords";
             $scope.showMoreButton = true;
             $scope.showPage = true;
         })
     } else {
-        $http.get('http://newsbuzzwords.com/getBuzzWords').success(function(data) {
+        $http.get('http://newsbuzzwords.com/getBuzzWords', 3).success(function(data) {
             $scope.buzzWords = data;
             $scope.headline = "News Buzzwords";
             $scope.showMoreButton = true;
             $scope.showPage = true;
         })
+    }
+
+    $scope.loadInitialWordsHoursRestriction = function(numberOfHours) {
+        if(window.location.href.includes("www.")) {
+            $http.post('http://www.newsbuzzwords.com/getBuzzWords', numberOfHours).success(function(data) {
+                $scope.buzzWords = data;
+            })
+        } else {
+            $http.post('http://newsbuzzwords.com/getBuzzWords', numberOfHours).success(function(data) {
+                $scope.buzzWords = data;
+            })
+        }
     }
 
     $scope.testfunctie = function(word) {

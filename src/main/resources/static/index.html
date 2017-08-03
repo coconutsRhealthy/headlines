@@ -40,6 +40,21 @@
                     </div>
                 </nav>
 
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" ng-click="loadInitialWordsHoursRestriction(3)" type="button">Last 3 hours</button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" ng-click="loadInitialWordsHoursRestriction(6)" type="button">Last 6 hours</button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" ng-click="loadInitialWordsHoursRestriction(12)" type="button">Last 12 hours</button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" ng-click="loadInitialWordsHoursRestriction(24)" type="button">Last 24 hours</button>
+                    </span>
+                </div>
+
                 <div class="row">
                     <a href="" ng-click="changeOrderType('entry')" id="firstRow1" class="col-xs-1"><font size="1"><b>Time<br> (CEST)</b></font></a>
                     <a href="" ng-click="changeOrderType('word')" id="firstRow2" class="col-xs-2"><font size="1"><b>Buzzword</b></font></a>
