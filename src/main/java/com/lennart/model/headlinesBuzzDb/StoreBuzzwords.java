@@ -63,7 +63,7 @@ public class StoreBuzzwords {
 
         Statement st = con.createStatement();
 
-        st.executeUpdate("INSERT INTO " + database + " (entry, date, word, headlines, links) VALUES ('" + (getHighestIntEntry(database) + 1) + "', '" + getCurrentDateTime() + "', '" + buzzWord + "', '" + headlinesAsOneString + "', '" + linksAsOneString + "')");
+        st.executeUpdate("INSERT INTO " + database + " (entry, date, word, headlines, links, no_of_headlines) VALUES ('" + (getHighestIntEntry(database) + 1) + "', '" + getCurrentDateTime() + "', '" + buzzWord + "', '" + headlinesAsOneString + "', '" + linksAsOneString + "', '" + headlines.size() + "')");
 
         st.close();
     }
