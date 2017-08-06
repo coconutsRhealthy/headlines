@@ -91,7 +91,7 @@ public class RetrieveBuzzwords {
                     latestWordHasBeenPassed = true;
                 }
             } else {
-                if(counter < 20) {
+                if(counter < 21) {
                     String s = rs.getString("date");
                     Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
 
