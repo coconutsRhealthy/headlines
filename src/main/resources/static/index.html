@@ -17,7 +17,7 @@
         <div ng-show=showPage>
 
             <div class="wrapper">
-                <nav class="navbar navbar-default" role="navigation">
+                <nav id="navbar_id" class="navbar navbar-default" role="navigation">
                     <div class="container-fluid">
                         <div class="navbar-header">
                             <a class="navbar-brand" href="index.html" style="color:rgb(66, 188, 147)">News Buzzwords</a>
@@ -40,29 +40,19 @@
                     </div>
                 </nav>
 
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <button class="btn btn-secondary" ng-click="loadInitialWordsHoursRestriction(3)" type="button">Last 3 hours</button>
-                    </span>
-                    <span class="input-group-btn">
-                        <button class="btn btn-secondary" ng-click="loadInitialWordsHoursRestriction(6)" type="button">Last 6 hours</button>
-                    </span>
-                    <span class="input-group-btn">
-                        <button class="btn btn-secondary" ng-click="loadInitialWordsHoursRestriction(12)" type="button">Last 12 hours</button>
-                    </span>
-                    <span class="input-group-btn">
-                        <button class="btn btn-secondary" ng-click="loadInitialWordsHoursRestriction(24)" type="button">Last 24 hours</button>
-                    </span>
+                <div id="hour-restriction-buttons" class="btn-group">
+                    <button class={{hour3buttonclass}} ng-click="loadInitialWordsHoursRestriction(3)" type="button"><font size="1">Last 3 hours</font></button>
+                    <button class={{hour6buttonclass}} ng-click="loadInitialWordsHoursRestriction(6)" type="button"><font size="1">Last 6 hours</font></button>
+                    <button class={{hour12buttonclass}} ng-click="loadInitialWordsHoursRestriction(12)" type="button"><font size="1">Last 12 hours</font></button>
+                    <button class={{hour24buttonclass}} ng-click="loadInitialWordsHoursRestriction(24)" type="button"><font size="1">Last 24 hours</font></button>
                 </div>
 
                 <div class="row">
-                    <a href="" ng-click="changeOrderType('entry')" id="firstRow1" class="col-xs-1"><font size="1"><b>Time<br> (CEST)</b></font></a>
                     <a href="" ng-click="changeOrderType('word')" id="firstRow2" class="col-xs-2"><font size="1"><b>Buzzword</b></font></a>
                     <a href="" ng-click="changeOrderType('headlines.length')" id="firstRow3" class="col-xs-3"><font size="1"><b>Buzzing<br> strength</b></font></a>
                 </div>
 
                 <div class="row" ng-repeat="buzzWord in buzzWords | orderBy : orderType">
-                    <div class="col-xs-1">{{buzzWord.dateTime}}</div>
                     <div class="col-xs-2"><a href="" ng-click="testfunctie(buzzWord)">{{buzzWord.word}}</a></div>
 
                     <div class="col-xs-3">

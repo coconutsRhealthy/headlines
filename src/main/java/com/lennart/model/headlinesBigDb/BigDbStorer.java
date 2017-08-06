@@ -303,10 +303,6 @@ public class BigDbStorer {
                 listOccurrencesAndSites.add(noSites.get(entry.getKey()));
             }
 
-            if(listOccurrencesAndSites.get(0) == null || listOccurrencesAndSites.get(1) == null) {
-                System.out.println("wacht");
-            }
-
             joinedMaps.put(entry.getKey(), listOccurrencesAndSites);
         }
         return joinedMaps;

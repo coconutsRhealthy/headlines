@@ -8,36 +8,89 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.headline;
     $scope.showMoreButton = false;
     $scope.showPage = false;
-    $scope.orderType = "-entry";
+    $scope.orderType = "-headlines.length";
     $scope.numberOfHoursToShow = 3;
 
+    $scope.hour3buttonclass = "btn btn-default btn-xs active";
+    $scope.hour6buttonclass = "btn btn-default btn-xs";
+    $scope.hour12buttonclass = "btn btn-default btn-xs";
+    $scope.hour24buttonclass = "btn btn-default btn-xs";
+
     if(window.location.href.includes("www.")) {
-        $http.get('http://www.newsbuzzwords.com/getBuzzWords', 3).success(function(data) {
+        $http.post('/getBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
+            if(data.length === 21) {
+                data.pop();
+                $scope.showMoreButton = true;
+            } else {
+                $scope.showMoreButton = false;
+            }
             $scope.buzzWords = data;
             $scope.headline = "News Buzzwords";
-            $scope.showMoreButton = true;
             $scope.showPage = true;
         })
     } else {
-        $http.get('http://newsbuzzwords.com/getBuzzWords', 3).success(function(data) {
+        $http.post('/getBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
+            if(data.length === 21) {
+                data.pop();
+                $scope.showMoreButton = true;
+            } else {
+                $scope.showMoreButton = false;
+            }
             $scope.buzzWords = data;
             $scope.headline = "News Buzzwords";
-            $scope.showMoreButton = true;
             $scope.showPage = true;
         })
     }
 
     $scope.loadInitialWordsHoursRestriction = function(numberOfHours) {
+        setActiveButtonClass(numberOfHours);
+
         if(window.location.href.includes("www.")) {
-            $http.post('http://www.newsbuzzwords.com/getBuzzWords', numberOfHours).success(function(data) {
+            $http.post('/getBuzzWords', numberOfHours).success(function(data) {
+                if(data.length === 21) {
+                    data.pop();
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
                 $scope.buzzWords = data;
                 $scope.numberOfHoursToShow = numberOfHours;
             })
         } else {
-            $http.post('http://newsbuzzwords.com/getBuzzWords', numberOfHours).success(function(data) {
+            $http.post('/getBuzzWords', numberOfHours).success(function(data) {
+                if(data.length === 21) {
+                    data.pop();
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
                 $scope.buzzWords = data;
                 $scope.numberOfHoursToShow = numberOfHours;
             })
+        }
+    }
+
+    function setActiveButtonClass(numberOfHours) {
+        if(numberOfHours === 3) {
+            $scope.hour3buttonclass = "btn btn-default btn-xs active";
+            $scope.hour6buttonclass = "btn btn-default btn-xs";
+            $scope.hour12buttonclass = "btn btn-default btn-xs";
+            $scope.hour24buttonclass = "btn btn-default btn-xs";
+        } else if(numberOfHours === 6) {
+            $scope.hour3buttonclass = "btn btn-default btn-xs";
+            $scope.hour6buttonclass = "btn btn-default btn-xs active";
+            $scope.hour12buttonclass = "btn btn-default btn-xs";
+            $scope.hour24buttonclass = "btn btn-default btn-xs";
+        } else if(numberOfHours === 12) {
+            $scope.hour3buttonclass = "btn btn-default btn-xs";
+            $scope.hour6buttonclass = "btn btn-default btn-xs";
+            $scope.hour12buttonclass = "btn btn-default btn-xs active";
+            $scope.hour24buttonclass = "btn btn-default btn-xs";
+        } else if(numberOfHours === 24) {
+            $scope.hour3buttonclass = "btn btn-default btn-xs";
+            $scope.hour6buttonclass = "btn btn-default btn-xs";
+            $scope.hour12buttonclass = "btn btn-default btn-xs";
+            $scope.hour24buttonclass = "btn btn-default btn-xs active";
         }
     }
 
@@ -55,14 +108,30 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
 
         var currentUrl = window.location.href;
 
+        var combinedDataToSend = $scope.lastBuzzWord + " ---- " + $scope.numberOfHoursToShow;
+
         if(currentUrl.includes("www.")) {
-            $http.post('http://www.newsbuzzwords.com/loadMoreBuzzWords', $scope.lastBuzzWord).success(function(data) {
+            $http.post('/loadMoreBuzzWords', combinedDataToSend).success(function(data) {
+                if(data.length === 21) {
+                    data.pop();
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
+
                 for(var i = 0; i < data.length; i++) {
                     $scope.buzzWords.push(data[i]);
                 }
             })
         } else {
-            $http.post('http://newsbuzzwords.com/loadMoreBuzzWords', $scope.lastBuzzWord).success(function(data) {
+            $http.post('/loadMoreBuzzWords', combinedDataToSend).success(function(data) {
+                if(data.length === 21) {
+                    data.pop();
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
+
                 for(var i = 0; i < data.length; i++) {
                     $scope.buzzWords.push(data[i]);
                 }

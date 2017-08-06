@@ -45,7 +45,11 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     @RequestMapping(value = "/loadMoreBuzzWords", method = RequestMethod.POST)
-    public @ResponseBody List<BuzzWord> sendMoreBuzzWordsToClient(@RequestBody String lastWord, int numberOfHours) throws Exception {
+    public @ResponseBody List<BuzzWord> sendMoreBuzzWordsToClient(@RequestBody String combinedData) throws Exception {
+        String[] combinedDataAsArray = combinedData.split(" ---- ");
+        String lastWord = combinedDataAsArray[0];
+        int numberOfHours = Integer.valueOf(combinedDataAsArray[1]);
+
         List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber("buzzwords_new", lastWord, numberOfHours);
         return buzzWords;
     }
