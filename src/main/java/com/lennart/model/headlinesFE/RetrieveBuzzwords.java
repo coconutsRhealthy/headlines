@@ -19,7 +19,9 @@ public class RetrieveBuzzwords {
     public List<BuzzWord> retrieveBuzzWordsFromDbInitialNewByHeadlineNumber(String database, int numberOfHours) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
 
-        long currentDate = new Date().getTime();
+        Date date = new Date();
+        date = DateUtils.addHours(date, 2);
+        long currentDate = date.getTime();
 
         initializeDbConnection();
 
@@ -75,7 +77,9 @@ public class RetrieveBuzzwords {
     public List<BuzzWord> retrieveExtraBuzzWordsFromDbNewByHeadlineNumber(String database, String latestWord, int numberOfHours) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
 
-        long currentDate = new Date().getTime();
+        Date date = new Date();
+        date = DateUtils.addHours(date, 2);
+        long currentDate = date.getTime();
 
         initializeDbConnection();
 
