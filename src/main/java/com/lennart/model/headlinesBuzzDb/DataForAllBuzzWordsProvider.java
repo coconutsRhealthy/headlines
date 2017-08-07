@@ -16,20 +16,24 @@ public class DataForAllBuzzWordsProvider {
         Map<String, Map<String, List<String>>> dataForAllBuzzWords = new HashMap<>();
 
         for (Map.Entry<String, Double> entry : buzzWords.entrySet()) {
-            Map<String, List<String>> dataForBuzzword = myNewOwnCompareLastNew(entry.getKey(), bigDbStorer);
+            try {
+                Map<String, List<String>> dataForBuzzword = myNewOwnCompareLastNew(entry.getKey(), bigDbStorer);
 
-            List<String> headLinesForWord = new ArrayList<>();
-            headLinesForWord.addAll(dataForBuzzword.get("rawHeadlines"));
-
-            if(headLinesForWord.size() >= 3) {
-                headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord);
-                headLinesForWord = removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(headLinesForWord);
-
-                dataForBuzzword.put("rawHeadlines", headLinesForWord);
+                List<String> headLinesForWord = new ArrayList<>();
+                headLinesForWord.addAll(dataForBuzzword.get("rawHeadlines"));
 
                 if(headLinesForWord.size() >= 3) {
-                    dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
+                    headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord);
+                    headLinesForWord = removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(headLinesForWord);
+
+                    dataForBuzzword.put("rawHeadlines", headLinesForWord);
+
+                    if(headLinesForWord.size() >= 3) {
+                        dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
+                    }
                 }
+            } catch (Exception e) {
+
             }
         }
         return dataForAllBuzzWords;
