@@ -14,69 +14,69 @@ import java.util.concurrent.TimeUnit;
  */
 public class BigDbStorer {
 
-    private Connection con;
+    protected Connection con;
     private double numberOfSites = 59.0;
 
-    private Document document1;
-    private Document document2;
-    private Document document3;
-    private Document document4;
-    private Document document5;
-    private Document document6;
-    private Document document7;
-    private Document document8;
-    private Document document9;
-    private Document document10;
-    private Document document11;
-    private Document document12;
-    private Document document13;
-    private Document document14;
-    private Document document15;
-    private Document document16;
-    private Document document17;
-    private Document document18;
-    private Document document19;
-    private Document document20;
-    private Document document21;
-    private Document document22;
-    private Document document23;
-    private Document document24;
-    private Document document25;
-    private Document document26;
-    private Document document27;
-    private Document document28;
-    private Document document29;
-    private Document document30;
-    private Document document31;
-    private Document document32;
-    private Document document33;
-    private Document document34;
-    private Document document35;
-    private Document document36;
-    private Document document37;
-    private Document document38;
-    private Document document39;
-    private Document document40;
-    private Document document41;
-    private Document document42;
-    private Document document43;
-    private Document document44;
-    private Document document45;
-    private Document document46;
-    private Document document47;
-    private Document document48;
-    private Document document49;
-    private Document document50;
-    private Document document51;
-    private Document document52;
-    private Document document53;
-    private Document document54;
-    private Document document55;
-    private Document document56;
-    private Document document57;
-    private Document document58;
-    private Document document59;
-    private Document document60;
+    protected Document document1;
+    protected Document document2;
+    protected Document document3;
+    protected Document document4;
+    protected Document document5;
+    protected Document document6;
+    protected Document document7;
+    protected Document document8;
+    protected Document document9;
+    protected Document document10;
+    protected Document document11;
+    protected Document document12;
+    protected Document document13;
+    protected Document document14;
+    protected Document document15;
+    protected Document document16;
+    protected Document document17;
+    protected Document document18;
+    protected Document document19;
+    protected Document document20;
+    protected Document document21;
+    protected Document document22;
+    protected Document document23;
+    protected Document document24;
+    protected Document document25;
+    protected Document document26;
+    protected Document document27;
+    protected Document document28;
+    protected Document document29;
+    protected Document document30;
+    protected Document document31;
+    protected Document document32;
+    protected Document document33;
+    protected Document document34;
+    protected Document document35;
+    protected Document document36;
+    protected Document document37;
+    protected Document document38;
+    protected Document document39;
+    protected Document document40;
+    protected Document document41;
+    protected Document document42;
+    protected Document document43;
+    protected Document document44;
+    protected Document document45;
+    protected Document document46;
+    protected Document document47;
+    protected Document document48;
+    protected Document document49;
+    protected Document document50;
+    protected Document document51;
+    protected Document document52;
+    protected Document document53;
+    protected Document document54;
+    protected Document document55;
+    protected Document document56;
+    protected Document document57;
+    protected Document document58;
+    protected Document document59;
+    protected Document document60;
 
     public void overallMethodServer() {
         while(true) {
@@ -129,7 +129,7 @@ public class BigDbStorer {
         }
     }
 
-    private void updateDatabase(int number) throws Exception {
+    protected void updateDatabase(int number) throws Exception {
         for(int i = 1; i <= 60; i++) {
             initializeDocuments(i);
         }
@@ -152,7 +152,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void updateAllOldATextsDatabase(List<String> aTexts) throws Exception {
+    protected void updateAllOldATextsDatabase(List<String> aTexts) throws Exception {
         initializeDbConnection();
 
         for(String aText : aTexts) {
@@ -169,7 +169,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void renameAtextUpdatedTableToAtexts() throws Exception {
+    protected void renameAtextUpdatedTableToAtexts() throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
         st.executeUpdate("ALTER TABLE a_texts_update RENAME TO a_texts");
@@ -177,7 +177,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void renameAtextDummyTableToAtextsUpdate() throws Exception {
+    protected void renameAtextDummyTableToAtextsUpdate() throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
         st.executeUpdate("ALTER TABLE a_texts_dummy RENAME TO a_texts_update");
@@ -185,7 +185,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void renameAtextOldTableToDummy() throws Exception {
+    protected void renameAtextOldTableToDummy() throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
         st.executeUpdate("ALTER TABLE a_texts RENAME TO a_texts_dummy");
@@ -193,7 +193,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void renameUpdatedTableToNewsWords() throws Exception {
+    protected void renameUpdatedTableToNewsWords() throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
         st.executeUpdate("ALTER TABLE news_words_update RENAME TO news_words");
@@ -201,7 +201,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void renameDummyTableToNewsWordsUpdate() throws Exception {
+    protected void renameDummyTableToNewsWordsUpdate() throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
         st.executeUpdate("ALTER TABLE news_words_dummy RENAME TO news_words_update");
@@ -209,7 +209,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void renameOldTableToDummy() throws Exception {
+    protected void renameOldTableToDummy() throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
         st.executeUpdate("ALTER TABLE news_words RENAME TO news_words_dummy");
@@ -217,7 +217,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void clearNewsWordsUpdateTable() throws Exception {
+    protected void clearNewsWordsUpdateTable() throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
         st.executeUpdate("DELETE FROM news_words_update");
@@ -225,7 +225,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void clearAtextsUpdateTable() throws Exception {
+    protected void clearAtextsUpdateTable() throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
         st.executeUpdate("DELETE FROM a_texts_update");
@@ -233,7 +233,7 @@ public class BigDbStorer {
         closeDbConnection();
     }
 
-    private void storeOrUpdateWordInDatabase(String database, String word, double avNoOccurrences, double avNoSites) throws Exception {
+    protected void storeOrUpdateWordInDatabase(String database, String word, double avNoOccurrences, double avNoSites) throws Exception {
         if(isWordInDatabase(database, word)) {
             updateWordInDatabase(database, word, avNoOccurrences, avNoSites);
         } else {
@@ -267,12 +267,12 @@ public class BigDbStorer {
         st.close();
     }
 
-    private void initializeDbConnection() throws Exception {
+    protected void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words", "root", "Vuurwerk00");
     }
 
-    private void closeDbConnection() throws SQLException {
+    protected void closeDbConnection() throws SQLException {
         con.close();
     }
 
@@ -292,7 +292,7 @@ public class BigDbStorer {
         return 0;
     }
 
-    private Map<String, List<Integer>> joinMaps(Map<String, Integer> noOccurrences, Map<String, Integer> noSites) {
+    protected Map<String, List<Integer>> joinMaps(Map<String, Integer> noOccurrences, Map<String, Integer> noSites) {
         Map<String, List<Integer>> joinedMaps = new HashMap<>();
 
         for (Map.Entry<String, Integer> entry : noOccurrences.entrySet()) {
@@ -613,7 +613,7 @@ public class BigDbStorer {
         return result;
     }
 
-    private String doStringReplacementsForDb(String string) {
+    protected String doStringReplacementsForDb(String string) {
         String correctString = string.replace("'", "''");
         correctString = correctString.replace("\"", "\\\"");
         return correctString;
@@ -838,7 +838,7 @@ public class BigDbStorer {
         }
     }
 
-    private Document readSite(String url) {
+    protected Document readSite(String url) {
         try {
             return Jsoup.connect(url).get();
         } catch (Exception e) {
