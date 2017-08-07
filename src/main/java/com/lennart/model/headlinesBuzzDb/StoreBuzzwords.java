@@ -86,8 +86,10 @@ public class StoreBuzzwords {
             headlines = doStringReplacementsForDb(headlines);
             links = doStringReplacementsForDb(links);
 
+            int numberOfHeadlines = headlines.split(" ---- ").length;
+
             Statement st = con.createStatement();
-            st.executeUpdate("UPDATE " + database + " SET headlines = '" + headlines + "', links = '" + links + "' WHERE word = '" + word + "'");
+            st.executeUpdate("UPDATE " + database + " SET headlines = '" + headlines + "', links = '" + links + "', no_of_headlines = " + numberOfHeadlines + " WHERE word = '" + word + "'");
             st.close();
         }
     }
