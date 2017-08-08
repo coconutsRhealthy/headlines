@@ -1,6 +1,5 @@
 package com.lennart.model.headlinesBuzzDb;
 
-import com.lennart.controller.Controller;
 import com.lennart.model.headlinesBigDb.BigDbStorer;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -15,10 +14,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class BuzzWordsManager {
 
-    private Connection con;
+    protected Connection con;
     private double numberOfSites = 59.0;
 
-    public void overallMethodServer() {
+    public void overallMethodServer(String database) {
         while(true) {
             try {
                 deleteEntriesOlderThan24Hours();
@@ -30,7 +29,7 @@ public class BuzzWordsManager {
                 Map<String, Map<String, List<String>>> dataForAllBuzzWords = compareCurrentWithLastDbEntry();
 
                 if(dataForAllBuzzWords != null) {
-                    new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
+                    new StoreBuzzwords().storeBuzzwordsInDb(database, dataForAllBuzzWords);
                 }
             } catch (Exception q) {
 
@@ -38,7 +37,7 @@ public class BuzzWordsManager {
         }
     }
 
-    private void deleteEntriesOlderThan24Hours() throws Exception {
+    protected void deleteEntriesOlderThan24Hours() throws Exception {
         Date date = new Date();
         date = DateUtils.addHours(date, 2);
         long currentDate = date.getTime();
@@ -63,16 +62,16 @@ public class BuzzWordsManager {
         closeDbConnection();
     }
 
-    private void initializeDbConnection() throws Exception {
+    protected void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words", "root", "Vuurwerk00");
     }
 
-    private void closeDbConnection() throws SQLException {
+    protected void closeDbConnection() throws SQLException {
         con.close();
     }
 
-    private Map<String, Double> getBuzzWords(Map<String, Double> wordMap, Map<String, Double> siteMap) {
+    protected Map<String, Double> getBuzzWords(Map<String, Double> wordMap, Map<String, Double> siteMap) {
         Map<String, Double> combined = new HashMap<>();
 
         for (Map.Entry<String, Double> entry : wordMap.entrySet()) {
@@ -92,12 +91,12 @@ public class BuzzWordsManager {
         return sortByValue(combined);
     }
 
-    private ResultSet getResultSetFromQuery(String query) throws SQLException {
+    protected ResultSet getResultSetFromQuery(String query) throws SQLException {
         Statement st = con.createStatement();
         return st.executeQuery(query);
     }
 
-    private Map<String, Map<String, List<String>>> compareCurrentWithLastDbEntry() throws Exception {
+    protected Map<String, Map<String, List<String>>> compareCurrentWithLastDbEntry() throws Exception {
         BigDbStorer bigDbStorer = new BigDbStorer();
 
         try {
@@ -110,8 +109,8 @@ public class BuzzWordsManager {
 
         initializeDbConnection();
 
-        Map<String, Double> buzzWords = getBuzzWords(getTop50HighestIncreaseWordCountCurrent(bigDbStorer), getTop50HighestIncreaseSiteCountCurrent(bigDbStorer));
-        System.out.println("Size buzzwords: "+ buzzWords.size());
+        Map<String, Double> buzzWords = getBuzzWords(getTop50HighestIncreaseWordCountCurrent("news_words", bigDbStorer),
+                getTop50HighestIncreaseSiteCountCurrent("news_words", bigDbStorer));
 
         Map<String, Map<String, List<String>>> dataForAllBuzzWords = new DataForAllBuzzWordsProvider().getDataForAllBuzzWords(buzzWords, bigDbStorer);
         closeDbConnection();
@@ -119,11 +118,11 @@ public class BuzzWordsManager {
         return dataForAllBuzzWords;
     }
 
-    private Map<String, Double> getTop50HighestIncreaseWordCountCurrent(BigDbStorer bigDbStorer) throws Exception {
+    protected Map<String, Double> getTop50HighestIncreaseWordCountCurrent(String database, BigDbStorer bigDbStorer) throws Exception {
         Map<String, Double> wordIncreaseMap = new HashMap<>();
 
         initializeDbConnection();
-        ResultSet rs = getResultSetFromQuery("SELECT * FROM news_words;");
+        ResultSet rs = getResultSetFromQuery("SELECT * FROM " + database + ";");
 
         Map<String, Double> map1 = new HashMap<>();
 
@@ -165,11 +164,11 @@ public class BuzzWordsManager {
         return sortByValue(filteredMap);
     }
 
-    private Map<String, Double> getTop50HighestIncreaseSiteCountCurrent(BigDbStorer bigDbStorer) throws Exception {
+    protected Map<String, Double> getTop50HighestIncreaseSiteCountCurrent(String database, BigDbStorer bigDbStorer) throws Exception {
         Map<String, Double> wordIncreaseMap = new HashMap<>();
 
         initializeDbConnection();
-        ResultSet rs = getResultSetFromQuery("SELECT * FROM news_words;");
+        ResultSet rs = getResultSetFromQuery("SELECT * FROM " + database + ";");
 
         Map<String, Double> map1 = new HashMap<>();
 

@@ -14,9 +14,7 @@ public class StoreBuzzwords {
 
     private Connection con;
 
-    public void storeBuzzwordsInDb(Map<String, Map<String, List<String>>> dataForAllBuzzwords) throws Exception {
-        String database = "buzzwords_new";
-
+    public void storeBuzzwordsInDb(String database, Map<String, Map<String, List<String>>> dataForAllBuzzwords) throws Exception {
         initializeDbConnection();
 
         for (Map.Entry<String, Map<String, List<String>>> entry : dataForAllBuzzwords.entrySet()) {

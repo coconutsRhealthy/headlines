@@ -35,7 +35,7 @@ public class Controller extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/updateBuzzDb", method = RequestMethod.GET)
     public void updateBuzzDb() throws Exception {
-        new BuzzWordsManager().overallMethodServer();
+        new BuzzWordsManager().overallMethodServer("buzzwords_new");
     }
 
     @RequestMapping(value = "/getBuzzWords", method = RequestMethod.POST)
