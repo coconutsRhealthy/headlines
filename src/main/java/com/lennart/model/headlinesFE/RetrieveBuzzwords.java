@@ -239,7 +239,9 @@ public class RetrieveBuzzwords {
         List<String> newsSites = new ArrayList<>();
 
         for(String link : links) {
-            if(link.contains("aljazeera.")) {
+            if(link.contains("washpost")) {
+                newsSites.add("washingtonpost");
+            } else if(link.contains("aljazeera.")) {
                 newsSites.add("Al Jazeera");
             } else if(link.contains("bloomberg.")) {
                 newsSites.add("Bloomberg");
@@ -355,6 +357,10 @@ public class RetrieveBuzzwords {
                 newsSites.add("The Australian");
             } else if(link.contains("nzherald.")) {
                 newsSites.add("New Zealand Herald");
+            } else if(link.contains("marketwatch")) {
+                newsSites.add("marketwatch");
+            } else if(link.contains("seekingalpha")) {
+                newsSites.add("seekingalpha");
             } else {
                 String site = link.split("\\.")[1];
                 newsSites.add(site);

@@ -16,8 +16,8 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.hour12buttonclass = "btn btn-default btn-xs";
     $scope.hour24buttonclass = "btn btn-default btn-xs";
 
-    if(window.location.href.includes("www.")) {
-        $http.post('/getBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
+    if(window.location.href.includes("finance")) {
+        $http.post('/getFinanceBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
             if(data.length === 21) {
                 data.pop();
                 $scope.showMoreButton = true;
@@ -45,8 +45,8 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.loadInitialWordsHoursRestriction = function(numberOfHours) {
         setActiveButtonClass(numberOfHours);
 
-        if(window.location.href.includes("www.")) {
-            $http.post('/getBuzzWords', numberOfHours).success(function(data) {
+        if(window.location.href.includes("finance")) {
+            $http.post('/getFinanceBuzzWords', numberOfHours).success(function(data) {
                 if(data.length === 21) {
                     data.pop();
                     $scope.showMoreButton = true;
@@ -110,8 +110,8 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
 
         var combinedDataToSend = $scope.lastBuzzWord + " ---- " + $scope.numberOfHoursToShow;
 
-        if(currentUrl.includes("www.")) {
-            $http.post('/loadMoreBuzzWords', combinedDataToSend).success(function(data) {
+        if(currentUrl.includes("finance")) {
+            $http.post('/loadMoreFinanceBuzzWords', combinedDataToSend).success(function(data) {
                 if(data.length === 21) {
                     data.pop();
                     $scope.showMoreButton = true;

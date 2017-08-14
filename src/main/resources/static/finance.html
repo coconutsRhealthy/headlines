@@ -52,7 +52,40 @@
                     </div>
                 </nav>
 
-                <p>Coming soon</p>
+                <div id="hour-restriction-buttons" class="btn-group">
+                    <button class={{hour3buttonclass}} ng-click="loadInitialWordsHoursRestriction(3)" type="button"><font size="1">Last 3 hours</font></button>
+                    <button class={{hour6buttonclass}} ng-click="loadInitialWordsHoursRestriction(6)" type="button"><font size="1">Last 6 hours</font></button>
+                    <button class={{hour12buttonclass}} ng-click="loadInitialWordsHoursRestriction(12)" type="button"><font size="1">Last 12 hours</font></button>
+                    <button class={{hour24buttonclass}} ng-click="loadInitialWordsHoursRestriction(24)" type="button"><font size="1">Last 24 hours</font></button>
+                </div>
+
+                <div class="row">
+                    <a href="" ng-click="changeOrderType('word')" id="firstRow2" class="col-xs-2"><font size="1"><b>Buzzword</b></font></a>
+                    <a href="" ng-click="changeOrderType('headlines.length')" id="firstRow3" class="col-xs-3"><font size="1"><b>Buzzing<br> strength</b></font></a>
+                </div>
+
+                <div class="row" ng-repeat="buzzWord in buzzWords | orderBy : orderType">
+                    <div class="col-xs-2"><a href="" ng-click="testfunctie(buzzWord)">{{buzzWord.word}}</a></div>
+
+                    <div class="col-xs-3">
+                        <span ng-repeat="i in [1, 2, 3, 4]" style="{{getBulletColour(buzzWord.headlines, i)}}">●</span>
+                    </div>
+
+                    <div ng-show="check(buzzWord)" class="col-xs-12">
+                        <ul class="custom-bullet">
+                            <div ng-show="check(buzzWord)" ng-repeat="headline in buzzWord.headlines track by $index">
+                                <li>
+                                    <div><a href={{buzzWord.links[$index]}}>{{headline}}</a></div>
+                                    <div><small class="text-muted">{{buzzWord.sites[$index]}}</small></div>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <button ng-show=showMoreButton class="btn btn-default" ng-click="loadMoreBuzzWords()">More</button>
+                </div>
 
                 <div class="push"></div>
             </div>

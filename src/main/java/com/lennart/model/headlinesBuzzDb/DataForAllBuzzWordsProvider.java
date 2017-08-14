@@ -242,6 +242,8 @@ public class DataForAllBuzzWordsProvider {
                 if(href.contains("www.")) {
                     String site = href.split("\\.")[1];
                     sites.add(site);
+                } else if(href.contains("feeds.reuters")) {
+                    sites.add("reuters");
                 } else {
                     String site = href.split("\\.")[0];
                     sites.add(site);

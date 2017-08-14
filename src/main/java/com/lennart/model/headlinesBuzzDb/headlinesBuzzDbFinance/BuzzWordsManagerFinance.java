@@ -1,6 +1,6 @@
 package com.lennart.model.headlinesBuzzDb.headlinesBuzzDbFinance;
 
-import com.lennart.model.headlinesBigDb.BigDbStorer;
+import com.lennart.model.headlinesBigDb.headlinesBigDbFinance.BigDbStorerFinance;
 import com.lennart.model.headlinesBuzzDb.BuzzWordsManager;
 import com.lennart.model.headlinesBuzzDb.DataForAllBuzzWordsProvider;
 import org.apache.commons.lang3.time.DateUtils;
@@ -46,11 +46,11 @@ public class BuzzWordsManagerFinance extends BuzzWordsManager {
 
     @Override
     protected Map<String, Map<String, List<String>>> compareCurrentWithLastDbEntry() throws Exception {
-        BigDbStorer bigDbStorer = new BigDbStorer();
+        BigDbStorerFinance bigDbStorerFinance = new BigDbStorerFinance();
 
         try {
             for(int i = 1; i <= 60; i++) {
-                bigDbStorer.initializeDocuments(i);
+                bigDbStorerFinance.initializeDocuments(i);
             }
         } catch (Exception e) {
             return null;
@@ -58,10 +58,10 @@ public class BuzzWordsManagerFinance extends BuzzWordsManager {
 
         initializeDbConnection();
 
-        Map<String, Double> buzzWords = getBuzzWords(getTop50HighestIncreaseWordCountCurrent("finance_news_words", bigDbStorer),
-                getTop50HighestIncreaseSiteCountCurrent("finance_news_words", bigDbStorer));
+        Map<String, Double> buzzWords = getBuzzWords(getTop50HighestIncreaseWordCountCurrent("finance_news_words", bigDbStorerFinance),
+                getTop50HighestIncreaseSiteCountCurrent("finance_news_words", bigDbStorerFinance));
 
-        Map<String, Map<String, List<String>>> dataForAllBuzzWords = new DataForAllBuzzWordsProvider().getDataForAllBuzzWords(buzzWords, bigDbStorer);
+        Map<String, Map<String, List<String>>> dataForAllBuzzWords = new DataForAllBuzzWordsProvider().getDataForAllBuzzWords(buzzWords, bigDbStorerFinance);
         closeDbConnection();
 
         return dataForAllBuzzWords;
