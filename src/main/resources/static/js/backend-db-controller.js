@@ -65,4 +65,36 @@ mainApp.controller('backendDbController', function($scope, $http) {
             })
         }
     }
+
+    $scope.updateSportBigDb = function() {
+        alert("Starting sport big db update");
+
+        var currentUrl = window.location.href;
+
+        if(currentUrl.includes("www.")) {
+            $http.get('http://www.newsbuzzwords.com/updateSportBigDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        } else {
+            $http.get('http://newsbuzzwords.com/updateSportBigDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        }
+    }
+
+    $scope.updateSportBuzzDb = function() {
+        alert("Starting sport buzz db update");
+
+        var currentUrl = window.location.href;
+
+        if(currentUrl.includes("www.")) {
+            $http.get('http://www.newsbuzzwords.com/updateSportBuzzDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        } else {
+            $http.get('http://newsbuzzwords.com/updateSportBuzzDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        }
+    }
 });

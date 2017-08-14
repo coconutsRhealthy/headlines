@@ -78,29 +78,20 @@ public class BigDbStorer {
     protected Document document59;
     protected Document document60;
 
-    public void overallMethodServer() {
+    public void overallMethodServer(String page) {
         while(true) {
-            //empty the the update table
-            try {
-                clearNewsWordsUpdateTable();
-                clearAtextsUpdateTable();
-            } catch (Exception e) {
-                //overallMethodServer();
-            }
+            if(page.equals("finance")) {
+                try {
+                    TimeUnit.MINUTES.sleep(15);
+                } catch (Exception e) {
 
-            //update the update table
-            try {
-//                for(int i = 1; i <= 60; i++) {
-                    updateDatabase(1);
-            } catch (Exception e) {
-                //overallMethodServer();
-            }
+                }
+            } else if(page.equals("sport")) {
+                try {
+                    TimeUnit.MINUTES.sleep(30);
+                } catch (Exception e) {
 
-            //wait for 40 minutes
-            try {
-                TimeUnit.MINUTES.sleep(53);
-            } catch (Exception e) {
-
+                }
             }
 
             //rename current production table to dummy
@@ -125,6 +116,44 @@ public class BigDbStorer {
                 renameAtextDummyTableToAtextsUpdate();
             } catch (Exception e) {
 
+            }
+
+
+            //empty the the update table
+            try {
+                clearNewsWordsUpdateTable();
+                clearAtextsUpdateTable();
+            } catch (Exception e) {
+                //overallMethodServer();
+            }
+
+            //update the update table
+            try {
+//                for(int i = 1; i <= 60; i++) {
+                    updateDatabase(1);
+            } catch (Exception e) {
+                //overallMethodServer();
+            }
+
+            //wait for 40 minutes
+            if(page.equals("main")) {
+                try {
+                    TimeUnit.MINUTES.sleep(53);
+                } catch (Exception e) {
+
+                }
+            } else if(page.equals("finance")) {
+                try {
+                    TimeUnit.MINUTES.sleep(38);
+                } catch (Exception e) {
+
+                }
+            } else if(page.equals("sport")) {
+                try {
+                    TimeUnit.MINUTES.sleep(23);
+                } catch (Exception e) {
+
+                }
             }
         }
     }

@@ -28,6 +28,18 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
             $scope.headline = "News Buzzwords";
             $scope.showPage = true;
         })
+    } else if(window.location.href.includes("sport")) {
+        $http.post('/getSportBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
+            if(data.length === 21) {
+                data.pop();
+                $scope.showMoreButton = true;
+            } else {
+                $scope.showMoreButton = false;
+            }
+            $scope.buzzWords = data;
+            $scope.headline = "News Buzzwords";
+            $scope.showPage = true;
+        })
     } else {
         $http.post('/getBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
             if(data.length === 21) {
@@ -47,6 +59,17 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
 
         if(window.location.href.includes("finance")) {
             $http.post('/getFinanceBuzzWords', numberOfHours).success(function(data) {
+                if(data.length === 21) {
+                    data.pop();
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
+                $scope.buzzWords = data;
+                $scope.numberOfHoursToShow = numberOfHours;
+            })
+        } else if(window.location.href.includes("sport")) {
+            $http.post('/getSportBuzzWords', numberOfHours).success(function(data) {
                 if(data.length === 21) {
                     data.pop();
                     $scope.showMoreButton = true;
@@ -112,6 +135,19 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
 
         if(currentUrl.includes("finance")) {
             $http.post('/loadMoreFinanceBuzzWords', combinedDataToSend).success(function(data) {
+                if(data.length === 21) {
+                    data.pop();
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
+
+                for(var i = 0; i < data.length; i++) {
+                    $scope.buzzWords.push(data[i]);
+                }
+            })
+        } else if(currentUrl.includes("sport")) {
+            $http.post('/loadMoreSportBuzzWords', combinedDataToSend).success(function(data) {
                 if(data.length === 21) {
                     data.pop();
                     $scope.showMoreButton = true;
