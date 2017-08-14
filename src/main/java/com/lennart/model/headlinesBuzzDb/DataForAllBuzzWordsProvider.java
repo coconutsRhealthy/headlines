@@ -1,6 +1,8 @@
 package com.lennart.model.headlinesBuzzDb;
 
 import com.lennart.model.headlinesBigDb.BigDbStorer;
+import com.lennart.model.headlinesBigDb.headlinesBigDbFinance.BigDbStorerFinance;
+import com.lennart.model.headlinesBigDb.headlinesBigDbSport.BigDbStorerSport;
 import com.lennart.model.headlinesFE.BuzzWord;
 import com.lennart.model.headlinesFE.RetrieveBuzzwords;
 import org.jsoup.nodes.Element;
@@ -23,8 +25,8 @@ public class DataForAllBuzzWordsProvider {
                 headLinesForWord.addAll(dataForBuzzword.get("rawHeadlines"));
 
                 if(headLinesForWord.size() >= 3) {
-                    headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord);
-                    headLinesForWord = removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(headLinesForWord);
+                    headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord, bigDbStorer);
+                    headLinesForWord = removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(headLinesForWord, bigDbStorer);
 
                     dataForBuzzword.put("rawHeadlines", headLinesForWord);
 
@@ -39,10 +41,8 @@ public class DataForAllBuzzWordsProvider {
         return dataForAllBuzzWords;
     }
 
-    private List<String> removeHeadlinesThatWerePresentInPreviousIteration(List<String> headLinesForWord) throws Exception {
+    private List<String> removeHeadlinesThatWerePresentInPreviousIteration(List<String> headLinesForWord, BigDbStorer bigDbStorer) throws Exception {
         List<String> headlinesThatShouldBeRemoved = new ArrayList<>();
-        BigDbStorer bigDbStorer = new BigDbStorer();
-
         List<String> allOldATexts = bigDbStorer.retrieveAllOldAtexts();
 
         for(String headline : headLinesForWord) {
@@ -56,12 +56,21 @@ public class DataForAllBuzzWordsProvider {
         return headLinesForWord;
     }
 
-    private List<String> removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(List<String> headLinesForWord) throws Exception {
+    private List<String> removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(List<String> headLinesForWord, BigDbStorer bigDbStorer) throws Exception {
         List<String> headLinesForWordCopy = new ArrayList<>();
         headLinesForWordCopy.addAll(headLinesForWord);
 
         //get all buzzwords older than 3 hours
-        List<BuzzWord> buzzWordsOlderThan3Hours = new RetrieveBuzzwords().retrieveBuzzWordsFromDbUntillHour("buzzwords_new", 3);
+        String databaseTableToUse;
+        if(bigDbStorer instanceof BigDbStorerFinance) {
+            databaseTableToUse = "finance_buzzwords_new";
+        } else if(bigDbStorer instanceof BigDbStorerSport) {
+            databaseTableToUse = "sport_buzzwords_new";
+        } else {
+            databaseTableToUse = "buzzwords_new";
+        }
+
+        List<BuzzWord> buzzWordsOlderThan3Hours = new RetrieveBuzzwords().retrieveBuzzWordsFromDbUntillHour(databaseTableToUse, 3);
 
         List<String> olderHeadlinesList = new ArrayList<>();
 
