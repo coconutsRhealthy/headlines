@@ -375,6 +375,11 @@ public class RetrieveBuzzwords {
                     newsSites.add("marketwatch");
                 } else {
                     String site = link.split("\\.")[1];
+
+                    if(site != null && site.contains("/")) {
+                        site = link.split("\\.")[0];
+                        site = site.replaceAll("http://", "");
+                    }
                     newsSites.add(site);
                 }
             }
