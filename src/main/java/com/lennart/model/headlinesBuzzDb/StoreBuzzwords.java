@@ -14,6 +14,26 @@ public class StoreBuzzwords {
 
     private Connection con;
 
+
+    //je hebt 2 mogelijkheden:
+        //woord is nog niet in database
+            //check voor elke urlLink van je woord of deze al ergens in de db voorkomt.
+                //zoja, check welk woord meer urlLinks heeft, jouw woord of het geidentificeerde woord
+                    //indien jouw woord
+                        //verwijder het geidentificeerde woord uit db en begin de urlLink check opnieuw voor jouw woord
+                    //indien geidentificeerde woord
+                        //voeg jouw woord niet toe aan db
+                //zonee, voeg het nieuwe woord toe aan de db
+
+        //woord is al wel in database
+            //check voor elke urlLink van je woord of deze al ergens, buiten jouw buzzword, in de db voorkomt.
+                //zoja, check welk woord meer urlLinks heeft, jouw woord of het geidentificeerde woord
+                    //indien jouw woord
+                        //verwijder het geidentificeerde woord uit db en begin de urlLink check opnieuw voor jouw woord
+                    //indien geidentificeerde woord
+                        //verwijder jouw woord uit db
+                //zonee, voeg eventuele nieuwe urlLinks toe aan de db
+
     public void storeBuzzwordsInDb(String database, Map<String, Map<String, List<String>>> dataForAllBuzzwords) throws Exception {
         initializeDbConnection();
 
@@ -22,18 +42,21 @@ public class StoreBuzzwords {
             List<String> linksForWord = entry.getValue().get("hrefs");
 
             if(!isWordInDatabase(database, entry.getKey())) {
-                if(!earlierWordsWithSame3Headlines(database, headlinesForWord)) {
+                List<String> wordsWithSameUrls = getWordsWithSameUrls(database, linksForWord);
+                if(wordsWithSameUrls.isEmpty()) {
                     addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
+                } else {
+                    replaceExistingBuzzwordInDbIfNecessary(database, entry.getKey(), headlinesForWord, linksForWord, wordsWithSameUrls);
                 }
             } else {
-                for(int i = 0; i < linksForWord.size(); i++) {
-                    if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
-                        try {
-                            addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
-                        } catch (Exception e) {
+                List<String> wordsWithSameUrls = getWordsWithSameUrls(database, linksForWord);
+                wordsWithSameUrls.remove(entry.getKey());
 
-                        }
-                    }
+                if(wordsWithSameUrls.isEmpty()) {
+                    updateLinksOfWordIfNecessary(database, entry.getKey(), linksForWord, headlinesForWord);
+                } else {
+                    updateLinksIfNecessaryAndRemoveBuzzwordsWithDuplicateLinks(database, entry.getKey(), headlinesForWord,
+                            linksForWord, wordsWithSameUrls);
                 }
             }
         }
@@ -174,6 +197,103 @@ public class StoreBuzzwords {
             return thereIsEarlierWordWithSame3Headlines;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    private Map<String, List<String>> getAllUrlsPerWordFromDatabase(String database) throws Exception {
+        Map<String, List<String>> allUrlsPerWord = new HashMap<>();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + ";");
+
+        while(rs.next()) {
+            String word = rs.getString("word");
+            List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
+            allUrlsPerWord.put(word, links);
+        }
+
+        rs.close();
+        st.close();
+
+        return allUrlsPerWord;
+    }
+    
+    private List<String> getWordsWithSameUrls(String database, List<String> linksForWord) throws Exception {
+        List<String> wordsWithSameUrls = new ArrayList<>();
+        Map<String, List<String>> allUrlsPerWord = getAllUrlsPerWordFromDatabase(database);
+
+        for(String link : linksForWord) {
+            for (Map.Entry<String, List<String>> entry : allUrlsPerWord.entrySet()) {
+                if(entry.getValue().contains(link)) {
+                    wordsWithSameUrls.add(entry.getKey());
+                    break;
+                }
+            }
+        }
+        return wordsWithSameUrls;
+    }
+
+    private void replaceExistingBuzzwordInDbIfNecessary(String database, String buzzWord, List<String> headlines,
+                                                        List<String> links, List<String> wordsWithSameUrls) throws Exception {
+        for(String wordWithSameUrls : wordsWithSameUrls) {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE word = '" + wordWithSameUrls + "';");
+            rs.next();
+            List<String> linksOfWordWithSameUrls = Arrays.asList(rs.getString("links").split(" ---- "));
+
+            rs.close();
+            st.close();
+
+            if(links.size() < linksOfWordWithSameUrls.size()) {
+                return;
+            }
+        }
+
+        //if you come here, apparently the new buzzword has the most links and should replace older buzzwords in db
+        for(String wordWithSameUrls : wordsWithSameUrls) {
+            deleteWordFromDb(database, wordWithSameUrls);
+        }
+
+        addNewBuzzwordToDb(database, buzzWord, headlines, links);
+    }
+
+    private void updateLinksIfNecessaryAndRemoveBuzzwordsWithDuplicateLinks(String database, String buzzWord, List<String> headlines,
+                                                                            List<String> links, List<String> wordsWithSameUrls) throws Exception {
+        for(String wordWithSameUrls : wordsWithSameUrls) {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE word = '" + wordWithSameUrls + "';");
+            rs.next();
+            List<String> linksOfWordWithSameUrls = Arrays.asList(rs.getString("links").split(" ---- "));
+
+            rs.close();
+            st.close();
+
+            if(links.size() > linksOfWordWithSameUrls.size()) {
+                deleteWordFromDb(database, wordWithSameUrls);
+            } else {
+                deleteWordFromDb(database, buzzWord);
+                return;
+            }
+        }
+        updateLinksOfWordIfNecessary(database, buzzWord, links, headlines);
+    }
+
+    private void deleteWordFromDb(String database, String word) throws Exception {
+        Statement st = con.createStatement();
+        st.executeUpdate("DELETE FROM " + database + "WHERE word = '" + word + "';");
+        st.close();
+    }
+
+    private void updateLinksOfWordIfNecessary(String database, String word, List<String> linksForWord,
+                                              List<String> headlinesForWord) throws Exception {
+        for(int i = 0; i < linksForWord.size(); i++) {
+            if(!isLinkInDatabase(database, word, linksForWord.get(i))) {
+                try {
+                    addHeadlineAndLinkToExistingBuzzword(database, word, headlinesForWord.get(i), linksForWord.get(i));
+                } catch (Exception e) {
+
+                }
+            }
         }
     }
 
