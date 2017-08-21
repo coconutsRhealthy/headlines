@@ -42,21 +42,18 @@ public class StoreBuzzwords {
             List<String> linksForWord = entry.getValue().get("hrefs");
 
             if(!isWordInDatabase(database, entry.getKey())) {
-                List<String> wordsWithSameUrls = getWordsWithSameUrls(database, linksForWord);
-                if(wordsWithSameUrls.isEmpty()) {
+                if(!earlierWordsWithSame3Headlines(database, headlinesForWord)) {
                     addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
-                } else {
-                    replaceExistingBuzzwordInDbIfNecessary(database, entry.getKey(), headlinesForWord, linksForWord, wordsWithSameUrls);
                 }
             } else {
-                List<String> wordsWithSameUrls = getWordsWithSameUrls(database, linksForWord);
-                wordsWithSameUrls.remove(entry.getKey());
+                for(int i = 0; i < linksForWord.size(); i++) {
+                    if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
+                        try {
+                            addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
+                        } catch (Exception e) {
 
-                if(wordsWithSameUrls.isEmpty()) {
-                    updateLinksOfWordIfNecessary(database, entry.getKey(), linksForWord, headlinesForWord);
-                } else {
-                    updateLinksIfNecessaryAndRemoveBuzzwordsWithDuplicateLinks(database, entry.getKey(), headlinesForWord,
-                            linksForWord, wordsWithSameUrls);
+                        }
+                    }
                 }
             }
         }

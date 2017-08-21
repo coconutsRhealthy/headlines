@@ -304,7 +304,7 @@ public class DataForAllBuzzWordsProvider {
         return cleanedStringList;
     }
 
-    private List<String> removeBlackListWords(List<String> allWords) {
+    public static List<String> removeBlackListWords(List<String> allWords) {
         List<String> blackListWords = new ArrayList<>();
 
         blackListWords.add("the");
