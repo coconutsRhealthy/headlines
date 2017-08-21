@@ -109,6 +109,8 @@ public class RelatedBuzzwordsIdentifier {
 
         Map<String, Integer> buzzWordGroupMap = getBuzzwordGroupMap(database, finalGroupMap);
 
+        Map<String, Integer> correctFinalMap = theMapCorrectingMethod(buzzWordGroupMap);
+
         System.out.println("wacht");
     }
 
@@ -162,54 +164,103 @@ public class RelatedBuzzwordsIdentifier {
     }
 
 
+    private Map<String, Integer> theMapCorrectingMethod(Map<String, Integer> initialMap) {
+        //Je hebt map met woorden en bijbehorende groep
 
-    private Map<String, Integer> setCorrectGroupNumbersForBuzzword(Map<String, Integer> initialMap) {
+        //Je wil nu dat de woorden een nieuwe groep krijgen, op basis van hoeveel de eerdere groep voorkomt
 
-        //je hebt de map met woorden en bijbehorende groep
+        //
 
-
-        //stop alle values in een list
-
-
-        //sorteer de list op no_of_occurr
-
-
-        //maak set van list
-
-
-        //maak list van set
-
-
-        //loop door map heen. Kijk aan welke index van list de value van map gelijk is. Verander de value in deze index
-
-
-
-
-
-
-
-
-
-
-        List<Integer> allValuesOfMap = new ArrayList<>();
-
-        for (Map.Entry<String, Integer> entry : initialMap.entrySet()) {
-            allValuesOfMap.add(entry.getValue());
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
+        Map<Integer, Integer> frequencyMap = getFrequencyMap(initialMap);
+        Map<Integer, Integer> counterMap = convertFrequencyMapToCounterMap2(frequencyMap);
+        Map<String, Integer> correctFinalMap = setCorrectValuesOfInitialGroupMap(initialMap, counterMap);
+        correctFinalMap = sortByValueLowToHigh(correctFinalMap);
+        return correctFinalMap;
     }
+
+    private Map<Integer, Integer> getFrequencyMap(Map<String, Integer> mapToAnalyse) {
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+        List<Integer> valuesAsList = new ArrayList<Integer>(mapToAnalyse.values());
+
+        for (Map.Entry<String, Integer> entry : mapToAnalyse.entrySet()) {
+            int frequency =  Collections.frequency(valuesAsList, entry.getValue());
+            frequencyMap.put(entry.getValue(), frequency);
+        }
+        return frequencyMap;
+    }
+
+    private Map<Integer, Integer> convertFrequencyMapToCounterMap(Map<Integer, Integer> frequencyMap) {
+        Map<Integer, Integer> frequencyMapSorted = sortByValueHighToLow(frequencyMap);
+        Map<Integer, Integer> frequencyMapCorrectNumbers = new HashMap<>();
+        int counter = 1;
+
+        for (Map.Entry<Integer, Integer> entry : frequencyMapSorted.entrySet()) {
+            frequencyMapCorrectNumbers.put(entry.getKey(), counter);
+            counter++;
+        }
+        return frequencyMapCorrectNumbers;
+    }
+
+    private Map<Integer, Integer> convertFrequencyMapToCounterMap2(Map<Integer, Integer> frequencyMap) {
+        Map<Integer, Integer> frequencyMapCorrectNumbers = new HashMap<>();
+        Map<Integer, Integer> frequencyMapSorted = sortByValueHighToLow(frequencyMap);
+
+        int previousNumber = -1;
+        int numberToSetAsValue = 1;
+
+        for (Map.Entry<Integer, Integer> entry : frequencyMapSorted.entrySet()) {
+            if(previousNumber == -1) {
+                frequencyMapCorrectNumbers.put(entry.getKey(), numberToSetAsValue);
+                previousNumber = entry.getValue();
+            } else if(previousNumber == entry.getValue()) {
+                frequencyMapCorrectNumbers.put(entry.getKey(), numberToSetAsValue);
+            } else {
+                numberToSetAsValue++;
+                frequencyMapCorrectNumbers.put(entry.getKey(), numberToSetAsValue);
+            }
+        }
+        return frequencyMapCorrectNumbers;
+    }
+
+    private Map<String, Integer> setCorrectValuesOfInitialGroupMap(Map<String, Integer> initialGroupMap,
+                                                                   Map<Integer, Integer> counterMap) {
+        Map<String, Integer> correctMap = new HashMap<>();
+
+        for (Map.Entry<String, Integer> entry : initialGroupMap.entrySet()) {
+            correctMap.put(entry.getKey(), counterMap.get(entry.getValue()));
+        }
+        return correctMap;
+    }
+
+//    private Map<String, Integer> setCorrectGroupNumbersForBuzzword(Map<String, Integer> initialMap) {
+//
+//        //je hebt de map met woorden en bijbehorende groep
+//
+//
+//        //stop alle values in een list
+//
+//
+//        //sorteer de list op no_of_occurr
+//
+//
+//        //maak set van list
+//
+//
+//        //maak list van set
+//
+//
+//        //loop door map heen. Kijk aan welke index van list de value van map gelijk is. Verander de value in deze index
+//
+//
+//
+//        List<Integer> allValuesOfMap = new ArrayList<>();
+//
+//        for (Map.Entry<String, Integer> entry : initialMap.entrySet()) {
+//            allValuesOfMap.add(entry.getValue());
+//        }
+//
+//
+//    }
 
 
 
@@ -230,7 +281,7 @@ public class RelatedBuzzwordsIdentifier {
 //            }
 //        }
 //
-//        occurrenceMap = sortByValue(occurrenceMap);
+//        occurrenceMap = sortByValueHighToLow(occurrenceMap);
 //
 //        int newCounter = 1;
 //        Map<Integer, Integer> correctOccurrenceMap = new HashMap<>();
@@ -775,7 +826,23 @@ public class RelatedBuzzwordsIdentifier {
 //    }
 
 
-    private <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+    private <K, V extends Comparable<? super V>> Map<K, V> sortByValueHighToLow(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new LinkedList<>( map.entrySet() );
+        Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
+            @Override
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return (o2.getValue() ).compareTo( o1.getValue());
+            }
+        });
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
+    private <K, V extends Comparable<? super V>> Map<K, V> sortByValueLowToHigh(Map<K, V> map) {
         List<Map.Entry<K, V>> list = new LinkedList<>( map.entrySet() );
         Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
             @Override
