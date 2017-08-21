@@ -186,8 +186,9 @@ public class RetrieveBuzzwords {
         List<String> sites = getNewsSitesFromLinks(links, page);
 
         int entry = rs.getInt("entry");
+        int group = rs.getInt("group_number");
 
-        buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites));
+        buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites, group));
 
         return buzzWords;
     }

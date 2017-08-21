@@ -213,6 +213,48 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
         return stringToReturn;
     }
 
+    $scope.getGroupColour = function(group) {
+        var stringToReturn;
+
+        switch(group) {
+            case 1:
+                stringToReturn = "color:rgb(128, 128, 225)";
+                break;
+            case 2:
+                stringToReturn = "color:rgb(225, 128, 64)";
+                break;
+            case 3:
+                stringToReturn = "color:rgb(0, 0, 128)";
+                break;
+            case 4:
+                stringToReturn = "color:rgb(255, 128, 192)";
+                break;
+            case 5:
+                stringToReturn = "color:rgb(128, 128, 128)";
+                break;
+            case 6:
+                stringToReturn = "color:rgb(255, 255, 0)";
+                break;
+            case 7:
+                stringToReturn = "color:rgb(255, 0, 128)";
+                break;
+            case 8:
+                stringToReturn = "color:rgb(225, 0, 0)";
+                break;
+            case 9:
+                stringToReturn = "color:rgb(64, 0, 0)";
+                break;
+            case 10:
+                stringToReturn = "color:rgb(128, 128, 64)";
+                break;
+            default:
+                stringToReturn = "color:rgb(255, 255, 255)";
+                break;
+        }
+
+        return stringToReturn;
+    }
+
     $scope.changeOrderType = function(type) {
         if($scope.orderType.indexOf(type) === -1) {
             if(type === "entry") {
