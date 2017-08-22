@@ -43,6 +43,9 @@ public class RetrieveBuzzwords {
                 break;
             }
         }
+
+        //hier de RelatedBuzzwordsIdentifier setCorrectGroupsInRetrievingPhase() aanroepen
+
         return buzzWords;
     }
 

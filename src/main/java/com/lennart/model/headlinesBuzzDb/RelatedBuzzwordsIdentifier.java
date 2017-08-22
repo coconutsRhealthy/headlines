@@ -1,5 +1,7 @@
 package com.lennart.model.headlinesBuzzDb;
 
+import com.lennart.model.headlinesFE.BuzzWord;
+
 import java.sql.*;
 import java.util.*;
 
@@ -20,6 +22,37 @@ public class RelatedBuzzwordsIdentifier {
         Map<String, Integer> buzzWordGroupMap = getBuzzwordGroupMap(database, finalGroupMap);
         Map<String, Integer> correctFinalMap = setCorrectGroupNumbersInBuzzwordMap(buzzWordGroupMap);
         doDatabaseUpdate(database, correctFinalMap);
+    }
+
+    public List<BuzzWord> setCorrectGroupsInRetrievingPhase(List<BuzzWord> initialBuzzList) {
+
+        List<BuzzWord> buzzListToReturn = new ArrayList<>();
+
+        //je krijgt lijst binnen met woorden en groepen
+
+        //maak van deze lijst map<String, Integer> initialmap
+        Map<String, Integer> initialMap = new HashMap<>();
+
+        for (BuzzWord buzzWord : initialBuzzList) {
+            initialMap.put(buzzWord.getWord(), buzzWord.getGroup());
+        }
+
+        //verwijder uit initialmap groepsnummers die 1 keer voorkomen
+        Map<String, Integer> correctMap = deleteEntriesFromMapWithValuesThatOccurOnlyOnce(initialMap);
+
+        //converteer map naar correctFinalMap op de manier zoals setCorrectGroupNumbersInBuzzwordMap()
+        correctMap = setCorrectGroupNumbersInBuzzwordMap(correctMap);
+
+        //update de buzzword lijst adhv deze map
+        for (BuzzWord buzzWord : initialBuzzList) {
+            if(correctMap.get(buzzWord.getWord()) != null) {
+                buzzWord.setGroup(correctMap.get(buzzWord.getWord()));
+            } else {
+                buzzWord.setGroup(0);
+            }
+        }
+
+        return buzzListToReturn;
     }
 
     private Map<String, Integer> getBuzzwordGroupMap(String database, Map<Integer, Set<String>> finalGroupMap) throws Exception {
