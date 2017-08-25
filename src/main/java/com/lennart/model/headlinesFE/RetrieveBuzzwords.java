@@ -1,5 +1,6 @@
 package com.lennart.model.headlinesFE;
 
+import com.lennart.model.headlinesBuzzDb.RelatedBuzzwordsIdentifier;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.sql.*;
@@ -44,7 +45,7 @@ public class RetrieveBuzzwords {
             }
         }
 
-        //hier de RelatedBuzzwordsIdentifier setCorrectGroupsInRetrievingPhase() aanroepen
+        buzzWords = new RelatedBuzzwordsIdentifier().setCorrectGroupsInRetrievingPhase(buzzWords);
 
         return buzzWords;
     }
@@ -77,7 +78,8 @@ public class RetrieveBuzzwords {
         return buzzWords;
     }
 
-    public List<BuzzWord> retrieveExtraBuzzWordsFromDbNewByHeadlineNumber(String database, String latestWord, int numberOfHours, String page) throws Exception {
+    public List<BuzzWord> retrieveExtraBuzzWordsFromDbNewByHeadlineNumber(String database, int numberOfHours, String page,
+                                                                          int numberOfWordsOnSite) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
 
         Date date = new Date();
@@ -89,23 +91,16 @@ public class RetrieveBuzzwords {
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery("SELECT * FROM " + database + " ORDER BY no_of_headlines DESC;");
 
-        boolean latestWordHasBeenPassed = false;
         int counter = 0;
 
         while(rs.next()) {
-            if(!latestWordHasBeenPassed) {
-                if(rs.getString("word").equals(latestWord)) {
-                    latestWordHasBeenPassed = true;
-                }
-            } else {
-                if(counter < 21) {
-                    String s = rs.getString("date");
-                    Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
+            if(counter < (numberOfWordsOnSite + 21)) {
+                String s = rs.getString("date");
+                Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
 
-                    if(parsedDateTime.getTime() > currentDate - TimeUnit.HOURS.toMillis(numberOfHours)) {
-                        counter++;
-                        buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, page);
-                    }
+                if(parsedDateTime.getTime() > currentDate - TimeUnit.HOURS.toMillis(numberOfHours)) {
+                    counter++;
+                    buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, page);
                 }
             }
         }
@@ -113,6 +108,8 @@ public class RetrieveBuzzwords {
         rs.close();
         st.close();
         closeDbConnection();
+
+        buzzWords = new RelatedBuzzwordsIdentifier().setCorrectGroupsInRetrievingPhase(buzzWords);
 
         return buzzWords;
     }

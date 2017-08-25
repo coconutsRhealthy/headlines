@@ -24,35 +24,25 @@ public class RelatedBuzzwordsIdentifier {
         doDatabaseUpdate(database, correctFinalMap);
     }
 
-    public List<BuzzWord> setCorrectGroupsInRetrievingPhase(List<BuzzWord> initialBuzzList) {
-
-        List<BuzzWord> buzzListToReturn = new ArrayList<>();
-
-        //je krijgt lijst binnen met woorden en groepen
-
-        //maak van deze lijst map<String, Integer> initialmap
+    public List<BuzzWord> setCorrectGroupsInRetrievingPhase(List<BuzzWord> buzzList) {
         Map<String, Integer> initialMap = new HashMap<>();
 
-        for (BuzzWord buzzWord : initialBuzzList) {
+        for (BuzzWord buzzWord : buzzList) {
             initialMap.put(buzzWord.getWord(), buzzWord.getGroup());
         }
 
-        //verwijder uit initialmap groepsnummers die 1 keer voorkomen
         Map<String, Integer> correctMap = deleteEntriesFromMapWithValuesThatOccurOnlyOnce(initialMap);
-
-        //converteer map naar correctFinalMap op de manier zoals setCorrectGroupNumbersInBuzzwordMap()
+        correctMap = removeEntriesFromMapWithValueZero(correctMap);
         correctMap = setCorrectGroupNumbersInBuzzwordMap(correctMap);
 
-        //update de buzzword lijst adhv deze map
-        for (BuzzWord buzzWord : initialBuzzList) {
-            if(correctMap.get(buzzWord.getWord()) != null) {
+        for (BuzzWord buzzWord : buzzList) {
+            if(correctMap.get(buzzWord.getWord()) != null && correctMap.get(buzzWord.getWord()) < 5) {
                 buzzWord.setGroup(correctMap.get(buzzWord.getWord()));
             } else {
-                buzzWord.setGroup(0);
+                buzzWord.setGroup(5);
             }
         }
-
-        return buzzListToReturn;
+        return buzzList;
     }
 
     private Map<String, Integer> getBuzzwordGroupMap(String database, Map<Integer, Set<String>> finalGroupMap) throws Exception {
@@ -112,6 +102,17 @@ public class RelatedBuzzwordsIdentifier {
         return correctFinalMap;
     }
 
+    private Map<String, Integer> removeEntriesFromMapWithValueZero(Map<String, Integer> mapWithZeros) {
+        Map<String, Integer> mapWithoutZeros = new HashMap<>();
+
+        for (Map.Entry<String, Integer> entry : mapWithZeros.entrySet()) {
+            if(entry.getValue() != 0) {
+                mapWithoutZeros.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return mapWithoutZeros;
+    }
+
     private Map<Integer, Integer> getFrequencyMap(Map<String, Integer> mapToAnalyse) {
         Map<Integer, Integer> frequencyMap = new HashMap<>();
         List<Integer> valuesAsList = new ArrayList<>(mapToAnalyse.values());
@@ -134,8 +135,6 @@ public class RelatedBuzzwordsIdentifier {
             if(previousNumber == -1) {
                 frequencyMapCorrectNumbers.put(entry.getKey(), numberToSetAsValue);
                 previousNumber = entry.getValue();
-            } else if(previousNumber == entry.getValue()) {
-                frequencyMapCorrectNumbers.put(entry.getKey(), numberToSetAsValue);
             } else {
                 numberToSetAsValue++;
                 frequencyMapCorrectNumbers.put(entry.getKey(), numberToSetAsValue);
@@ -342,7 +341,7 @@ public class RelatedBuzzwordsIdentifier {
 
     private void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words?&serverTimezone=UTC", "root", "");
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words", "root", "Vuurwerk00");
     }
 
     private void closeDbConnection() throws SQLException {
