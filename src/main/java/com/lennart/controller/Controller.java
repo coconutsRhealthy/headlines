@@ -1,9 +1,11 @@
 package com.lennart.controller;
 
 import com.lennart.model.headlinesBigDb.BigDbStorer;
+import com.lennart.model.headlinesBigDb.headlinesBigDbEntertainment.BigDbStorerEntertainment;
 import com.lennart.model.headlinesBigDb.headlinesBigDbFinance.BigDbStorerFinance;
 import com.lennart.model.headlinesBigDb.headlinesBigDbSport.BigDbStorerSport;
 import com.lennart.model.headlinesBuzzDb.BuzzWordsManager;
+import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbEntertainment.BuzzWordsManagerEntertainment;
 import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbFinance.BuzzWordsManagerFinance;
 import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbSport.BuzzWordsManagerSport;
 import com.lennart.model.headlinesFE.BuzzWord;
@@ -62,6 +64,16 @@ public class Controller extends SpringBootServletInitializer {
         new BuzzWordsManagerSport().overallMethodServer("sport_buzzwords_new");
     }
 
+    @RequestMapping(value = "/updateEntertainmentBigDb", method = RequestMethod.GET)
+    private void updateEntertainmentBigDb() throws Exception {
+        new BigDbStorerEntertainment().overallMethodServer("entertainment");
+    }
+
+    @RequestMapping(value = "/updateEntertainmentBuzzDb", method = RequestMethod.GET)
+    private void updateEntertainmentBuzzDb() throws Exception {
+        new BuzzWordsManagerEntertainment().overallMethodServer("entertainment_buzzwords_new");
+    }
+
     @RequestMapping(value = "/getBuzzWords", method = RequestMethod.POST)
     public @ResponseBody List<BuzzWord> sendBuzzWordsToClient(@RequestBody int numberOfHours) throws Exception {
         List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialNewByHeadlineNumber("buzzwords_new", numberOfHours, "home");
@@ -110,6 +122,23 @@ public class Controller extends SpringBootServletInitializer {
 
         List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber
                 ("sport_buzzwords_new", numberOfHours, "sport", numberOfWordsPresentOnSite);
+        return buzzWords;
+    }
+
+    @RequestMapping(value = "/getEntertainmentBuzzWords", method = RequestMethod.POST)
+    public @ResponseBody List<BuzzWord> sendEntertainmentBuzzWordsToClient(@RequestBody int numberOfHours) throws Exception {
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialNewByHeadlineNumber("entertainment_buzzwords_new", numberOfHours, "entertainment");
+        return buzzWords;
+    }
+
+    @RequestMapping(value = "/loadMoreEntertainmentBuzzWords", method = RequestMethod.POST)
+    public @ResponseBody List<BuzzWord> sendMoreEntertainmentBuzzWordsToClient(@RequestBody String combinedData) throws Exception {
+        String[] combinedDataAsArray = combinedData.split(" ---- ");
+        int numberOfHours = Integer.valueOf(combinedDataAsArray[0]);
+        int numberOfWordsPresentOnSite = Integer.valueOf(combinedDataAsArray[1]);
+
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber
+                ("entertainment_buzzwords_new", numberOfHours, "entertainment", numberOfWordsPresentOnSite);
         return buzzWords;
     }
 }

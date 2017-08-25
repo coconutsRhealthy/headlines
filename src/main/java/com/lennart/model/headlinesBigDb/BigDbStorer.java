@@ -92,6 +92,12 @@ public class BigDbStorer {
                 } catch (Exception e) {
 
                 }
+            } else if(page.equals("entertainment")) {
+                try {
+                    TimeUnit.MINUTES.sleep(45);
+                } catch (Exception e) {
+
+                }
             }
 
             //rename current production table to dummy
@@ -151,6 +157,12 @@ public class BigDbStorer {
             } else if(page.equals("sport")) {
                 try {
                     TimeUnit.MINUTES.sleep(23);
+                } catch (Exception e) {
+
+                }
+            } else if(page.equals("entertainment")) {
+                try {
+                    TimeUnit.MINUTES.sleep(8);
                 } catch (Exception e) {
 
                 }

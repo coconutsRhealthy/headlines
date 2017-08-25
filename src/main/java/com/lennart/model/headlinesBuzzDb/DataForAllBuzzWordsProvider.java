@@ -1,6 +1,7 @@
 package com.lennart.model.headlinesBuzzDb;
 
 import com.lennart.model.headlinesBigDb.BigDbStorer;
+import com.lennart.model.headlinesBigDb.headlinesBigDbEntertainment.BigDbStorerEntertainment;
 import com.lennart.model.headlinesBigDb.headlinesBigDbFinance.BigDbStorerFinance;
 import com.lennart.model.headlinesBigDb.headlinesBigDbSport.BigDbStorerSport;
 import com.lennart.model.headlinesFE.BuzzWord;
@@ -66,6 +67,8 @@ public class DataForAllBuzzWordsProvider {
             databaseTableToUse = "finance_buzzwords_new";
         } else if(bigDbStorer instanceof BigDbStorerSport) {
             databaseTableToUse = "sport_buzzwords_new";
+        } else if(bigDbStorer instanceof BigDbStorerEntertainment) {
+            databaseTableToUse = "entertainment_buzzwords_new";
         } else {
             databaseTableToUse = "buzzwords_new";
         }

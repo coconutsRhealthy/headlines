@@ -39,6 +39,18 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
             $scope.headline = "News Buzzwords";
             $scope.showPage = true;
         })
+    } else if(window.location.href.includes("entertainment")) {
+        $http.post('/getEntertainmentBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
+            if(data.length === 21) {
+                data.pop();
+                $scope.showMoreButton = true;
+            } else {
+                $scope.showMoreButton = false;
+            }
+            $scope.buzzWords = data;
+            $scope.headline = "News Buzzwords";
+            $scope.showPage = true;
+        })
     } else {
         $http.post('/getBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
             if(data.length === 21) {
@@ -69,6 +81,17 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
             })
         } else if(window.location.href.includes("sport")) {
             $http.post('/getSportBuzzWords', numberOfHours).success(function(data) {
+                if(data.length === 21) {
+                    data.pop();
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
+                $scope.buzzWords = data;
+                $scope.numberOfHoursToShow = numberOfHours;
+            })
+        } else if(window.location.href.includes("entertainment")) {
+            $http.post('/getEntertainmentBuzzWords', numberOfHours).success(function(data) {
                 if(data.length === 21) {
                     data.pop();
                     $scope.showMoreButton = true;
@@ -142,6 +165,17 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
             })
         } else if(currentUrl.includes("sport")) {
             $http.post('/loadMoreSportBuzzWords', combinedDataToSend).success(function(data) {
+                data.pop();
+                if(data.length % 20 === 0) {
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
+
+                $scope.buzzWords = data;
+            })
+        } else if(true) {
+            $http.post('/loadMoreEntertainmentBuzzWords', combinedDataToSend).success(function(data) {
                 data.pop();
                 if(data.length % 20 === 0) {
                     $scope.showMoreButton = true;

@@ -97,4 +97,36 @@ mainApp.controller('backendDbController', function($scope, $http) {
             })
         }
     }
+
+    $scope.updateEntertainmentBigDb = function() {
+        alert("Starting entertainment big db update");
+
+        var currentUrl = window.location.href;
+
+        if(currentUrl.includes("www.")) {
+            $http.get('http://www.newsbuzzwords.com/updateEntertainmentBigDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        } else {
+            $http.get('http://newsbuzzwords.com/updateEntertainmentBigDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        }
+    }
+
+    $scope.updateEntertainmentBuzzDb = function() {
+        alert("Starting entertainment buzz db update");
+
+        var currentUrl = window.location.href;
+
+        if(currentUrl.includes("www.")) {
+            $http.get('http://www.newsbuzzwords.com/updateEntertainmentBuzzDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        } else {
+            $http.get('http://newsbuzzwords.com/updateEntertainmentBuzzDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        }
+    }
 });
