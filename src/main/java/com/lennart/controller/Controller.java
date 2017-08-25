@@ -71,10 +71,11 @@ public class Controller extends SpringBootServletInitializer {
     @RequestMapping(value = "/loadMoreBuzzWords", method = RequestMethod.POST)
     public @ResponseBody List<BuzzWord> sendMoreBuzzWordsToClient(@RequestBody String combinedData) throws Exception {
         String[] combinedDataAsArray = combinedData.split(" ---- ");
-        String lastWord = combinedDataAsArray[0];
-        int numberOfHours = Integer.valueOf(combinedDataAsArray[1]);
+        int numberOfHours = Integer.valueOf(combinedDataAsArray[0]);
+        int numberOfWordsPresentOnSite = Integer.valueOf(combinedDataAsArray[1]);
 
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber("buzzwords_new", lastWord, numberOfHours, "home");
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber
+                ("buzzwords_new", numberOfHours, "home", numberOfWordsPresentOnSite);
         return buzzWords;
     }
 
@@ -87,10 +88,11 @@ public class Controller extends SpringBootServletInitializer {
     @RequestMapping(value = "/loadMoreFinanceBuzzWords", method = RequestMethod.POST)
     public @ResponseBody List<BuzzWord> sendMoreFinanceBuzzWordsToClient(@RequestBody String combinedData) throws Exception {
         String[] combinedDataAsArray = combinedData.split(" ---- ");
-        String lastWord = combinedDataAsArray[0];
-        int numberOfHours = Integer.valueOf(combinedDataAsArray[1]);
+        int numberOfHours = Integer.valueOf(combinedDataAsArray[0]);
+        int numberOfWordsPresentOnSite = Integer.valueOf(combinedDataAsArray[1]);
 
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber("finance_buzzwords_new", lastWord, numberOfHours, "finance");
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber
+                ("finance_buzzwords_new", numberOfHours, "finance", numberOfWordsPresentOnSite);
         return buzzWords;
     }
 
@@ -103,10 +105,11 @@ public class Controller extends SpringBootServletInitializer {
     @RequestMapping(value = "/loadMoreSportBuzzWords", method = RequestMethod.POST)
     public @ResponseBody List<BuzzWord> sendMoreSportBuzzWordsToClient(@RequestBody String combinedData) throws Exception {
         String[] combinedDataAsArray = combinedData.split(" ---- ");
-        String lastWord = combinedDataAsArray[0];
-        int numberOfHours = Integer.valueOf(combinedDataAsArray[1]);
+        int numberOfHours = Integer.valueOf(combinedDataAsArray[0]);
+        int numberOfWordsPresentOnSite = Integer.valueOf(combinedDataAsArray[1]);
 
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber("sport_buzzwords_new", lastWord, numberOfHours, "sport");
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber
+                ("sport_buzzwords_new", numberOfHours, "sport", numberOfWordsPresentOnSite);
         return buzzWords;
     }
 }

@@ -4,7 +4,6 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
 
     $scope.buzzWords;
     $scope.words = [];
-    $scope.lastBuzzWord;
     $scope.headline;
     $scope.showMoreButton = false;
     $scope.showPage = false;
@@ -126,51 +125,42 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     }
 
     $scope.loadMoreBuzzWords = function() {
-        var sizeBuzzWords = $scope.buzzWords.length - 1;
-        $scope.lastBuzzWord = $scope.buzzWords[sizeBuzzWords].word;
-
         var currentUrl = window.location.href;
 
-        var combinedDataToSend = $scope.lastBuzzWord + " ---- " + $scope.numberOfHoursToShow;
+        var combinedDataToSend = $scope.numberOfHoursToShow + " ---- " + $scope.buzzWords.length;
 
         if(currentUrl.includes("finance")) {
             $http.post('/loadMoreFinanceBuzzWords', combinedDataToSend).success(function(data) {
-                if(data.length === 21) {
-                    data.pop();
+                data.pop();
+                if(data.length % 20 === 0) {
                     $scope.showMoreButton = true;
                 } else {
                     $scope.showMoreButton = false;
                 }
 
-                for(var i = 0; i < data.length; i++) {
-                    $scope.buzzWords.push(data[i]);
-                }
+                $scope.buzzWords = data;
             })
         } else if(currentUrl.includes("sport")) {
             $http.post('/loadMoreSportBuzzWords', combinedDataToSend).success(function(data) {
-                if(data.length === 21) {
-                    data.pop();
+                data.pop();
+                if(data.length % 20 === 0) {
                     $scope.showMoreButton = true;
                 } else {
                     $scope.showMoreButton = false;
                 }
 
-                for(var i = 0; i < data.length; i++) {
-                    $scope.buzzWords.push(data[i]);
-                }
+                $scope.buzzWords = data;
             })
         } else {
             $http.post('/loadMoreBuzzWords', combinedDataToSend).success(function(data) {
-                if(data.length === 21) {
-                    data.pop();
+                data.pop();
+                if(data.length % 20 === 0) {
                     $scope.showMoreButton = true;
                 } else {
                     $scope.showMoreButton = false;
                 }
 
-                for(var i = 0; i < data.length; i++) {
-                    $scope.buzzWords.push(data[i]);
-                }
+                $scope.buzzWords = data;
             })
         }
     }
@@ -218,34 +208,16 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
 
         switch(group) {
             case 1:
-                stringToReturn = "color:rgb(128, 128, 225)";
-                break;
-            case 2:
-                stringToReturn = "color:rgb(225, 128, 64)";
-                break;
-            case 3:
                 stringToReturn = "color:rgb(0, 0, 128)";
                 break;
+            case 2:
+                stringToReturn = "color:rgb(174, 174, 255)";
+                break;
+            case 3:
+                stringToReturn = "color:rgb(255, 183, 183)";
+                break;
             case 4:
-                stringToReturn = "color:rgb(255, 128, 192)";
-                break;
-            case 5:
-                stringToReturn = "color:rgb(128, 128, 128)";
-                break;
-            case 6:
-                stringToReturn = "color:rgb(255, 255, 0)";
-                break;
-            case 7:
-                stringToReturn = "color:rgb(255, 0, 128)";
-                break;
-            case 8:
-                stringToReturn = "color:rgb(225, 0, 0)";
-                break;
-            case 9:
-                stringToReturn = "color:rgb(64, 0, 0)";
-                break;
-            case 10:
-                stringToReturn = "color:rgb(128, 128, 64)";
+                stringToReturn = "color:rgb(151, 151, 0)";
                 break;
             default:
                 stringToReturn = "color:rgb(255, 255, 255)";
@@ -263,6 +235,8 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
                 $scope.orderType = "word";
             } else if(type === "headlines.length") {
                 $scope.orderType = "-headlines.length";
+            } else if(type === "group") {
+                $scope.orderType = "group";
             }
         } else {
             if($scope.orderType.indexOf("-") === -1) {

@@ -34,6 +34,12 @@ public class BuzzWordsManager {
             } catch (Exception q) {
 
             }
+
+            try {
+                new RelatedBuzzwordsIdentifier().updateGroupsInDb(database);
+            } catch (Exception e) {
+
+            }
         }
     }
 

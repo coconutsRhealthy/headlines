@@ -30,7 +30,7 @@ div.col-xs-1 {
 }
 
 div.col-xs-2 {
-    width: 176px;
+    width: 188px;
 }
 
 a.col-xs-1 {
@@ -38,18 +38,18 @@ a.col-xs-1 {
 }
 
 a.col-xs-2 {
-    width: 176px;
+    width: 188px;
 }
 
 a.col-xs-3 {
-    width: 1px;
+    width: 60px;
     padding-left: 4px;
     padding-right: 4px;
 }
 
 
 div.col-xs-3 {
-    width: 1px;
+    width: 60px;
     padding-left: 4px;
     padding-right: 4px;
 }
@@ -70,6 +70,11 @@ div.col-xs-12 {
 }
 
 #firstRow3 {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#firstRowXx {
     padding-top: 20px;
     padding-bottom: 10px;
 }
