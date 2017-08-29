@@ -11,11 +11,6 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class TweetMachine {
 
-    public static void main(String[] args) {
-        TweetMachine tweetMachine = new TweetMachine();
-        tweetMachine.postTweet();
-    }
-
     public void postTweet() {
 
         String consumerKey = "i9Rkxihee7YFLhBbBdIyvIrdA";

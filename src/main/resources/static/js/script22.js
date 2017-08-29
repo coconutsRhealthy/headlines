@@ -174,7 +174,7 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
 
                 $scope.buzzWords = data;
             })
-        } else if(true) {
+        } else if(currentUrl.includes("entertainment")) {
             $http.post('/loadMoreEntertainmentBuzzWords', combinedDataToSend).success(function(data) {
                 data.pop();
                 if(data.length % 20 === 0) {
