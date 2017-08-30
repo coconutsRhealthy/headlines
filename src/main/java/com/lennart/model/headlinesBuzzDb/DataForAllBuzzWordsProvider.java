@@ -29,9 +29,22 @@ public class DataForAllBuzzWordsProvider {
                     headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord, bigDbStorer);
                     headLinesForWord = removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(headLinesForWord, bigDbStorer);
 
-                    dataForBuzzword.put("rawHeadlines", headLinesForWord);
-
                     if(headLinesForWord.size() >= 3) {
+
+                        if(headLinesForWord.size() < dataForBuzzword.get("rawHeadlines").size()) {
+                            List<Integer> removedIndices = getIndicesThatHaveBeenRemovedFromList
+                                    (dataForBuzzword.get("rawHeadlines"), headLinesForWord);
+
+                            List<String> hrefsForWord = removeIndicesFromList(removedIndices, dataForBuzzword.get("hrefs"));
+                            List<String> correctedHeadlinesForWord =
+                                    removeIndicesFromList(removedIndices, dataForBuzzword.get("correctedHeadlines"));
+
+                            dataForBuzzword.put("hrefs", hrefsForWord);
+                            dataForBuzzword.put("correctedHeadlines", correctedHeadlinesForWord);
+                        }
+
+                        dataForBuzzword.put("rawHeadlines", headLinesForWord);
+
                         dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
                     }
                 }
@@ -40,6 +53,24 @@ public class DataForAllBuzzWordsProvider {
             }
         }
         return dataForAllBuzzWords;
+    }
+
+    private List<Integer> getIndicesThatHaveBeenRemovedFromList(List<String> oldList, List<String> newList) {
+        List<Integer> removedIndices = new ArrayList<>();
+
+        for(int i = 0; i < oldList.size(); i++) {
+            if(!newList.contains(oldList.get(i))) {
+                removedIndices.add(i);
+            }
+        }
+        return removedIndices;
+    }
+
+    private List<String> removeIndicesFromList(List<Integer> indicesToRemove, List<String> list) {
+        for(int i : indicesToRemove) {
+            list.remove(i);
+        }
+        return list;
     }
 
     private List<String> removeHeadlinesThatWerePresentInPreviousIteration(List<String> headLinesForWord, BigDbStorer bigDbStorer) throws Exception {
