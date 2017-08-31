@@ -380,6 +380,7 @@ public class RetrieveBuzzwords {
                     if(site != null && site.contains("/")) {
                         site = link.split("\\.")[0];
                         site = site.replaceAll("http://", "");
+                        site = site.replaceAll("https://", "");
                     }
                     newsSites.add(site);
                 }
