@@ -1,10 +1,11 @@
 package com.lennart.model.twitter;
 
-import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+
+import java.util.List;
 
 /**
  * Created by LennartMac on 29/08/2017.
@@ -40,4 +41,16 @@ public class TweetMachine {
         }
     }
 
+    private String getTweetText(String word, List<String> headlines) {
+        String tweet = "Buzzword: " + word + "\n" + "Sample headline: " + getShortestHeadlineForBuzzword(headlines) + "\n" + "More at newsbuzzwords.com" + "\n" + getHashTags();
+        return tweet;
+    }
+
+    private String getShortestHeadlineForBuzzword(List<String> headlines) {
+        return "Wayne Rooney charged with drink-driving";
+    }
+
+    private String getHashTags() {
+        return "#wait #are #these #good #hashtags";
+    }
 }
