@@ -23,11 +23,6 @@ public class TweetMachine {
         }
     }
 
-    private List<BuzzWord> getBuzzwordsToBeTweeted() throws Exception {
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialNewByHeadlineNumber("buzzwords_new", 5, "home");
-        return buzzWords;
-    }
-
     private void postTweet(String tweetText) {
         String consumerKey = "i9Rkxihee7YFLhBbBdIyvIrdA";
         String consumerSecret = "EHhxP4TSE81G4Dn15uaHcPQOE2fOrTLFsppz1PIrliplR3WqYU";
@@ -51,8 +46,8 @@ public class TweetMachine {
     }
 
     private String getTweetText(String word, List<String> headlines) {
-        String tweetWithoutHashTags = "Buzzword: " + word + "\n" + "Sample headline: " + getHeadlineForBuzzword(headlines, word) + "\n" + "More at newsbuzzwords.com" + "\n";
-        String tweet =  tweetWithoutHashTags + getHashTags(word, headlines, 140 - tweetWithoutHashTags.length());
+        String tweetWithoutHashTags = "Buzzword: " + word + "\n" + "\"" + getHeadlineForBuzzword(headlines, word) + "\"" + "\n" + "More at newsbuzzwords.com" + "\n";
+        String tweet =  tweetWithoutHashTags + getHashTags(word, headlines, 134 - tweetWithoutHashTags.length());
         return tweet;
     }
 
@@ -61,11 +56,17 @@ public class TweetMachine {
 
         for(String headline : headlines) {
             String correctedHeadline = convertHeadlineToCorrectedFormat(headline);
-            correctedHeadline = correctedHeadline.substring(0, 37);
+
+            if(correctedHeadline.length() >= 52) {
+                correctedHeadline = correctedHeadline.substring(0, 52);
+            }
+
             correctedHeadline = correctedHeadline + "...";
 
             if(correctedHeadline.contains(buzzWord)) {
-                headlineToReturn = headline.substring(0, 37);
+                if(headline.length() >= 52) {
+                    headlineToReturn = headline.substring(0, 52);
+                }
                 headlineToReturn = headlineToReturn + "...";
                 break;
             }
@@ -73,7 +74,9 @@ public class TweetMachine {
 
         if(headlineToReturn.equals("No sample headline Identified")) {
             String lastResortHeadlineToReturn = convertHeadlineToCorrectedFormat(headlines.get(0));
-            lastResortHeadlineToReturn = lastResortHeadlineToReturn.substring(0, 37);
+            if(lastResortHeadlineToReturn.length() >= 52) {
+                lastResortHeadlineToReturn = lastResortHeadlineToReturn.substring(0, 52);
+            }
             lastResortHeadlineToReturn = lastResortHeadlineToReturn + "...";
             headlineToReturn = lastResortHeadlineToReturn;
         }
