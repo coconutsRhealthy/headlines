@@ -1,5 +1,6 @@
 package com.lennart.model.headlinesBuzzDb;
 
+import com.lennart.model.twitter.TweetMachine;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.sql.*;
@@ -44,6 +45,10 @@ public class StoreBuzzwords {
             if(!isWordInDatabase(database, entry.getKey())) {
                 if(!earlierWordsWithSame3Headlines(database, headlinesForWord)) {
                     addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
+
+                    if(database.equals("buzzwords_new")) {
+                        postTweet(entry.getKey(), headlinesForWord);
+                    }
                 }
             } else {
                 for(int i = 0; i < linksForWord.size(); i++) {
@@ -58,6 +63,14 @@ public class StoreBuzzwords {
             }
         }
         closeDbConnection();
+    }
+
+    private void postTweet(String buzzWord, List<String> headlines) {
+        try {
+            new TweetMachine().postTweetForNewBuzzword(buzzWord, headlines);
+        } catch (Exception e) {
+
+        }
     }
 
     public void storeBuzzwordsInDeclinedDb(String wordAndHeadline) throws Exception {

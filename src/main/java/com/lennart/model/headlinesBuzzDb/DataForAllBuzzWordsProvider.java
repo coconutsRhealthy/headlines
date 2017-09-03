@@ -188,7 +188,7 @@ public class DataForAllBuzzWordsProvider {
         dataTotalForWord.put("hrefs", hrefsForWord);
 
         //dan doe je de woord analyse
-        Map<String, Integer> wordsRankedByOccurenceTwoOrMore = getWordsRankedByOccurrence(correctedHeadlinesForWord, word);
+        Map<String, Integer> wordsRankedByOccurenceTwoOrMore = getWordsRankedByOccurrence(correctedHeadlinesForWord, word, 2);
 
         //dan verwijder je uit alle gegevens op basis van de woordanalyse de niet relevante entries
         dataTotalForWord = getRelevantEntries(dataTotalForWord, wordsRankedByOccurenceTwoOrMore);
@@ -233,7 +233,8 @@ public class DataForAllBuzzWordsProvider {
         return dataTotalForWord;
     }
 
-    private Map<String, Integer> getWordsRankedByOccurrence(List<String> correctedHeadlinesForWord, String word) {
+    public Map<String, Integer> getWordsRankedByOccurrence(List<String> correctedHeadlinesForWord, String word,
+                                                           int amountRestriction) {
         List<Set<String>> wordSetsPerHeadline = new ArrayList<>();
 
         for(int i = 0; i < correctedHeadlinesForWord.size(); i++) {
@@ -261,7 +262,7 @@ public class DataForAllBuzzWordsProvider {
         }
 
         for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceAll.entrySet()) {
-            if(entry.getValue() > 2) {
+            if(entry.getValue() > amountRestriction) {
                 wordsRankedByOccurenceTwoOrMore.put(entry.getKey(), entry.getValue());
             }
         }
