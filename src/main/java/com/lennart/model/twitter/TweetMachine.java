@@ -16,10 +16,12 @@ import java.util.*;
 public class TweetMachine {
 
     public void postTweetForNewBuzzword(String word, List<String> headlines) {
-        String tweetText = getTweetText(word, headlines);
+        if(!word.matches("[0-9]+")) {
+            String tweetText = getTweetText(word, headlines);
 
-        if(tweetText != null && tweetText.length() > 80) {
-            postTweet(tweetText);
+            if(tweetText != null && tweetText.length() > 80) {
+                postTweet(tweetText);
+            }
         }
     }
 
@@ -47,7 +49,7 @@ public class TweetMachine {
 
     private String getTweetText(String word, List<String> headlines) {
         String tweetWithoutHashTags = "Buzzword: " + word + "\n" + "\"" + getHeadlineForBuzzword(headlines, word) + "\"" + "\n" + "More at newsbuzzwords.com" + "\n";
-        String tweet =  tweetWithoutHashTags + getHashTags(word, headlines, 134 - tweetWithoutHashTags.length());
+        String tweet = tweetWithoutHashTags + getHashTags(word, headlines, 134 - tweetWithoutHashTags.length());
         return tweet;
     }
 
@@ -59,15 +61,16 @@ public class TweetMachine {
 
             if(correctedHeadline.length() >= 52) {
                 correctedHeadline = correctedHeadline.substring(0, 52);
+                correctedHeadline = correctedHeadline + "...";
             }
-
-            correctedHeadline = correctedHeadline + "...";
 
             if(correctedHeadline.contains(buzzWord)) {
                 if(headline.length() >= 52) {
                     headlineToReturn = headline.substring(0, 52);
+                    headlineToReturn = headlineToReturn + "...";
+                } else {
+                    headlineToReturn = headline;
                 }
-                headlineToReturn = headlineToReturn + "...";
                 break;
             }
         }
@@ -76,8 +79,9 @@ public class TweetMachine {
             String lastResortHeadlineToReturn = convertHeadlineToCorrectedFormat(headlines.get(0));
             if(lastResortHeadlineToReturn.length() >= 52) {
                 lastResortHeadlineToReturn = lastResortHeadlineToReturn.substring(0, 52);
+                lastResortHeadlineToReturn = lastResortHeadlineToReturn + "...";
             }
-            lastResortHeadlineToReturn = lastResortHeadlineToReturn + "...";
+
             headlineToReturn = lastResortHeadlineToReturn;
         }
 
@@ -91,7 +95,9 @@ public class TweetMachine {
             String buzzwordHashtag = "#" + buzzword + " ";
 
             if(buzzwordHashtag.length() < numberOfCharactersRemaining) {
-                hashTags.append(buzzwordHashtag);
+                if(!buzzwordHashtag.matches("[0-9]+")) {
+                    hashTags.append(buzzwordHashtag);
+                }
             }
 
             if(hashTags.length() < numberOfCharactersRemaining) {
@@ -106,7 +112,9 @@ public class TweetMachine {
                     String hashTagsTryOutTotal = hashTags.toString() + hashTagToAdd;
 
                     if(hashTagsTryOutTotal.length() < numberOfCharactersRemaining) {
-                        hashTags.append(hashTagToAdd);
+                        if(!buzzwordHashtag.matches("[0-9]+")) {
+                            hashTags.append(hashTagToAdd);
+                        }
                     }
                 }
             }
