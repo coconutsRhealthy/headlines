@@ -1,8 +1,6 @@
 package com.lennart.model.twitter;
 
 import com.lennart.model.headlinesBuzzDb.DataForAllBuzzWordsProvider;
-import com.lennart.model.headlinesFE.BuzzWord;
-import com.lennart.model.headlinesFE.RetrieveBuzzwords;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -17,9 +15,9 @@ public class TweetMachine {
 
     public void postTweetForNewBuzzword(String word, List<String> headlines) {
         if(!word.matches("[0-9]+")) {
-            String tweetText = getTweetText(word, headlines);
+            String tweetText = getTweetTextNew(word, headlines);
 
-            if(tweetText != null && tweetText.length() > 80) {
+            if(tweetText != null && tweetText.length() > 50 && tweetText.length() < 135) {
                 postTweet(tweetText);
             }
         }
@@ -47,85 +45,124 @@ public class TweetMachine {
         }
     }
 
-    private String getTweetText(String word, List<String> headlines) {
-        String tweetWithoutHashTags = "Buzzword: " + word + "\n" + "\"" + getHeadlineForBuzzword(headlines, word) + "\"" + "\n" + "More at newsbuzzwords.com" + "\n";
-        String tweet = tweetWithoutHashTags + getHashTags(word, headlines, 134 - tweetWithoutHashTags.length());
-        return tweet;
+    public String getTweetTextNew(String word, List<String> headlines) {
+        String tweetText = getHeadlineToUse(headlines, word) + "\n" + "\n" + "Buzzword: " + word + "\n" + "\n" +
+                "newsbuzzwords.com";
+
+        return tweetText;
     }
 
-    private String getHeadlineForBuzzword(List<String> headlines, String buzzWord) {
-        String headlineToReturn = "No sample headline Identified";
+    private String getHeadlineToUse(List<String> headlines, String buzzWord) {
+        List<String> headlinesToChooseFrom = getHeadlinesBetween40and76Chars(headlines);
+        headlinesToChooseFrom = getHeadlinesThatContainBuzzword(headlinesToChooseFrom, buzzWord);
+
+        String headlineToUse;
+
+        if(!headlinesToChooseFrom.isEmpty()) {
+            headlineToUse = getHeadlineWithBestHashTagWords(headlines, headlinesToChooseFrom, buzzWord);
+        } else {
+            headlineToUse = getHeadlineWithBestHashTagWords(headlines, headlines, buzzWord);
+        }
+
+        return headlineToUse;
+    }
+
+    private List<String> getHeadlinesBetween40and76Chars(List<String> headlines) {
+        List<String> headlinesBetween40and76Chars = new ArrayList<>();
 
         for(String headline : headlines) {
-            String correctedHeadline = convertHeadlineToCorrectedFormat(headline);
-
-            if(correctedHeadline.length() >= 52) {
-                correctedHeadline = correctedHeadline.substring(0, 52);
-                correctedHeadline = correctedHeadline + "...";
-            }
-
-            if(correctedHeadline.contains(buzzWord)) {
-                if(headline.length() >= 52) {
-                    headlineToReturn = headline.substring(0, 52);
-                    headlineToReturn = headlineToReturn + "...";
-                } else {
-                    headlineToReturn = headline;
-                }
-                break;
+            if(headline.length() >= 40 && headline.length() <= 76) {
+                headlinesBetween40and76Chars.add(headline);
             }
         }
-
-        if(headlineToReturn.equals("No sample headline Identified")) {
-            String lastResortHeadlineToReturn = convertHeadlineToCorrectedFormat(headlines.get(0));
-            if(lastResortHeadlineToReturn.length() >= 52) {
-                lastResortHeadlineToReturn = lastResortHeadlineToReturn.substring(0, 52);
-                lastResortHeadlineToReturn = lastResortHeadlineToReturn + "...";
-            }
-
-            headlineToReturn = lastResortHeadlineToReturn;
-        }
-
-        return headlineToReturn;
+        return headlinesBetween40and76Chars;
     }
 
-    private String getHashTags(String buzzword, List<String> headlines, int numberOfCharactersRemaining) {
-        StringBuilder hashTags = new StringBuilder();
+    private List<String> getHeadlinesThatContainBuzzword(List<String> headlines, String buzzWord) {
+        List<String> headlinesToReturn = new ArrayList<>();
+        headlines = convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
 
-        if(numberOfCharactersRemaining > 0) {
-            String buzzwordHashtag = "#" + buzzword + " ";
-
-            if(buzzwordHashtag.length() < numberOfCharactersRemaining) {
-                if(!buzzwordHashtag.matches("[0-9]+")) {
-                    hashTags.append(buzzwordHashtag);
-                }
-            }
-
-            if(hashTags.length() < numberOfCharactersRemaining) {
-                List<String> frequencyWordsFromHeadlines = getWordsSortedByFrequencyFromHeadlines(headlines, buzzword);
-
-                for(String frequencyWord : frequencyWordsFromHeadlines) {
-                    if(hashTags.length() >= numberOfCharactersRemaining) {
-                        break;
-                    }
-
-                    String hashTagToAdd = "#" + frequencyWord + " ";
-                    String hashTagsTryOutTotal = hashTags.toString() + hashTagToAdd;
-
-                    if(hashTagsTryOutTotal.length() < numberOfCharactersRemaining) {
-                        if(!buzzwordHashtag.matches("[0-9]+")) {
-                            hashTags.append(hashTagToAdd);
-                        }
-                    }
-                }
+        for(String headline : headlines) {
+            if(headline.contains(buzzWord)) {
+                headlinesToReturn.add(headline);
             }
         }
-        return hashTags.toString();
+        return headlinesToReturn;
     }
 
-    private String convertHeadlineToCorrectedFormat(String rawHeadline) {
-        String correctedHeadline = rawHeadline.toLowerCase();
-        correctedHeadline = correctedHeadline.replaceAll("[^A-Za-z0-9 ]", "");
-        return correctedHeadline;
+    private String getHeadlineWithBestHashTagWords(List<String> baseHeadlines, List<String> headlinesToChooseFrom,
+                                                   String buzzWord) {
+        List<String> wordsSortedByFrequencyFromHeadlines = getWordsSortedByFrequencyFromHeadlines(baseHeadlines, buzzWord);
+        wordsSortedByFrequencyFromHeadlines = clearNumbersFromHashTagWords(wordsSortedByFrequencyFromHeadlines);
+
+        headlinesToChooseFrom = convertHeadlinesToNonSpecialCharactersAndLowerCase(headlinesToChooseFrom);
+
+        String headlineWithBestHashTags = getHeadlineWhereYouCanPutMostHashTags(headlinesToChooseFrom,
+                wordsSortedByFrequencyFromHeadlines);
+
+        headlineWithBestHashTags = putHashTagsInHeadline(headlineWithBestHashTags, wordsSortedByFrequencyFromHeadlines, buzzWord);
+
+        return headlineWithBestHashTags;
+
+    }
+
+    private String getHeadlineWhereYouCanPutMostHashTags(List<String> headlines, List<String> hashTagWords) {
+        Map<String, Integer> numberOfHashTagsPerHeadline = new HashMap<>();
+
+        for(String headline : headlines) {
+            int counter = 0;
+
+            for(String hashTagWord : hashTagWords) {
+                if(headline.contains(hashTagWord)) {
+                    counter++;
+                }
+            }
+            numberOfHashTagsPerHeadline.put(headline, counter);
+        }
+
+        numberOfHashTagsPerHeadline = sortByValueHighToLow(numberOfHashTagsPerHeadline);
+
+        Map.Entry<String,Integer> entry = numberOfHashTagsPerHeadline.entrySet().iterator().next();
+
+        return entry.getKey();
+    }
+
+    private String putHashTagsInHeadline(String headline, List<String> hashTagWords, String buzzWord) {
+        if(hashTagWords.size() > 4) {
+            hashTagWords = hashTagWords.subList(0, 4);
+        }
+
+        for(String hashTagWord : hashTagWords) {
+            headline = headline.replaceFirst(hashTagWord, "#" + hashTagWord);
+        }
+
+        headline = headline.replaceFirst(buzzWord, "#" + buzzWord);
+
+        headline = doCorrectionStringReplacements(headline);
+
+        return headline;
+    }
+
+    private String doCorrectionStringReplacements(String headline) {
+        headline = headline.replaceAll("##", "#");
+        headline = headline.replaceAll("#", " #");
+        headline = headline.replaceAll("  ", " ");
+
+        if(headline.charAt(0) == ' ') {
+            headline = headline.substring(1, headline.length());
+        }
+        return headline;
+    }
+
+    private List<String> clearNumbersFromHashTagWords(List<String> hashTagWords) {
+        List<String> hashTagWordsToReturn = new ArrayList<>();
+
+        for(String hashTagWord : hashTagWords) {
+            if(!hashTagWord.matches("[0-9]+")) {
+                hashTagWordsToReturn.add(hashTagWord);
+            }
+        }
+        return hashTagWordsToReturn;
     }
 
     private List<String> convertHeadlinesToNonSpecialCharactersAndLowerCase(List<String> headlinesRaw) {
@@ -140,10 +177,6 @@ public class TweetMachine {
     }
 
     private List<String> getWordsSortedByFrequencyFromHeadlines(List<String> headlines, String buzzword) {
-        if(buzzword.equals("condemnation")) {
-            System.out.println("wacht");
-        }
-
         List<String> wordsSortedByFrequency = new ArrayList<>();
 
         List<String> correctFormatHeadlines = convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
