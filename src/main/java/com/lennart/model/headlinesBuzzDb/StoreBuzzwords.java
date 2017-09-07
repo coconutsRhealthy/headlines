@@ -46,9 +46,9 @@ public class StoreBuzzwords {
                 if(!earlierWordsWithSame3Headlines(database, headlinesForWord)) {
                     addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
 
-//                    if(database.equals("buzzwords_new")) {
-//                        postTweet(entry.getKey(), headlinesForWord);
-//                    }
+                    if(database.equals("buzzwords_new")) {
+                        postTweet(entry.getKey(), headlinesForWord);
+                    }
                 }
             } else {
                 for(int i = 0; i < linksForWord.size(); i++) {
