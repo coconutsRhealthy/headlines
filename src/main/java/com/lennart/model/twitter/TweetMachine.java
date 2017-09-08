@@ -21,19 +21,6 @@ public class TweetMachine {
 
     private Connection con;
 
-
-    public static void main(String[] args) throws Exception {
-        List<String> headlines = new ArrayList<>();
-        headlines.add("Ik loop al tijden over straat");
-        headlines.add("Wij fietsen samen naar school");
-        headlines.add("Gisteren ging ik voetballen in de tuin");
-
-        TweetMachine tweetMachine = new TweetMachine();
-        tweetMachine.postTweetForNewBuzzword("nears", headlines);
-    }
-
-
-
     public void postTweetForNewBuzzword(String word, List<String> headlines) throws Exception {
         if(wordIsFromNewGroup("buzzwords_new", word)) {
             if(!word.matches("[0-9]+")) {
