@@ -21,12 +21,28 @@ public class TweetMachine {
 
     private Connection con;
 
-    public void postTweetForNewBuzzword(String word, List<String> headlines) throws Exception {
-        if(!word.matches("[0-9]+")) {
-            String tweetText = getTweetText(word, headlines);
 
-            if(tweetText != null && tweetText.length() > 50 && tweetText.length() < 135) {
-                postTweet(tweetText);
+    public static void main(String[] args) throws Exception {
+        List<String> headlines = new ArrayList<>();
+        headlines.add("Ik loop al tijden over straat");
+        headlines.add("Wij fietsen samen naar school");
+        headlines.add("Gisteren ging ik voetballen in de tuin");
+
+        TweetMachine tweetMachine = new TweetMachine();
+        tweetMachine.postTweetForNewBuzzword("nears", headlines);
+    }
+
+
+
+    public void postTweetForNewBuzzword(String word, List<String> headlines) throws Exception {
+        if(wordIsFromNewGroup("buzzwords_new", word)) {
+            if(!word.matches("[0-9]+")) {
+                String tweetText = getTweetText(word, headlines);
+
+                if(tweetText != null && tweetText.length() > 50 && tweetText.length() < 135) {
+                    postTweet(tweetText);
+                    addWordToTweetedWordsDb(word);
+                }
             }
         }
 
@@ -55,6 +71,82 @@ public class TweetMachine {
         }
     }
 
+    private boolean wordIsFromNewGroup(String database, String buzzWord) throws Exception {
+        boolean wordIsFromNewGroup = false;
+        int groupOfNewBuzzWord = getGroupOfWord(database, buzzWord);
+
+        if(groupOfNewBuzzWord == 0) {
+            wordIsFromNewGroup = true;
+        } else {
+            List<Integer> groupsOfWordsAlreadyTweeted = getGroupsOfWordsAlreadyTweeted(database);
+
+            if(!groupsOfWordsAlreadyTweeted.contains(groupOfNewBuzzWord)) {
+                wordIsFromNewGroup = true;
+            }
+        }
+
+        return wordIsFromNewGroup;
+    }
+
+    private List<Integer> getGroupsOfWordsAlreadyTweeted(String database) throws Exception {
+        List<Integer> groupsOfWordsAlreadyTweeted = new ArrayList<>();
+        List<String> wordsAlreadyTweeted = getWordsAlreadyTweeted();
+
+        for(String word : wordsAlreadyTweeted) {
+            groupsOfWordsAlreadyTweeted.add(getGroupOfWord(database, word));
+        }
+        return groupsOfWordsAlreadyTweeted;
+    }
+
+
+    private List<String> getWordsAlreadyTweeted() throws Exception {
+        List<String> wordsAlreadyTweeted = new ArrayList<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM tweet_words");
+
+        while(rs.next()) {
+            wordsAlreadyTweeted.add(rs.getString("word"));
+        }
+
+        rs.close();
+        st.close();
+        closeDbConnection();
+
+        return wordsAlreadyTweeted;
+    }
+
+    private int getGroupOfWord(String database, String word) throws Exception {
+        int groupOfWord;
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE word = '" + word + "';");
+
+        rs.next();
+
+        groupOfWord = rs.getInt("group_number");
+
+        rs.close();
+        st.close();
+        closeDbConnection();
+
+        return groupOfWord;
+    }
+
+    private void addWordToTweetedWordsDb(String word) throws Exception {
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        st.executeUpdate("INSERT INTO tweet_words (date, word) VALUES ('" + getCurrentDateTime() + "', '" + word + "')");
+        st.close();
+
+        closeDbConnection();
+    }
+
     private String getTweetText(String word, List<String> headlines) throws Exception {
         String headlineToUse = getHeadlineToUse(headlines, word);
         String tweetText;
@@ -69,7 +161,6 @@ public class TweetMachine {
 
     private String getHeadlineToUse(List<String> headlines, String buzzWord) throws Exception {
         headlines = convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
-        headlines = removeHeadlinesThatWereAlreadyUsedInTweets(headlines);
 
         String headlineToUse = "";
 
@@ -86,52 +177,7 @@ public class TweetMachine {
         return headlineToUse;
     }
 
-    private List<String> removeHeadlinesThatWereAlreadyUsedInTweets(List<String> headlines) throws Exception {
-        List<String> headlinesAlreadyUsed = getHeadlinesThatWereAlreadyUsedInTweetsFromDb();
-
-        List<String> headlinesToRemove = new ArrayList<>();
-
-        for(String headline : headlines) {
-            if(headlinesAlreadyUsed.contains(headline)) {
-                headlinesToRemove.add(headline);
-            }
-        }
-
-        headlines.removeAll(headlinesToRemove);
-
-        return headlines;
-    }
-
-    private List<String> getHeadlinesThatWereAlreadyUsedInTweetsFromDb() throws Exception {
-        List<String> headlinesAlreadyUsed = new ArrayList<>();
-
-        initializeDbConnection();
-
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM tweet_headlines");
-
-        while(rs.next()) {
-            headlinesAlreadyUsed.add(rs.getString("headline"));
-        }
-
-        rs.close();
-        st.close();
-        closeDbConnection();
-
-        return headlinesAlreadyUsed;
-    }
-
-    private void addHeadlineToAlreadyUsedHeadlinesInTweetsDb(String headline) throws Exception {
-        initializeDbConnection();
-
-        Statement st = con.createStatement();
-        st.executeUpdate("INSERT INTO tweet_headlines (date, headline) VALUES ('" + getCurrentDateTime() + "', '" + headline + "')");
-        st.close();
-
-        closeDbConnection();
-    }
-
-    protected void deleteEntriesOlderThan24Hours() throws Exception {
+    private void deleteEntriesOlderThan24Hours() throws Exception {
         Date date = new Date();
         date = DateUtils.addHours(date, 2);
         long currentDate = date.getTime();
@@ -139,17 +185,17 @@ public class TweetMachine {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM tweet_headlines");
+        ResultSet rs = st.executeQuery("SELECT * FROM tweet_words");
 
         while(rs.next()) {
             String s = rs.getString("date");
             Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
 
-            if(parsedDateTime.getTime() < currentDate - TimeUnit.HOURS.toMillis(12)) {
-                String headlineToRemove = rs.getString("headline");
+            if(parsedDateTime.getTime() < currentDate - TimeUnit.HOURS.toMillis(24)) {
+                String wordToRemove = rs.getString("word");
 
                 Statement st2 = con.createStatement();
-                st2.executeUpdate("DELETE FROM tweet_headlines WHERE headline = '" + headlineToRemove + "';");
+                st2.executeUpdate("DELETE FROM tweet_words WHERE word = '" + wordToRemove + "';");
                 st2.close();
             }
         }
@@ -184,23 +230,16 @@ public class TweetMachine {
     private String getHeadlineWithBestHashTagWords(List<String> baseHeadlines, List<String> headlinesToChooseFrom,
                                                    String buzzWord) {
         List<String> wordsSortedByFrequencyFromHeadlines = getWordsSortedByFrequencyFromHeadlines(baseHeadlines, buzzWord);
-        wordsSortedByFrequencyFromHeadlines = clearNumbersFromHashTagWords(wordsSortedByFrequencyFromHeadlines);
+        wordsSortedByFrequencyFromHeadlines = clearNumbersAndEmptyStringsFromHashTagWords(wordsSortedByFrequencyFromHeadlines);
 
         headlinesToChooseFrom = convertHeadlinesToNonSpecialCharactersAndLowerCase(headlinesToChooseFrom);
 
         String headlineWithBestHashTags = getHeadlineWhereYouCanPutMostHashTags(headlinesToChooseFrom,
                 wordsSortedByFrequencyFromHeadlines);
 
-        try {
-            addHeadlineToAlreadyUsedHeadlinesInTweetsDb(headlineWithBestHashTags);
-        } catch (Exception e) {
-
-        }
-
         headlineWithBestHashTags = putHashTagsInHeadline(headlineWithBestHashTags, wordsSortedByFrequencyFromHeadlines, buzzWord);
 
         return headlineWithBestHashTags;
-
     }
 
     private String getHeadlineWhereYouCanPutMostHashTags(List<String> headlines, List<String> hashTagWords) {
@@ -251,11 +290,11 @@ public class TweetMachine {
         return headline;
     }
 
-    private List<String> clearNumbersFromHashTagWords(List<String> hashTagWords) {
+    private List<String> clearNumbersAndEmptyStringsFromHashTagWords(List<String> hashTagWords) {
         List<String> hashTagWordsToReturn = new ArrayList<>();
 
         for(String hashTagWord : hashTagWords) {
-            if(!hashTagWord.matches("[0-9]+")) {
+            if(!hashTagWord.equals("") && !hashTagWord.matches("[0-9]+")) {
                 hashTagWordsToReturn.add(hashTagWord);
             }
         }
@@ -268,6 +307,7 @@ public class TweetMachine {
         for(String rawHeadline : headlinesRaw) {
             String correctedHeadline = rawHeadline.toLowerCase();
             correctedHeadline = correctedHeadline.replaceAll("[^A-Za-z0-9 ]", "");
+            correctedHeadline = correctedHeadline.replaceAll("  ", " ");
             headlinesCorrected.add(correctedHeadline);
         }
         return headlinesCorrected;
