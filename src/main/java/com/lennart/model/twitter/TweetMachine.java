@@ -148,6 +148,7 @@ public class TweetMachine {
 
     private String getHeadlineToUse(List<String> headlines, String buzzWord) throws Exception {
         headlines = convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
+        headlines = removeSpecificWordsFromHeadlines(headlines);
 
         String headlineToUse = "";
 
@@ -296,6 +297,20 @@ public class TweetMachine {
             correctedHeadline = correctedHeadline.replaceAll("[^A-Za-z0-9 ]", "");
             correctedHeadline = correctedHeadline.replaceAll("  ", " ");
             headlinesCorrected.add(correctedHeadline);
+        }
+        return headlinesCorrected;
+    }
+
+    private List<String> removeSpecificWordsFromHeadlines(List<String> headlines) {
+        List<String> headlinesCorrected = new ArrayList<>();
+
+        for(String headline : headlines) {
+            if(headline.contains("read comments")) {
+                String correctedHeadline = headline.replaceAll("read comments", "");
+                headlinesCorrected.add(correctedHeadline);
+            } else {
+                headlinesCorrected.add(headline);
+            }
         }
         return headlinesCorrected;
     }
