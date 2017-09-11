@@ -21,26 +21,26 @@ public class TweetMachine {
 
     private Connection con;
 
-    public void postTweetForNewBuzzword(String word, List<String> headlines) throws Exception {
-        if(wordIsFromNewGroup("buzzwords_new", word)) {
+    public void postTweetForNewBuzzword(String word, List<String> headlines, String database) throws Exception {
+        if(wordIsFromNewGroup(database, word)) {
             if(!word.matches("[0-9]+")) {
                 String tweetText = getTweetText(word, headlines);
 
                 if(tweetText != null && tweetText.length() > 50 && tweetText.length() < 135) {
-                    postTweet(tweetText);
-                    addWordToTweetedWordsDb(word);
+                    postTweet(tweetText, database);
+                    addWordToTweetedWordsDb(word, database);
                 }
             }
         }
 
-        deleteEntriesOlderThan24Hours();
+        deleteEntriesOlderThan24Hours(database);
     }
 
-    private void postTweet(String tweetText) {
-        String consumerKey = "i9Rkxihee7YFLhBbBdIyvIrdA";
-        String consumerSecret = "EHhxP4TSE81G4Dn15uaHcPQOE2fOrTLFsppz1PIrliplR3WqYU";
-        String accessToken = "892103185606877185-9eN7Sj2buwRynB6iYSBHe7JpVyMnMSz";
-        String accessSecret = "GPtbDjVXWML1Nlda2D7EsFQxZbZbLalvOsCTLXQqMh6Rd";
+    private void postTweet(String tweetText, String database) {
+        String consumerKey = getConsumerKey(database);
+        String consumerSecret = getConsumerSecret(database);
+        String accessToken = getAccessToken(database);
+        String accessSecret = getAccessSecret(database);
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
@@ -56,6 +56,66 @@ public class TweetMachine {
         } catch (TwitterException te) {
 
         }
+    }
+
+    private String getConsumerKey(String database) {
+        String consumerKey = "";
+
+        if(database.equals("buzzwords_new")) {
+            consumerKey = "i9Rkxihee7YFLhBbBdIyvIrdA";
+        } else if(database.equals("finance_buzzwords_new")) {
+            consumerKey = "dB1cpsM6d4UJmYBC4Xu3eZz7a";
+        } else if(database.equals("sport_buzzwords_new")) {
+            consumerKey = "Yqo4ciNiAPJEFkojhu0wLiXpj";
+        } else if(database.equals("entertainment_buzzwords_new")) {
+            consumerKey = "wBAxIuT7hKwhECsBTM3VHwkjS";
+        }
+        return consumerKey;
+    }
+
+    private String getConsumerSecret(String database) {
+        String consumerSecret = "";
+
+        if(database.equals("buzzwords_new")) {
+            consumerSecret = "EHhxP4TSE81G4Dn15uaHcPQOE2fOrTLFsppz1PIrliplR3WqYU";
+        } else if(database.equals("finance_buzzwords_new")) {
+            consumerSecret = "fmUa0v6959ftkYRpc1WQjry6iM17TqvH71z1YidQAvlLcDMTP3";
+        } else if(database.equals("sport_buzzwords_new")) {
+            consumerSecret = "M9A8XesBdE1Tc4OROp7qitl3DK23UJ2D9LLeRxIXNpMPVtW4sH";
+        } else if(database.equals("entertainment_buzzwords_new")) {
+            consumerSecret = "od5q7BKzv5iNEWbm7JCsvh3LfPQcDDOIkLCNtKZzNXnXqmnikY";
+        }
+        return consumerSecret;
+    }
+
+    private String getAccessToken(String database) {
+        String accessToken = "";
+
+        if(database.equals("buzzwords_new")) {
+            accessToken = "892103185606877185-9eN7Sj2buwRynB6iYSBHe7JpVyMnMSz";
+        } else if(database.equals("finance_buzzwords_new")) {
+            accessToken = "907314515175505921-c0NC52yxL9x0eVypVnqaIkx05jdyIYP";
+        } else if(database.equals("sport_buzzwords_new")) {
+            accessToken = "907324019682267136-PQh1O5C9tXKauzE3A8BAVCZcalXEszF";
+        } else if(database.equals("entertainment_buzzwords_new")) {
+            accessToken = "907326731001966593-8U914IvxGcsmZoXgFrpN4D1oNjn1pLo";
+        }
+        return accessToken;
+    }
+
+    private String getAccessSecret(String database) {
+        String accessSecret = "";
+
+        if(database.equals("buzzwords_new")) {
+            accessSecret = "GPtbDjVXWML1Nlda2D7EsFQxZbZbLalvOsCTLXQqMh6Rd";
+        } else if(database.equals("finance_buzzwords_new")) {
+            accessSecret = "GKAUZfwWS0EmAYlKsKHvMPxRWGPqUKyRa3AEN1j4fphat";
+        } else if(database.equals("sport_buzzwords_new")) {
+            accessSecret = "OhAMbrKk3hPk5ALQ3mlp9B3URvzTNWbtJ0W7sdkZQxVzb";
+        } else if(database.equals("entertainment_buzzwords_new")) {
+            accessSecret = "NfWSS7McTIqdTAXOFTWWS5gWvRIksP4EGPePxVESD7aES";
+        }
+        return accessSecret;
     }
 
     private boolean wordIsFromNewGroup(String database, String buzzWord) throws Exception {
@@ -77,7 +137,7 @@ public class TweetMachine {
 
     private List<Integer> getGroupsOfWordsAlreadyTweeted(String database) throws Exception {
         List<Integer> groupsOfWordsAlreadyTweeted = new ArrayList<>();
-        List<String> wordsAlreadyTweeted = getWordsAlreadyTweeted();
+        List<String> wordsAlreadyTweeted = getWordsAlreadyTweeted(database);
 
         for(String word : wordsAlreadyTweeted) {
             groupsOfWordsAlreadyTweeted.add(getGroupOfWord(database, word));
@@ -86,13 +146,13 @@ public class TweetMachine {
     }
 
 
-    private List<String> getWordsAlreadyTweeted() throws Exception {
+    private List<String> getWordsAlreadyTweeted(String database) throws Exception {
         List<String> wordsAlreadyTweeted = new ArrayList<>();
 
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM tweet_words");
+        ResultSet rs = st.executeQuery("SELECT * FROM " + getTweetDbNameFromBuzzDbName(database));
 
         while(rs.next()) {
             wordsAlreadyTweeted.add(rs.getString("word"));
@@ -124,11 +184,11 @@ public class TweetMachine {
         return groupOfWord;
     }
 
-    private void addWordToTweetedWordsDb(String word) throws Exception {
+    private void addWordToTweetedWordsDb(String word, String database) throws Exception {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        st.executeUpdate("INSERT INTO tweet_words (date, word) VALUES ('" + getCurrentDateTime() + "', '" + word + "')");
+        st.executeUpdate("INSERT INTO " + getTweetDbNameFromBuzzDbName(database) + " (date, word) VALUES ('" + getCurrentDateTime() + "', '" + word + "')");
         st.close();
 
         closeDbConnection();
@@ -165,7 +225,7 @@ public class TweetMachine {
         return headlineToUse;
     }
 
-    private void deleteEntriesOlderThan24Hours() throws Exception {
+    private void deleteEntriesOlderThan24Hours(String database) throws Exception {
         Date date = new Date();
         date = DateUtils.addHours(date, 2);
         long currentDate = date.getTime();
@@ -173,7 +233,7 @@ public class TweetMachine {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM tweet_words");
+        ResultSet rs = st.executeQuery("SELECT * FROM " + getTweetDbNameFromBuzzDbName(database));
 
         while(rs.next()) {
             String s = rs.getString("date");
@@ -183,7 +243,7 @@ public class TweetMachine {
                 String wordToRemove = rs.getString("word");
 
                 Statement st2 = con.createStatement();
-                st2.executeUpdate("DELETE FROM tweet_words WHERE word = '" + wordToRemove + "';");
+                st2.executeUpdate("DELETE FROM " + getTweetDbNameFromBuzzDbName(database) + " WHERE word = '" + wordToRemove + "';");
                 st2.close();
             }
         }
@@ -346,6 +406,21 @@ public class TweetMachine {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
+    }
+
+    private String getTweetDbNameFromBuzzDbName(String buzzDbName) {
+        String tweetDbName = "";
+
+        if(buzzDbName.equals("buzzwords_new")) {
+            tweetDbName = "tweet_words";
+        } else if(buzzDbName.equals("finance_buzzwords_new")) {
+            tweetDbName = "finance_tweet_words";
+        } else if(buzzDbName.equals("sport_buzzwords_new")) {
+            tweetDbName = "sport_tweet_words";
+        } else if(buzzDbName.equals("entertainment_buzzwords_new")) {
+            tweetDbName = "entertainment_tweet_words";
+        }
+        return tweetDbName;
     }
 
     private String getCurrentDateTime() {
