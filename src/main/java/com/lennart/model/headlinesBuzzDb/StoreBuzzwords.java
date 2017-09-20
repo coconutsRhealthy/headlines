@@ -46,7 +46,7 @@ public class StoreBuzzwords {
                 if(!earlierWordsWithSame3Headlines(database, headlinesForWord)) {
                     addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
                     updateGroupsInDb(database);
-                    postTweet(entry.getKey(), headlinesForWord, database);
+                    //postTweet(entry.getKey(), headlinesForWord, database);
                 }
             } else {
                 for(int i = 0; i < linksForWord.size(); i++) {
@@ -63,13 +63,13 @@ public class StoreBuzzwords {
         closeDbConnection();
     }
 
-    private void postTweet(String buzzWord, List<String> headlines, String database) {
-        try {
-            new TweetMachine().postTweetForNewBuzzword(buzzWord, headlines, database);
-        } catch (Exception e) {
-
-        }
-    }
+//    private void postTweet(String buzzWord, List<String> headlines, String database) {
+//        try {
+//            new TweetMachine().postTweetForNewBuzzword(buzzWord, headlines, database);
+//        } catch (Exception e) {
+//
+//        }
+//    }
 
     private void updateGroupsInDb(String database) {
         try {

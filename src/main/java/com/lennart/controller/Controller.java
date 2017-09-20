@@ -10,6 +10,7 @@ import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbFinance.BuzzWordsManager
 import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbSport.BuzzWordsManagerSport;
 import com.lennart.model.headlinesFE.BuzzWord;
 import com.lennart.model.headlinesFE.RetrieveBuzzwords;
+import com.lennart.model.twitter.TweetMachine;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -72,6 +73,11 @@ public class Controller extends SpringBootServletInitializer {
     @RequestMapping(value = "/updateEntertainmentBuzzDb", method = RequestMethod.GET)
     private void updateEntertainmentBuzzDb() throws Exception {
         new BuzzWordsManagerEntertainment().overallMethodServer("entertainment_buzzwords_new");
+    }
+
+    @RequestMapping(value = "/postTweets", method = RequestMethod.GET)
+    private void postTweets() throws Exception {
+        new TweetMachine().overallMethodServer();
     }
 
     @RequestMapping(value = "/getBuzzWords", method = RequestMethod.POST)

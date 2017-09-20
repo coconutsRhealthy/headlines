@@ -21,6 +21,266 @@ public class TweetMachine {
 
     private Connection con;
 
+    public void overallMethodServer() {
+        while(true) {
+            //0
+            postTweet1Hour();
+            postTweet3Hour();
+            postTweet6Hour();
+            postTweet12Hour();
+            postTweet24Hour();
+
+            //1
+            waitOneHour();
+            postTweet1Hour();
+
+            //2
+            waitOneHour();
+            postTweet1Hour();
+
+            //3
+            waitOneHour();
+            postTweet1Hour();
+            postTweet3Hour();
+
+            //4
+            waitOneHour();
+            postTweet1Hour();
+
+            //5
+            waitOneHour();
+            postTweet1Hour();
+
+            //6
+            waitOneHour();
+            postTweet1Hour();
+            postTweet3Hour();
+            postTweet6Hour();
+
+            //7
+            waitOneHour();
+            postTweet1Hour();
+
+            //8
+            waitOneHour();
+            postTweet1Hour();
+
+            //9
+            waitOneHour();
+            postTweet1Hour();
+            postTweet3Hour();
+
+            //10
+            waitOneHour();
+            postTweet1Hour();
+
+            //11
+            waitOneHour();
+            postTweet1Hour();
+
+            //12
+            waitOneHour();
+            postTweet1Hour();
+            postTweet3Hour();
+            postTweet6Hour();
+            postTweet12Hour();
+
+            //13
+            waitOneHour();
+            postTweet1Hour();
+
+            //14
+            waitOneHour();
+            postTweet1Hour();
+
+            //15
+            waitOneHour();
+            postTweet1Hour();
+            postTweet3Hour();
+
+            //16
+            waitOneHour();
+            postTweet1Hour();
+
+            //17
+            waitOneHour();
+            postTweet1Hour();
+
+            //18
+            waitOneHour();
+            postTweet1Hour();
+            postTweet3Hour();
+            postTweet6Hour();
+
+            //19
+            waitOneHour();
+            postTweet1Hour();
+
+            //20
+            waitOneHour();
+            postTweet1Hour();
+
+            //21
+            waitOneHour();
+            postTweet1Hour();
+            postTweet3Hour();
+
+            //22
+            waitOneHour();
+            postTweet1Hour();
+
+            //23
+            waitOneHour();
+            postTweet1Hour();
+        }
+    }
+
+    private void postTweet1Hour() {
+        try {
+            postTweetNewStyle("buzzwords_new", 1);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("finance_buzzwords_new", 1);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("sport_buzzwords_new", 1);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("entertainment_buzzwords_new", 1);
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void postTweet3Hour() {
+        try {
+            postTweetNewStyle("buzzwords_new", 3);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("finance_buzzwords_new", 3);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("sport_buzzwords_new", 3);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("entertainment_buzzwords_new", 3);
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void postTweet6Hour() {
+        try {
+            postTweetNewStyle("buzzwords_new", 6);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("finance_buzzwords_new", 6);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("sport_buzzwords_new", 6);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("entertainment_buzzwords_new", 6);
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void postTweet12Hour() {
+        try {
+            postTweetNewStyle("buzzwords_new", 12);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("finance_buzzwords_new", 12);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("sport_buzzwords_new", 12);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("entertainment_buzzwords_new", 12);
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void postTweet24Hour() {
+        try {
+            postTweetNewStyle("buzzwords_new", 24);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("finance_buzzwords_new", 24);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("sport_buzzwords_new", 24);
+        } catch (Exception e) {
+
+        }
+
+        try {
+            postTweetNewStyle("entertainment_buzzwords_new", 24);
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void waitOneHour() {
+        try {
+            TimeUnit.MINUTES.sleep(60);
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void postTweetNewStyle(String database, int numberOfHours) throws Exception {
+        String tweetText = getTweetTextNewStyle(database, numberOfHours);
+
+        if(tweetText != null && tweetText.length() > 5 && tweetText.length() < 135) {
+            postTweet(tweetText, database);
+        }
+    }
+
     public void postTweetForNewBuzzword(String word, List<String> headlines, String database) throws Exception {
         if(wordIsFromNewGroup(database, word)) {
             if(!word.matches("[0-9]+")) {
@@ -192,6 +452,128 @@ public class TweetMachine {
         st.close();
 
         closeDbConnection();
+    }
+
+    private String getTweetTextNewStyle(String database, int numberOfHours) throws Exception {
+        String tweetText;
+
+        List<String> wordsList = getMax5WordsOfLastXHoursFromDb(database, numberOfHours);
+
+        if(!wordsList.isEmpty()) {
+            tweetText = getFirstLine(database, numberOfHours, wordsList.size()) + getWordsBelowEachOther(wordsList) +
+                    getLastLine(database);
+        } else {
+            tweetText = null;
+        }
+        return tweetText;
+    }
+
+    private String getFirstLine(String database, int numberOfHours, int numberOfWords) {
+        String firstLine = "";
+
+        String wordOrWords;
+
+        if(numberOfWords == 1) {
+            wordOrWords = "word";
+        } else {
+            wordOrWords = "words";
+        }
+
+        if(database.equals("buzzwords_new")) {
+            if(numberOfHours == 1) {
+                firstLine = "#Trending news " + wordOrWords + " of last hour:\n\n";
+            } else {
+                firstLine = "#Trending news " + wordOrWords + " of last " + numberOfHours + " hours:\n\n";
+            }
+        } else if(database.equals("finance_buzzwords_new")) {
+            if(numberOfHours == 1) {
+                firstLine = "#Trending fin. market " + wordOrWords + " of last hour:\n\n";
+            } else {
+                firstLine = "#Trending fin. market " + wordOrWords + " of last " + numberOfHours + " hours:\n\n";
+            }
+        } else if(database.equals("sport_buzzwords_new")) {
+            if(numberOfHours == 1) {
+                firstLine = "#Trending sport " + wordOrWords + " of last hour:\n\n";
+            } else {
+                firstLine = "#Trending sport " + wordOrWords + " of last " + numberOfHours + " hours:\n\n";
+            }
+        } else if(database.equals("entertainment_buzzwords_new")) {
+            if(numberOfHours == 1) {
+                firstLine = "#Trending gossip " + wordOrWords + " of last hour:\n\n";
+            } else {
+                firstLine = "#Trending gossip " + wordOrWords + " of last " + numberOfHours + " hours:\n\n";
+            }
+        }
+        return firstLine;
+    }
+
+    private String getWordsBelowEachOther(List<String> wordsList) throws Exception {
+        StringBuilder wordsBelowEachOther = new StringBuilder();
+
+        if(!wordsList.isEmpty()) {
+            for(int i = 0; i < wordsList.size(); i++) {
+                if(i == 0) {
+                    wordsBelowEachOther.append("#");
+                    wordsBelowEachOther.append(wordsList.get(i));
+                } else {
+                    wordsBelowEachOther.append("\n");
+                    wordsBelowEachOther.append("#");
+                    wordsBelowEachOther.append(wordsList.get(i));
+                }
+            }
+        }
+        return wordsBelowEachOther.toString();
+    }
+
+    private String getLastLine(String database) {
+        String lastLine = "";
+
+        if(database.equals("buzzwords_new")) {
+            lastLine = "\n\nnewsbuzzwords.com";
+        } else if(database.equals("finance_buzzwords_new")) {
+            lastLine = "\n\nnewsbuzzwords.com/finance.html";
+        } else if(database.equals("sport_buzzwords_new")) {
+            lastLine = "\n\nnewsbuzzwords.com/sport.html";
+        } else if(database.equals("entertainment_buzzwords_new")) {
+            lastLine = "\n\nnewsbuzzwords.com/entertainment.html";
+        }
+        return lastLine;
+    }
+
+    private List<String> getMax5WordsOfLastXHoursFromDb(String database, int numberOfHours) throws Exception {
+        List<String> wordsOfLastXHours = new ArrayList<>();
+
+        Date date = new Date();
+        date = DateUtils.addHours(date, 2);
+        long currentDate = date.getTime();
+
+        initializeDbConnection();
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " ORDER BY no_of_headlines DESC;");
+
+        int counter = 0;
+
+        while(rs.next()) {
+            String s = rs.getString("date");
+            Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
+
+            if(parsedDateTime.getTime() > currentDate - TimeUnit.HOURS.toMillis(numberOfHours)) {
+                String word = rs.getString("word");
+
+                if(!word.matches("[0-9]+")) {
+                    if(counter < 5) {
+                        wordsOfLastXHours.add(word);
+                        counter++;
+                    }
+                }
+            }
+        }
+
+        st.close();
+        rs.close();
+        closeDbConnection();
+
+        return wordsOfLastXHours;
     }
 
     private String getTweetText(String word, List<String> headlines) throws Exception {

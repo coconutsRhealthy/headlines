@@ -129,4 +129,20 @@ mainApp.controller('backendDbController', function($scope, $http) {
             })
         }
     }
+
+    $scope.postTweets = function() {
+        alert("Starting tweet posting");
+
+        var currentUrl = window.location.href;
+
+        if(currentUrl.includes("www.")) {
+            $http.get('http://www.newsbuzzwords.com/postTweets').success(function(data) {
+                alert("Done (should not be)");
+            })
+        } else {
+            $http.get('http://newsbuzzwords.com/postTweets').success(function(data) {
+                alert("Done (should not be)");
+            })
+        }
+    }
 });
