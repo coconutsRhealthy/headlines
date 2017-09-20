@@ -18,12 +18,32 @@ public class JsoupElementsProcessor {
         for(Document document : allDocuments) {
             if(document != null) {
                 Elements elements = document.select("a:contains(" + word + ")");
+
+//                if(elements.size() != 0) {
+//                    elementsPerWord.add(elements.get(0));
+//                }
+
                 if(elements.size() != 0) {
-                    elementsPerWord.add(elements.get(0));
+                    loop: for(Element element : elements) {
+                        if(element.select("img").first() != null) {
+                            elementsPerWord.add(element);
+                            break loop;
+                        }
+                    }
                 }
             }
         }
         return elementsPerWord;
+    }
+
+    public List<String> getImageLinksPerWord(List<Element> elementsPerWord) {
+        List<String> imageLinksPerWord = new ArrayList<>();
+
+        for(Element element : elementsPerWord) {
+            String imageLink = element.select("img").first().absUrl("src");
+            imageLinksPerWord.add(imageLink);
+        }
+        return imageLinksPerWord;
     }
 
     public List<String> getHeadlinesPerWord(List<Element> elementsPerWord, String word) {

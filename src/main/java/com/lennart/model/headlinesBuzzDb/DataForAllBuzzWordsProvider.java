@@ -182,6 +182,8 @@ public class DataForAllBuzzWordsProvider {
         List<String> hrefsForWord = jsoupElementsProcessor.getHrefHeadlinesPerWord(elementsPerWord, word);
         List<String> correctedHeadlinesForWord = jsoupElementsProcessor.getHeadlinesPerWord(elementsPerWord, word);
 
+        List<String> imageLinksForWord = jsoupElementsProcessor.getImageLinksPerWord(elementsPerWord);
+
         Map<String, List<String>> dataTotalForWord = new HashMap<>();
         dataTotalForWord.put("correctedHeadlines", correctedHeadlinesForWord);
         dataTotalForWord.put("rawHeadlines", uncorrectedTrimmedHeadlines);
@@ -195,6 +197,8 @@ public class DataForAllBuzzWordsProvider {
 
         //tot slot verwijder je links die van dezelfde site afkomstig zijn
         dataTotalForWord = removeHeadlinesThatAreFromSameSite(dataTotalForWord);
+
+        dataTotalForWord.put("imageLinks", imageLinksForWord);
 
         return dataTotalForWord;
     }
