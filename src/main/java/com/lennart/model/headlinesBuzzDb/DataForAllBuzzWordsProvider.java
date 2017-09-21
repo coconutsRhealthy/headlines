@@ -6,8 +6,14 @@ import com.lennart.model.headlinesBigDb.headlinesBigDbFinance.BigDbStorerFinance
 import com.lennart.model.headlinesBigDb.headlinesBigDbSport.BigDbStorerSport;
 import com.lennart.model.headlinesFE.BuzzWord;
 import com.lennart.model.headlinesFE.RetrieveBuzzwords;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -45,7 +51,12 @@ public class DataForAllBuzzWordsProvider {
 
                         dataForBuzzword.put("rawHeadlines", headLinesForWord);
 
-                        dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
+                        List<String> imageLinkList = getImageLinkForBuzzwordInList(entry.getKey(), dataForBuzzword.get("hrefs"));
+
+                        if(imageLinkList != null && imageLinkList.size() == 1) {
+                            dataForBuzzword.put("imageLink", imageLinkList);
+                            dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -53,6 +64,73 @@ public class DataForAllBuzzWordsProvider {
             }
         }
         return dataForAllBuzzWords;
+    }
+
+    private List<String> getImageLinkForBuzzwordInList(String buzzword, List<String> hrefs) throws Exception {
+        List<String> asList = new ArrayList<>();
+
+        String link = getImageLinkForBuzzword(buzzword, hrefs);
+
+        if(link != null) {
+            asList.add(getImageLinkForBuzzword(buzzword, hrefs));
+        } else {
+            asList = null;
+        }
+        return asList;
+    }
+
+    private String getImageLinkForBuzzword(String buzzword, List<String> hrefs) throws Exception {
+        String linkToReturn;
+
+        List<String> imageLinksContainingBuzzword = getImageLinksContainingBuzzword(buzzword, hrefs);
+        Map<String, Integer> imageMapSortedBySize = getImgMapSortedBySize(imageLinksContainingBuzzword);
+
+        if(imageMapSortedBySize.entrySet().iterator().hasNext()) {
+            linkToReturn = imageMapSortedBySize.entrySet().iterator().next().getKey();
+        } else {
+            linkToReturn = null;
+        }
+        return linkToReturn;
+    }
+
+    private List<String> getImageLinksContainingBuzzword(String buzzword, List<String> hrefs) throws Exception {
+        List<String> imageLinksContainingBuzzword = new ArrayList<>();
+
+        for(String href : hrefs) {
+            Document document = Jsoup.connect(href).get();
+            Elements elements = document.select("img[src]");
+
+            for (Element element : elements) {
+                if (element.attr("abs:src").contains(buzzword)) {
+                    imageLinksContainingBuzzword.add(element.attr("abs:src"));
+                }
+            }
+        }
+        return imageLinksContainingBuzzword;
+    }
+
+    private Map<String, Integer> getImgMapSortedBySize(List<String> images) {
+        Map<String, Integer> imgSizeMap = new HashMap<>();
+
+        for(String imageLink : images) {
+            try {
+                BufferedImage bimg = ImageIO.read(new URL(imageLink));
+
+                if(bimg != null) {
+                    int width          = bimg.getWidth();
+                    int height         = bimg.getHeight();
+                    int size = width * height;
+
+                    if(size > 3000) {
+                        imgSizeMap.put(imageLink, size);
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+        }
+        imgSizeMap = sortByValueHighToLow(imgSizeMap);
+        return imgSizeMap;
     }
 
     private List<Integer> getIndicesThatHaveBeenRemovedFromList(List<String> oldList, List<String> newList) {
@@ -182,8 +260,6 @@ public class DataForAllBuzzWordsProvider {
         List<String> hrefsForWord = jsoupElementsProcessor.getHrefHeadlinesPerWord(elementsPerWord, word);
         List<String> correctedHeadlinesForWord = jsoupElementsProcessor.getHeadlinesPerWord(elementsPerWord, word);
 
-        List<String> imageLinksForWord = jsoupElementsProcessor.getImageLinksPerWord(elementsPerWord);
-
         Map<String, List<String>> dataTotalForWord = new HashMap<>();
         dataTotalForWord.put("correctedHeadlines", correctedHeadlinesForWord);
         dataTotalForWord.put("rawHeadlines", uncorrectedTrimmedHeadlines);
@@ -197,8 +273,6 @@ public class DataForAllBuzzWordsProvider {
 
         //tot slot verwijder je links die van dezelfde site afkomstig zijn
         dataTotalForWord = removeHeadlinesThatAreFromSameSite(dataTotalForWord);
-
-        dataTotalForWord.put("imageLinks", imageLinksForWord);
 
         return dataTotalForWord;
     }
@@ -408,5 +482,21 @@ public class DataForAllBuzzWordsProvider {
     private List<String> removeTheKeyword(List<String> allWords, String keyWord) {
         allWords.removeAll(Collections.singleton(keyWord));
         return allWords;
+    }
+
+    private <K, V extends Comparable<? super V>> Map<K, V> sortByValueHighToLow(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new LinkedList<>( map.entrySet() );
+        Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
+            @Override
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return (o2.getValue() ).compareTo( o1.getValue());
+            }
+        });
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 }

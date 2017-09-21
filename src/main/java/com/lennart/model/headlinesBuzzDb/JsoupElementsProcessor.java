@@ -1,6 +1,5 @@
 package com.lennart.model.headlinesBuzzDb;
 
-import com.lennart.controller.Controller;
 import com.lennart.model.headlinesBigDb.BigDbStorer;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,31 +18,12 @@ public class JsoupElementsProcessor {
             if(document != null) {
                 Elements elements = document.select("a:contains(" + word + ")");
 
-//                if(elements.size() != 0) {
-//                    elementsPerWord.add(elements.get(0));
-//                }
-
                 if(elements.size() != 0) {
-                    loop: for(Element element : elements) {
-                        if(element.select("img").first() != null) {
-                            elementsPerWord.add(element);
-                            break loop;
-                        }
-                    }
+                    elementsPerWord.add(elements.get(0));
                 }
             }
         }
         return elementsPerWord;
-    }
-
-    public List<String> getImageLinksPerWord(List<Element> elementsPerWord) {
-        List<String> imageLinksPerWord = new ArrayList<>();
-
-        for(Element element : elementsPerWord) {
-            String imageLink = element.select("img").first().absUrl("src");
-            imageLinksPerWord.add(imageLink);
-        }
-        return imageLinksPerWord;
     }
 
     public List<String> getHeadlinesPerWord(List<Element> elementsPerWord, String word) {
