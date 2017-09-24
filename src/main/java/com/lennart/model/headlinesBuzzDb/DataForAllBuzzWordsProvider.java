@@ -50,8 +50,18 @@ public class DataForAllBuzzWordsProvider {
 
                         if(imageLinkList != null && imageLinkList.size() == 1) {
                             dataForBuzzword.put("imageLink", imageLinkList);
-                            dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
+                        } else {
+                            if(imageLinkList == null) {
+                                imageLinkList = new ArrayList<>();
+                                imageLinkList.add("-");
+                            } else {
+                                imageLinkList.clear();
+                                imageLinkList.add("-");
+                            }
+                            dataForBuzzword.put("imageLink", imageLinkList);
                         }
+
+                        dataForAllBuzzWords.put(entry.getKey(), dataForBuzzword);
                     }
                 }
             } catch (Exception e) {
