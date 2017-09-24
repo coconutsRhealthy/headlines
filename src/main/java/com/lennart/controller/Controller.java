@@ -147,4 +147,21 @@ public class Controller extends SpringBootServletInitializer {
                 ("entertainment_buzzwords_new", numberOfHours, "entertainment", numberOfWordsPresentOnSite);
         return buzzWords;
     }
+
+
+    //below here the new style methods (with images)
+
+    @RequestMapping(value = "/getImageBuzzWords", method = RequestMethod.POST)
+    public @ResponseBody List<BuzzWord> sendImageBuzzWordsToClient() throws Exception {
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitial("buzzwords_new", "home");
+        return buzzWords;
+    }
+
+    @RequestMapping(value = "/loadMoreImageBuzzWords", method = RequestMethod.POST)
+    public @ResponseBody List<BuzzWord> sendMoreImageBuzzWordsToClient(@RequestBody String lastWord) throws Exception {
+        //je moet hier alle buzzwords heen en weer sturen tussen server en client..
+
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDb("buzzwords_new", lastWord, "home");
+        return buzzWords;
+    }
 }

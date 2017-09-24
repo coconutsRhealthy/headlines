@@ -79,7 +79,7 @@ public class RetrieveBuzzwords {
         return buzzWordsOnePerGroup;
     }
 
-    public List<BuzzWord> retrieveBuzzWordsFromDbInitial(String database) throws Exception {
+    public List<BuzzWord> retrieveBuzzWordsFromDbInitial(String database, String page) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
 
         initializeDbConnection();
@@ -90,19 +90,28 @@ public class RetrieveBuzzwords {
         int counter = 0;
 
         while(rs.next()) {
-            if(counter >= 21) {
-                break;
-            }
+            int sizeBuzzWordsInitial = buzzWords.size();
 
-            counter++;
-            buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, null);
+            buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, page);
+            buzzWords = retainOnlyOneWordPerGroup(buzzWords);
+
+            int sizeBuzzWordsAfterBothFunctions = buzzWords.size();
+
+            if(sizeBuzzWordsAfterBothFunctions == sizeBuzzWordsInitial + 1) {
+                if(counter >= 7) {
+                    break;
+                }
+
+                counter++;
+            }
         }
 
         rs.close();
         st.close();
         closeDbConnection();
 
-        //Collections.reverse(buzzWords);
+        buzzWords = retainOnlyOneWordPerGroup(buzzWords);
+
         return buzzWords;
     }
 
@@ -142,7 +151,7 @@ public class RetrieveBuzzwords {
         return buzzWords;
     }
 
-    public List<BuzzWord> retrieveExtraBuzzWordsFromDb(String database, String latestWord) throws Exception {
+    public List<BuzzWord> retrieveExtraBuzzWordsFromDb(String database, String latestWord, String page) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
 
         initializeDbConnection();
@@ -158,21 +167,32 @@ public class RetrieveBuzzwords {
         rsFirst.close();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM " + database);
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE entry < " + latestWordOnSiteEntry + " ORDER BY entry DESC;");
 
-        int targetEntryNumber = latestWordOnSiteEntry - 20;
+        int counter = 0;
 
         while(rs.next()) {
-            int rsEntryNumber = rs.getInt("entry");
+            int sizeBuzzWordsInitial = buzzWords.size();
 
-            if(rsEntryNumber < latestWordOnSiteEntry && rsEntryNumber >= targetEntryNumber) {
-                buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, null);
+            buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, page);
+            buzzWords = retainOnlyOneWordPerGroup(buzzWords);
+
+            int sizeBuzzWordsAfterBothFunctions = buzzWords.size();
+
+            if(sizeBuzzWordsAfterBothFunctions == sizeBuzzWordsInitial + 1) {
+                if(counter >= 7) {
+                    break;
+                }
+
+                counter++;
             }
         }
 
         rs.close();
         st.close();
         closeDbConnection();
+
+        //buzzWords = retainOnlyOneWordPerGroup(buzzWords);
 
         Collections.reverse(buzzWords);
         return buzzWords;
