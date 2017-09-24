@@ -14,8 +14,10 @@ public class BuzzWord {
     private List<String> links;
     private List<String> sites;
     private int group;
+    private String imageLink;
 
-    public BuzzWord(int entry, String dateTime, String word, List<String> headlines, List<String> links, List<String> sites, int group) {
+    public BuzzWord(int entry, String dateTime, String word, List<String> headlines, List<String> links, List<String> sites,
+                    int group, String imageLink) {
         this.entry = entry;
         this.dateTime = dateTime;
         this.word = word;
@@ -23,6 +25,7 @@ public class BuzzWord {
         this.links = links;
         this.sites = sites;
         this.group = group;
+        this.imageLink = imageLink;
     }
 
     public String getDateTime() {
@@ -79,5 +82,13 @@ public class BuzzWord {
 
     public void setGroup(int group) {
         this.group = group;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 }

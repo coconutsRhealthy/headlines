@@ -45,11 +45,39 @@ public class RetrieveBuzzwords {
             }
         }
 
+        rs.close();
+        st.close();
+        closeDbConnection();
+
         buzzWords = new RelatedBuzzwordsIdentifier().setCorrectGroupsInRetrievingPhase(buzzWords);
 
         return buzzWords;
     }
 
+    private List<BuzzWord> retainOnlyOneWordPerGroup(List<BuzzWord> buzzWords) {
+        List<BuzzWord> buzzWordsOnePerGroup = new ArrayList<>();
+
+        for(BuzzWord buzzWord : buzzWords) {
+            boolean isFromSameGroup = false;
+            int group = buzzWord.getGroup();
+
+            if(group != 0) {
+                for(BuzzWord buzzWord1 : buzzWordsOnePerGroup) {
+                    if(group == buzzWord1.getGroup()) {
+                        isFromSameGroup = true;
+                        break;
+                    }
+                }
+
+                if(!isFromSameGroup) {
+                    buzzWordsOnePerGroup.add(buzzWord);
+                }
+            } else {
+                buzzWordsOnePerGroup.add(buzzWord);
+            }
+        }
+        return buzzWordsOnePerGroup;
+    }
 
     public List<BuzzWord> retrieveBuzzWordsFromDbInitial(String database) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
@@ -188,7 +216,9 @@ public class RetrieveBuzzwords {
         int entry = rs.getInt("entry");
         int group = rs.getInt("group_number");
 
-        buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites, group));
+        String imageLink = rs.getString("image_link");
+
+        buzzWords.add(new BuzzWord(entry, dateTime, word, headlines, links, sites, group, imageLink));
 
         return buzzWords;
     }
