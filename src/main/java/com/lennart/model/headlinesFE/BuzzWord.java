@@ -16,6 +16,10 @@ public class BuzzWord {
     private int group;
     private String imageLink;
 
+    public BuzzWord() {
+
+    }
+
     public BuzzWord(int entry, String dateTime, String word, List<String> headlines, List<String> links, List<String> sites,
                     int group, String imageLink) {
         this.entry = entry;

@@ -36,36 +36,29 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     }
 
     $scope.loadMoreImageBuzzWords = function() {
-        var sizeBuzzWords = $scope.buzzWords.length - 1;
-        $scope.lastBuzzWord = $scope.buzzWords[sizeBuzzWords].word;
-
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.post('/loadMoreImageBuzzWords', $scope.lastBuzzWord).success(function(data) {
-                if(data.length === 8) {
+            $http.post('/loadMoreImageBuzzWords', $scope.buzzWords).success(function(data) {
+                if(((data.length - 1) % 7) === 0) {
                     data.pop();
                     $scope.showMoreButton = true;
                 } else {
                     $scope.showMoreButton = false;
                 }
 
-                for(var i = 0; i < data.length; i++) {
-                    $scope.buzzWords.push(data[i]);
-                }
+                $scope.buzzWords = data;
             })
         } else {
-            $http.post('/loadMoreImageBuzzWords', $scope.lastBuzzWord).success(function(data) {
-                if(data.length === 8) {
+            $http.post('/loadMoreImageBuzzWords', $scope.buzzWords).success(function(data) {
+                if(((data.length - 1) % 7) === 0) {
                     data.pop();
                     $scope.showMoreButton = true;
                 } else {
                     $scope.showMoreButton = false;
                 }
 
-                for(var i = 0; i < data.length; i++) {
-                    $scope.buzzWords.push(data[i]);
-                }
+                $scope.buzzWords = data;
             })
         }
     }

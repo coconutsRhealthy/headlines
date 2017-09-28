@@ -1,6 +1,7 @@
 package com.lennart.model.headlinesFE;
 
 import com.lennart.model.headlinesBuzzDb.RelatedBuzzwordsIdentifier;
+import com.lennart.model.headlinesBuzzDb.RelatedImageIdentifier;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.sql.*;
@@ -79,13 +80,13 @@ public class RetrieveBuzzwords {
         return buzzWordsOnePerGroup;
     }
 
-    public List<BuzzWord> retrieveBuzzWordsFromDbInitial(String database, String page) throws Exception {
+    public List<BuzzWord> retrieveBuzzWordsFromDbInitialWithImage(String database, String page) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
 
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " ORDER BY entry DESC;");
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE image_link <> '-' ORDER BY entry DESC;");
 
         int counter = 0;
 
@@ -93,6 +94,7 @@ public class RetrieveBuzzwords {
             int sizeBuzzWordsInitial = buzzWords.size();
 
             buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, page);
+            buzzWords = new RelatedImageIdentifier().removeDoubleImagesFromBuzzWordList(buzzWords);
             buzzWords = retainOnlyOneWordPerGroup(buzzWords);
 
             int sizeBuzzWordsAfterBothFunctions = buzzWords.size();
@@ -109,8 +111,6 @@ public class RetrieveBuzzwords {
         rs.close();
         st.close();
         closeDbConnection();
-
-        buzzWords = retainOnlyOneWordPerGroup(buzzWords);
 
         return buzzWords;
     }
@@ -151,23 +151,65 @@ public class RetrieveBuzzwords {
         return buzzWords;
     }
 
-    public List<BuzzWord> retrieveExtraBuzzWordsFromDb(String database, String latestWord, String page) throws Exception {
+//    public List<BuzzWord> retrieveExtraBuzzWordsFromDbWithImage(String database, String latestWord, String page) throws Exception {
+//        List<BuzzWord> buzzWords = new ArrayList<>();
+//
+//        initializeDbConnection();
+//
+//        Statement stFirst = con.createStatement();
+//        ResultSet rsFirst = stFirst.executeQuery("SELECT * FROM " + database + " WHERE word = '" + latestWord + "';");
+//
+//        rsFirst.next();
+//
+//        int latestWordOnSiteEntry = rsFirst.getInt("entry");
+//
+//        stFirst.close();
+//        rsFirst.close();
+//
+//        Statement st = con.createStatement();
+//        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE entry < " + latestWordOnSiteEntry + " AND image_link <> '-' ORDER BY entry DESC;");
+//
+//        int counter = 0;
+//
+//        while(rs.next()) {
+//            int sizeBuzzWordsInitial = buzzWords.size();
+//
+//            buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, page);
+//            //buzzWords = retainOnlyOneWordPerGroup(buzzWords);
+//
+//            buzzWords = new RelatedImageIdentifier().removeDoubleImagesFromBuzzWordList(buzzWords);
+//
+//            int sizeBuzzWordsAfterBothFunctions = buzzWords.size();
+//
+//            if(sizeBuzzWordsAfterBothFunctions == sizeBuzzWordsInitial + 1) {
+//                if(counter >= 7) {
+//                    break;
+//                }
+//
+//                counter++;
+//            }
+//        }
+//
+//        rs.close();
+//        st.close();
+//        closeDbConnection();
+//
+//        Collections.reverse(buzzWords);
+//        return buzzWords;
+//    }
+
+
+
+    public List<BuzzWord> retrieveExtraBuzzWordsFromDbWithImage(String database, List<BuzzWord> buzzWordsUntilNow, String page) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
+        buzzWords.addAll(buzzWordsUntilNow);
+
+        int latestWordOnSiteEntry = buzzWordsUntilNow.get(buzzWordsUntilNow.size() - 1).getEntry();
 
         initializeDbConnection();
 
-        Statement stFirst = con.createStatement();
-        ResultSet rsFirst = stFirst.executeQuery("SELECT * FROM " + database + " WHERE word = '" + latestWord + "';");
-
-        rsFirst.next();
-
-        int latestWordOnSiteEntry = rsFirst.getInt("entry");
-
-        stFirst.close();
-        rsFirst.close();
-
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE entry < " + latestWordOnSiteEntry + " ORDER BY entry DESC;");
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE entry < " + latestWordOnSiteEntry + " AND image_link <> '-' ORDER BY entry DESC;");
 
         int counter = 0;
 
@@ -175,6 +217,7 @@ public class RetrieveBuzzwords {
             int sizeBuzzWordsInitial = buzzWords.size();
 
             buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, page);
+            buzzWords = new RelatedImageIdentifier().removeDoubleImagesFromBuzzWordList(buzzWords);
             buzzWords = retainOnlyOneWordPerGroup(buzzWords);
 
             int sizeBuzzWordsAfterBothFunctions = buzzWords.size();
@@ -192,11 +235,15 @@ public class RetrieveBuzzwords {
         st.close();
         closeDbConnection();
 
-        //buzzWords = retainOnlyOneWordPerGroup(buzzWords);
-
-        Collections.reverse(buzzWords);
+        //Collections.reverse(buzzWords);
         return buzzWords;
     }
+
+
+
+
+
+
 
     public List<BuzzWord> retrieveBuzzWordsFromDbUntillHour(String database, int numberOfHours) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
@@ -441,7 +488,7 @@ public class RetrieveBuzzwords {
 
     private void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words", "root", "Vuurwerk00");
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words?&serverTimezone=UTC", "root", "");
     }
 
     private void closeDbConnection() throws SQLException {

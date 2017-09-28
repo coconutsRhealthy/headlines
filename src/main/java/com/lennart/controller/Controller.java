@@ -153,15 +153,15 @@ public class Controller extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/getImageBuzzWords", method = RequestMethod.POST)
     public @ResponseBody List<BuzzWord> sendImageBuzzWordsToClient() throws Exception {
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitial("buzzwords_new", "home");
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialWithImage("entertainment_buzzwords_new", "entertainment");
         return buzzWords;
     }
 
     @RequestMapping(value = "/loadMoreImageBuzzWords", method = RequestMethod.POST)
-    public @ResponseBody List<BuzzWord> sendMoreImageBuzzWordsToClient(@RequestBody String lastWord) throws Exception {
+    public @ResponseBody List<BuzzWord> sendMoreImageBuzzWordsToClient(@RequestBody List<BuzzWord> buzzWords) throws Exception {
         //je moet hier alle buzzwords heen en weer sturen tussen server en client..
 
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDb("buzzwords_new", lastWord, "home");
-        return buzzWords;
+        List<BuzzWord> buzzWordsToReturn = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbWithImage("entertainment_buzzwords_new", buzzWords, "entertainment");
+        return buzzWordsToReturn;
     }
 }
