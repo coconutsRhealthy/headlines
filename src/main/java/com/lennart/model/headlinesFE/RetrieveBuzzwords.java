@@ -290,7 +290,7 @@ public class RetrieveBuzzwords {
         return buzzWords;
     }
 
-    private List<String> removeEmptyStrings(List<String> strings) {
+    protected List<String> removeEmptyStrings(List<String> strings) {
         List<String> nonEmptyStrings = new ArrayList<>();
 
         for(String string : strings) {
@@ -301,7 +301,7 @@ public class RetrieveBuzzwords {
         return nonEmptyStrings;
     }
 
-    private String getCorrectTimeString(String rawDateTime) {
+    protected String getCorrectTimeString(String rawDateTime) {
         String correctTime = rawDateTime.substring(0, rawDateTime.lastIndexOf(":"));
 
         correctTime = addYtoTimeStringIfWordIsFromYesterday(correctTime);
@@ -333,7 +333,7 @@ public class RetrieveBuzzwords {
         return timeString;
     }
 
-    private List<String> getNewsSitesFromLinks(List<String> links, String page) {
+    protected List<String> getNewsSitesFromLinks(List<String> links, String page) {
         List<String> newsSites = new ArrayList<>();
 
         for(String link : links) {
@@ -488,7 +488,7 @@ public class RetrieveBuzzwords {
 
     private void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words?&serverTimezone=UTC", "root", "");
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words", "root", "Vuurwerk00");
     }
 
     private void closeDbConnection() throws SQLException {

@@ -10,6 +10,8 @@ import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbFinance.BuzzWordsManager
 import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbSport.BuzzWordsManagerSport;
 import com.lennart.model.headlinesFE.BuzzWord;
 import com.lennart.model.headlinesFE.RetrieveBuzzwords;
+import com.lennart.model.headlinesFE.RetrieveTopics;
+import com.lennart.model.headlinesFE.Topic;
 import com.lennart.model.twitter.TweetMachine;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -151,10 +153,16 @@ public class Controller extends SpringBootServletInitializer {
 
     //below here the new style methods (with images)
 
+//    @RequestMapping(value = "/getImageBuzzWords", method = RequestMethod.POST)
+//    public @ResponseBody List<BuzzWord> sendImageBuzzWordsToClient() throws Exception {
+//        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialWithImage("entertainment_buzzwords_new", "entertainment");
+//        return buzzWords;
+//    }
+
     @RequestMapping(value = "/getImageBuzzWords", method = RequestMethod.POST)
-    public @ResponseBody List<BuzzWord> sendImageBuzzWordsToClient() throws Exception {
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialWithImage("entertainment_buzzwords_new", "entertainment");
-        return buzzWords;
+    public @ResponseBody List<Topic> sendImageBuzzWordsToClient() throws Exception {
+        List<Topic> topics = new RetrieveTopics().retrieveAllTopicsFromDb("buzzwords_new");
+        return topics;
     }
 
     @RequestMapping(value = "/loadMoreImageBuzzWords", method = RequestMethod.POST)
