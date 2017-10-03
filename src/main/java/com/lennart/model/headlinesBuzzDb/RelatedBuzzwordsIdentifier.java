@@ -282,7 +282,7 @@ public class RelatedBuzzwordsIdentifier {
 
             wordsFromHeadlineToAnalyseAsSetCopy.retainAll(wordsFromHeadlineAsSet);
 
-            if(wordsFromHeadlineToAnalyseAsSetCopy.size() >= 4) {
+            if(wordsFromHeadlineToAnalyseAsSetCopy.size() >= 5) {
                 relatedHeadlines.add(headline);
             }
         }
