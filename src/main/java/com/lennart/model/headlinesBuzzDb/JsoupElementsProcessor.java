@@ -31,21 +31,21 @@ public class JsoupElementsProcessor {
 
     public List<String> getHeadlinesPerWord(List<Element> elementsPerWord, String word) {
         List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
-        headlinesPerWord = trimHeadlinesToMax77Characters(headlinesPerWord);
+        headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlines(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
     }
 
     public List<String> getRawHeadlinesPerWord(List<Element> elementsPerWord, String word) {
         List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
-        headlinesPerWord = trimHeadlinesToMax77Characters(headlinesPerWord);
+        headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForRaw(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
     }
 
     public List<String> getHrefHeadlinesPerWord(List<Element> elementsPerWord, String word) {
         List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
-        headlinesPerWord = trimHeadlinesToMax77Characters(headlinesPerWord);
+        headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForHref(headlinesPerWord, " " + word + " ", elementsPerWord);
         return headlinesPerWord;
     }
@@ -192,12 +192,12 @@ public class JsoupElementsProcessor {
         return correctHeadlines;
     }
 
-    private List<String> trimHeadlinesToMax77Characters(List<String> headlines) {
+    private List<String> trimHeadlinesToMax150Characters(List<String> headlines) {
         List<String> trimmedHeadlines = new ArrayList<>();
 
         for(String headline : headlines) {
-            if(headline.length() >= 78) {
-                String trimmedHeadline = headline.substring(0, 78);
+            if(headline.length() >= 151) {
+                String trimmedHeadline = headline.substring(0, 151);
                 //trimmedHeadline = removeLastHalfWordFromString(trimmedHeadline);
                 trimmedHeadlines.add(trimmedHeadline);
             } else {
