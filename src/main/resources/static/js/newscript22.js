@@ -1,28 +1,30 @@
 var mainApp = angular.module("mainApp", []);
 
-mainApp.controller('buzzwordsController', function($scope, $http) {
+mainApp.controller('topicsController', function($scope, $http) {
 
-    $scope.buzzWords;
+    $scope.topics;
     $scope.words = [];
-    $scope.showMoreButton = false;
     $scope.showPage = false;
     $scope.orderType = "-entry";
 
     if(window.location.href.includes("finance")) {
-
+        $http.post('/getFinanceTopics').success(function(data) {
+            $scope.topics = data;
+            $scope.showPage = true;
+        })
     } else if(window.location.href.includes("sport")) {
-
+        $http.post('/getSportTopics').success(function(data) {
+            $scope.topics = data;
+            $scope.showPage = true;
+        })
     } else if(window.location.href.includes("entertainment")) {
-
+        $http.post('/getEntertainmentTopics').success(function(data) {
+            $scope.topics = data;
+            $scope.showPage = true;
+        })
     } else {
-        $http.post('/getImageBuzzWords').success(function(data) {
-            if(data.length === 8) {
-                data.pop();
-                $scope.showMoreButton = true;
-            } else {
-                $scope.showMoreButton = false;
-            }
-            $scope.buzzWords = data;
+        $http.post('/getWorldNewsTopics').success(function(data) {
+            $scope.topics = data;
             $scope.showPage = true;
         })
     }
@@ -32,34 +34,6 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
             $scope.words.splice($scope.words.indexOf(word), 1);
         } else {
             $scope.words.push(word);
-        }
-    }
-
-    $scope.loadMoreImageBuzzWords = function() {
-        var currentUrl = window.location.href;
-
-        if(currentUrl.includes("www.")) {
-            $http.post('/loadMoreImageBuzzWords', $scope.buzzWords).success(function(data) {
-                if(((data.length - 1) % 7) === 0) {
-                    data.pop();
-                    $scope.showMoreButton = true;
-                } else {
-                    $scope.showMoreButton = false;
-                }
-
-                $scope.buzzWords = data;
-            })
-        } else {
-            $http.post('/loadMoreImageBuzzWords', $scope.buzzWords).success(function(data) {
-                if(((data.length - 1) % 7) === 0) {
-                    data.pop();
-                    $scope.showMoreButton = true;
-                } else {
-                    $scope.showMoreButton = false;
-                }
-
-                $scope.buzzWords = data;
-            })
         }
     }
 

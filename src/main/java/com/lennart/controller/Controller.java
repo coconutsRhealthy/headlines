@@ -153,23 +153,27 @@ public class Controller extends SpringBootServletInitializer {
 
     //below here the new style methods (with images)
 
-//    @RequestMapping(value = "/getImageBuzzWords", method = RequestMethod.POST)
-//    public @ResponseBody List<BuzzWord> sendImageBuzzWordsToClient() throws Exception {
-//        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialWithImage("entertainment_buzzwords_new", "entertainment");
-//        return buzzWords;
-//    }
-
-    @RequestMapping(value = "/getImageBuzzWords", method = RequestMethod.POST)
-    public @ResponseBody List<Topic> sendImageBuzzWordsToClient() throws Exception {
-        List<Topic> topics = new RetrieveTopics().retrieveAllTopicsFromDb("buzzwords_new");
-        return topics;
+    @RequestMapping(value = "/getWorldNewsTopics", method = RequestMethod.POST)
+    public @ResponseBody List<Topic> sendWorldNewsTopicsToClient() throws Exception {
+        List<Topic> worldNewsTopics = new RetrieveTopics().retrieveAllTopicsFromDb("buzzwords_new");
+        return worldNewsTopics;
     }
 
-    @RequestMapping(value = "/loadMoreImageBuzzWords", method = RequestMethod.POST)
-    public @ResponseBody List<BuzzWord> sendMoreImageBuzzWordsToClient(@RequestBody List<BuzzWord> buzzWords) throws Exception {
-        //je moet hier alle buzzwords heen en weer sturen tussen server en client..
+    @RequestMapping(value = "/getFinanceTopics", method = RequestMethod.POST)
+    public @ResponseBody List<Topic> sendFinanceTopicsToClient() throws Exception {
+        List<Topic> financeTopics = new RetrieveTopics().retrieveAllTopicsFromDb("finance_buzzwords_new");
+        return financeTopics;
+    }
 
-        List<BuzzWord> buzzWordsToReturn = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbWithImage("entertainment_buzzwords_new", buzzWords, "entertainment");
-        return buzzWordsToReturn;
+    @RequestMapping(value = "/getSportTopics", method = RequestMethod.POST)
+    public @ResponseBody List<Topic> sendSportTopicsToClient() throws Exception {
+        List<Topic> sportTopics = new RetrieveTopics().retrieveAllTopicsFromDb("sport_buzzwords_new");
+        return sportTopics;
+    }
+
+    @RequestMapping(value = "/getEntertainmentTopics", method = RequestMethod.POST)
+    public @ResponseBody List<Topic> sendEntertainmentTopicsToClient() throws Exception {
+        List<Topic> entertainmentTopics = new RetrieveTopics().retrieveAllTopicsFromDb("entertainment_buzzwords_new");
+        return entertainmentTopics;
     }
 }
