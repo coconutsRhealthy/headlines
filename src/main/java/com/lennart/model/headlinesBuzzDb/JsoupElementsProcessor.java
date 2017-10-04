@@ -1,6 +1,7 @@
 package com.lennart.model.headlinesBuzzDb;
 
 import com.lennart.model.headlinesBigDb.BigDbStorer;
+import com.lennart.model.headlinesFE.BuzzWord;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -29,44 +30,41 @@ public class JsoupElementsProcessor {
         return elementsPerWord;
     }
 
-    public List<String> getHeadlinesPerWord(String word, List<String> headlinesPerWord) {
+    public List<String> getHeadlinesPerWord(List<Element> elementsPerWord, String word) {
+        List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlines(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
     }
 
-    public List<String> getRawHeadlinesPerWord(String word, List<String> headlinesPerWord) {
+    public List<String> getRawHeadlinesPerWord(List<Element> elementsPerWord, String word) {
+        List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForRaw(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
     }
 
-    public List<String> getHrefHeadlinesPerWord(List<Element> elementsPerWord, String word, List<String> headlinesPerWord) {
+    public List<String> getHrefHeadlinesPerWord(List<Element> elementsPerWord, String word) {
+        List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForHref(headlinesPerWord, " " + word + " ", elementsPerWord);
         return headlinesPerWord;
     }
 
-    public List<String> getUncorrectedHeadlinesPerWordNew(List<Element> elementsList) throws Exception {
-        List<String> headlines = new ArrayList<>();
+    public List<String> replaceRawHeadlinesToH1ifPossible(Map<String, String> hrefAndRawHeadline) throws Exception {
+        List<String> headlinesH1 = new ArrayList<>();
 
-        for(Element e : elementsList) {
-            String link = e.attr("abs:href");
+        for (Map.Entry<String, String> entry : hrefAndRawHeadline.entrySet()) {
+            Document document = Jsoup.connect(entry.getKey()).get();
+            Elements elements = document.select("h1");
 
-            if(link != null) {
-                Document document = Jsoup.connect(link).get();
-                Elements elements = document.select("h1");
-
-                if(!elements.isEmpty()) {
-                    headlines.add(elements.first().text());
-                } else {
-                    headlines.add("");
-                }
+            if(elements.size() == 1) {
+                headlinesH1.add(elements.first().text());
             } else {
-                headlines.add("");
+                headlinesH1.add(entry.getValue());
             }
         }
-        return headlines;
+        return headlinesH1;
     }
 
     private List<String> getUncorrectedHeadlinesPerWord(List<Element> elementsList) {

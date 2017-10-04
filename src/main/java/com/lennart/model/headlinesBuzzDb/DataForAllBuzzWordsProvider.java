@@ -194,12 +194,9 @@ public class DataForAllBuzzWordsProvider {
         JsoupElementsProcessor jsoupElementsProcessor = new JsoupElementsProcessor();
 
         List<Element> elementsPerWord = jsoupElementsProcessor.getAllElementsPerWord(word, bigDbStorer);
-
-        List<String> uncorrectedHeadlines = jsoupElementsProcessor.getUncorrectedHeadlinesPerWordNew(elementsPerWord);
-
-        List<String> uncorrectedTrimmedHeadlines = jsoupElementsProcessor.getRawHeadlinesPerWord(word, uncorrectedHeadlines);
-        List<String> hrefsForWord = jsoupElementsProcessor.getHrefHeadlinesPerWord(elementsPerWord, word, uncorrectedHeadlines);
-        List<String> correctedHeadlinesForWord = jsoupElementsProcessor.getHeadlinesPerWord(word, uncorrectedHeadlines);
+        List<String> uncorrectedTrimmedHeadlines = jsoupElementsProcessor.getRawHeadlinesPerWord(elementsPerWord, word);
+        List<String> hrefsForWord = jsoupElementsProcessor.getHrefHeadlinesPerWord(elementsPerWord, word);
+        List<String> correctedHeadlinesForWord = jsoupElementsProcessor.getHeadlinesPerWord(elementsPerWord, word);
 
         Map<String, List<String>> dataTotalForWord = new HashMap<>();
         dataTotalForWord.put("correctedHeadlines", correctedHeadlinesForWord);
@@ -214,6 +211,22 @@ public class DataForAllBuzzWordsProvider {
 
         //tot slot verwijder je links die van dezelfde site afkomstig zijn
         dataTotalForWord = removeHeadlinesThatAreFromSameSite(dataTotalForWord);
+
+        //hieronder nieuw, vervang headlines met h1 van target pagina als mogelijk
+        Map<String, String> hrefsAndRawHeadlines = new LinkedHashMap<>();
+        List<String> hrefsNow = dataTotalForWord.get("hrefs");
+        List<String> rawHeadlinesNow = dataTotalForWord.get("rawHeadlines");
+
+        if(rawHeadlinesNow.size() == hrefsNow.size()) {
+            for(int i = 0; i < hrefsNow.size(); i++) {
+                hrefsAndRawHeadlines.put(hrefsNow.get(i), rawHeadlinesNow.get(i));
+            }
+        }
+
+        if(!hrefsAndRawHeadlines.isEmpty()) {
+            List<String> rawHeadlinesReplacedByH1 = jsoupElementsProcessor.replaceRawHeadlinesToH1ifPossible(hrefsAndRawHeadlines);
+            dataTotalForWord.put("rawHeadlines", rawHeadlinesReplacedByH1);
+        }
 
         return dataTotalForWord;
     }
