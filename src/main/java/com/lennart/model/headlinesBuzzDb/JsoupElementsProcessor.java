@@ -29,25 +29,44 @@ public class JsoupElementsProcessor {
         return elementsPerWord;
     }
 
-    public List<String> getHeadlinesPerWord(List<Element> elementsPerWord, String word) {
-        List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
+    public List<String> getHeadlinesPerWord(String word, List<String> headlinesPerWord) {
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlines(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
     }
 
-    public List<String> getRawHeadlinesPerWord(List<Element> elementsPerWord, String word) {
-        List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
+    public List<String> getRawHeadlinesPerWord(String word, List<String> headlinesPerWord) {
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForRaw(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
     }
 
-    public List<String> getHrefHeadlinesPerWord(List<Element> elementsPerWord, String word) {
-        List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
+    public List<String> getHrefHeadlinesPerWord(List<Element> elementsPerWord, String word, List<String> headlinesPerWord) {
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForHref(headlinesPerWord, " " + word + " ", elementsPerWord);
         return headlinesPerWord;
+    }
+
+    public List<String> getUncorrectedHeadlinesPerWordNew(List<Element> elementsList) throws Exception {
+        List<String> headlines = new ArrayList<>();
+
+        for(Element e : elementsList) {
+            String link = e.attr("abs:href");
+
+            if(link != null) {
+                Document document = Jsoup.connect(link).get();
+                Elements elements = document.select("h1");
+
+                if(!elements.isEmpty()) {
+                    headlines.add(elements.first().text());
+                } else {
+                    headlines.add("");
+                }
+            } else {
+                headlines.add("");
+            }
+        }
+        return headlines;
     }
 
     private List<String> getUncorrectedHeadlinesPerWord(List<Element> elementsList) {

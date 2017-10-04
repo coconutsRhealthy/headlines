@@ -194,9 +194,12 @@ public class DataForAllBuzzWordsProvider {
         JsoupElementsProcessor jsoupElementsProcessor = new JsoupElementsProcessor();
 
         List<Element> elementsPerWord = jsoupElementsProcessor.getAllElementsPerWord(word, bigDbStorer);
-        List<String> uncorrectedTrimmedHeadlines = jsoupElementsProcessor.getRawHeadlinesPerWord(elementsPerWord, word);
-        List<String> hrefsForWord = jsoupElementsProcessor.getHrefHeadlinesPerWord(elementsPerWord, word);
-        List<String> correctedHeadlinesForWord = jsoupElementsProcessor.getHeadlinesPerWord(elementsPerWord, word);
+
+        List<String> uncorrectedHeadlines = jsoupElementsProcessor.getUncorrectedHeadlinesPerWordNew(elementsPerWord);
+
+        List<String> uncorrectedTrimmedHeadlines = jsoupElementsProcessor.getRawHeadlinesPerWord(word, uncorrectedHeadlines);
+        List<String> hrefsForWord = jsoupElementsProcessor.getHrefHeadlinesPerWord(elementsPerWord, word, uncorrectedHeadlines);
+        List<String> correctedHeadlinesForWord = jsoupElementsProcessor.getHeadlinesPerWord(word, uncorrectedHeadlines);
 
         Map<String, List<String>> dataTotalForWord = new HashMap<>();
         dataTotalForWord.put("correctedHeadlines", correctedHeadlinesForWord);
