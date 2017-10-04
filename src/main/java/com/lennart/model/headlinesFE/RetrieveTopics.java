@@ -20,6 +20,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         }
 
         Map<Integer, List<BuzzWord>> buzzWordGroups = retrieveAllBuzzWordGroups(database);
+        buzzWordGroups = retainBuzzWordsWithSameImagesInGroupsMap(buzzWordGroups);
 
         for (Map.Entry<Integer, List<BuzzWord>> entry : buzzWordGroups.entrySet()) {
             Topic topic = getTopicFromBuzzWordGroup(entry.getValue());
@@ -37,6 +38,52 @@ public class RetrieveTopics extends RetrieveBuzzwords {
     private Map<Integer, List<BuzzWord>> retrieveAllBuzzWordGroups(String database) throws Exception {
         List<BuzzWord> allGroupBuzzWords = getAllGroupBuzzWords(database);
         return getMapOfGroupBuzzWords(allGroupBuzzWords);
+    }
+
+    private Map<Integer, List<BuzzWord>> retainBuzzWordsWithSameImagesInGroupsMap(Map<Integer, List<BuzzWord>> buzzWordGroupsMap) {
+        Map<Integer, List<BuzzWord>> cleanedMap = new HashMap<>();
+
+        for (Map.Entry<Integer, List<BuzzWord>> entry : buzzWordGroupsMap.entrySet()) {
+            String mostFrequentImageUrlFromGroup = getMostFrequentImageUrlFromGroup(entry.getValue());
+
+            if(mostFrequentImageUrlFromGroup != null) {
+                List<BuzzWord> cleanedGroup = retainBuzzWordsWithSameImageInGroup(entry.getValue(), mostFrequentImageUrlFromGroup);
+                cleanedMap.put(entry.getKey(), cleanedGroup);
+            }
+        }
+        return cleanedMap;
+    }
+
+    private String getMostFrequentImageUrlFromGroup(List<BuzzWord> group) {
+        List<String> allImageLinks = new ArrayList<>();
+
+        for(BuzzWord buzzWord : group) {
+            if(!buzzWord.getImageLink().equals("-")) {
+                allImageLinks.add(buzzWord.getImageLink());
+            }
+        }
+
+        Map<Integer, String> frequencyMap = new TreeMap<>(Collections.reverseOrder());
+
+        for(String imageLink : allImageLinks) {
+            frequencyMap.put(Collections.frequency(allImageLinks, imageLink), imageLink);
+        }
+
+        if(frequencyMap.entrySet().iterator().hasNext()) {
+            return frequencyMap.entrySet().iterator().next().getValue();
+        }
+        return null;
+    }
+
+    private List<BuzzWord> retainBuzzWordsWithSameImageInGroup(List<BuzzWord> group, String imageUrlToRetain) {
+        List<BuzzWord> buzzWordsToRetain = new ArrayList<>();
+
+        for(BuzzWord buzzWord : group) {
+            if(buzzWord.getImageLink().equals(imageUrlToRetain)) {
+                buzzWordsToRetain.add(buzzWord);
+            }
+        }
+        return buzzWordsToRetain;
     }
 
     private Topic getTopicFromBuzzWordGroup(List<BuzzWord> buzzWordGroup) {
