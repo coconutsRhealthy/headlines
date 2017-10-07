@@ -58,14 +58,15 @@
                 <div class="row" ng-repeat="topic in topics | orderBy : orderType">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-6" >
-                        <div class="marginbottom">
-                            <div>
-                                <a class="nounderline" href="" ng-click="testfunctie(topic)">
+                        <div class="image-headline-block">
+                            <div class="main-headline">
+                                <a class="no-underline-link" href="" ng-click="testfunctie(topic)">
                                     <img src={{topic.imageLink}}>
                                     <h4>{{topic.headlines[0]}}</h4>
+                                    <small class="text-muted metadata-headline">3 hours ago</small>
                                 </a>
                             </div>
-                            <div ng-show="check(topic)">
+                            <div class="child-headlines" ng-show="check(topic)">
                                 <ul class="custom-bullet">
                                     <div ng-show="check(topic)" ng-repeat="headline in topic.headlines track by $index">
                                         <li>
@@ -75,7 +76,6 @@
                                     </div>
                                 </ul>
                             </div>
-                            <div>3 hours ago</div>
                         </div>
                     </div>
                     <div class="col-sm-3"></div>

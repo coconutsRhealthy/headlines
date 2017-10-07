@@ -61,10 +61,31 @@ img {
     height: auto;
 }
 
-.nounderline {
+h4 {
+    margin-left: 5;
+    margin-bottom: 3 !important;
+}
+
+.image-headline-block {
+    margin-bottom: 35;
+    background-color: rgb(243, 243, 243);
+}
+
+.main-headline {
+    padding-bottom: 6;
+}
+
+.metadata-headline {
+    margin-left: 5;
+    color: rgb(100, 100, 100);
+}
+
+.child-headlines {
+    margin-top: 5;
+    padding-bottom: 7;
+}
+
+.no-underline-link {
     text-decoration: none !important;
 }
 
-.marginbottom {
-    margin-bottom: 35;
-}
