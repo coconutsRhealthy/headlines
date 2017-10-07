@@ -215,16 +215,16 @@ public class BigDbStorerFinance extends BigDbStorer {
                 document21 = readSite("https://markets.ft.com/data");
                 break;
             case 22:
-                document22 = readSite("http://www.japantimes.co.jp/news/financial-markets");
+                document22 = readSite("http://nypost.com/business");
                 break;
             case 23:
-                document23 = readSite("http://www.scmp.com/business/markets");
+                document23 = readSite("http://www.nydailynews.com/news/money");
                 break;
             case 24:
-                document24 = readSite("http://www.theaustralian.com.au/business/markets");
+                document24 = readSite("http://www.chron.com/business");
                 break;
             case 25:
-                document25 = readSite("https://www.theguardian.com/business/stock-markets");
+                document25 = readSite("http://www.tampabay.com/news/business");
                 break;
             case 26:
                 document26 = readSite("https://washpost.bloomberg.com/market-news");
@@ -233,7 +233,7 @@ public class BigDbStorerFinance extends BigDbStorer {
                 document27 = readSite("http://finviz.com/news.ashx");
                 break;
             case 28:
-                document28 = readSite("https://www.ft.com/markets");
+                document28 = readSite("https://www.seattletimes.com/business");
                 break;
             case 29:
                 document29 = readSite("http://www.cbc.ca/news/business");
@@ -251,76 +251,76 @@ public class BigDbStorerFinance extends BigDbStorer {
                 document33 = readSite("http://www.nbcnews.com/business/markets");
                 break;
             case 34:
-                document34 = readSite("http://www.bbc.com/news/business");
+                document34 = readSite("http://www.post-gazette.com/business");
                 break;
             case 35:
                 document35 = readSite("https://www.ft.com");
                 break;
             case 36:
-                document36 = readSite("https://www.irishtimes.com/business");
+                document36 = readSite("http://www.azcentral.com/business");
                 break;
             case 37:
-                document37 = readSite("http://www.telegraph.co.uk/business/markets");
+                document37 = readSite("http://www.mercurynews.com/business");
                 break;
             case 38:
-                document38 = readSite("https://www.rt.com/business");
+                document38 = readSite("https://www.dallasnews.com/business");
                 break;
             case 39:
-                document39 = readSite("http://gulfnews.com/business");
+                document39 = readSite("https://www.cbsnews.com/moneywatch/");
                 break;
             case 40:
-                document40 = readSite("https://www.dailysabah.com/business");
+                document40 = readSite("http://abcnews.go.com/Business");
                 break;
             case 41:
-                document41 = readSite("http://timesofoman.com/business");
+                document41 = readSite("https://www.newsmax.com/finance");
                 break;
             case 42:
-                document42 = readSite("http://timesofindia.indiatimes.com/business");
+                document42 = readSite("http://observer.com/business");
                 break;
             case 43:
-                document43 = readSite("http://indianexpress.com/business");
+                document43 = readSite("http://www.newsday.com/business");
                 break;
             case 44:
-                document44 = readSite("http://www.chinadaily.com.cn/business");
+                document44 = readSite("http://www.sfchronicle.com/business");
                 break;
             case 45:
-                document45 = readSite("http://www.shanghaidaily.com/business");
+                document45 = readSite("https://www.bostonglobe.com/business");
                 break;
             case 46:
-                document46 = readSite("http://www.xinhuanet.com/english/business");
+                document46 = readSite("http://www.ajc.com/money");
                 break;
             case 47:
-                document47 = readSite("http://www.globaltimes.cn/business");
+                document47 = readSite("http://www.startribune.com/business");
                 break;
             case 48:
-                document48 = readSite("http://www.scmp.com/business");
+                document48 = readSite("http://www.oregonlive.com/business");
                 break;
             case 49:
-                document49 = readSite("http://www.japantimes.co.jp/news/business");
+                document49 = readSite("http://www.sandiegouniontribune.com/business");
                 break;
             case 51:
-                document51 = readSite("http://the-japan-news.com/news/business");
+                document51 = readSite("http://www.ocregister.com/business");
                 break;
             case 52:
-                document52 = readSite("https://japantoday.com/category/business");
+                document52 = readSite("http://www.sacbee.com/news/business");
                 break;
             case 53:
-                document53 = readSite("http://www.bangkokpost.com/business");
+                document53 = readSite("http://www.stltoday.com/business");
                 break;
             case 54:
-                document54 = readSite("http://www.thejakartapost.com/news/business");
+                document54 = readSite("http://www.miamiherald.com/news/business");
                 break;
             case 55:
-                document55 = readSite("http://www.abc.net.au/news/business");
+                document55 = readSite("http://www.indystar.com/news/business");
                 break;
             case 56:
-                document56 = readSite("http://www.theaustralian.com.au/business");
+                document56 = readSite("http://www.denverpost.com/business");
                 break;
             case 57:
-                document57 = readSite("http://www.nzherald.co.nz/business");
+                document57 = readSite("http://www.kansascity.com/news/business");
                 break;
             case 58:
-                document58 = readSite("http://www.aljazeera.com/topics/categories/business.html");
+                document58 = readSite("http://www.baltimoresun.com/business");
                 break;
             case 59:
                 document59 = readSite("https://www.forbes.com/markets");
