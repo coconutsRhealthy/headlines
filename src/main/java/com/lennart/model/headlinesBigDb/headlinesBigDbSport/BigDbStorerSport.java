@@ -194,37 +194,37 @@ public class BigDbStorerSport extends BigDbStorer {
                 document14 = readSite("http://www.yardbarker.com");
                 break;
             case 15:
-                document15 = readSite("http://www.goal.com/en");
+                document15 = readSite("http://nypost.com/sports");
                 break;
             case 16:
-                document16 = readSite("http://www.skysports.com");
+                document16 = readSite("http://www.nydailynews.com/sports");
                 break;
             case 17:
-                document17 = readSite("http://www.eurosport.com");
+                document17 = readSite("https://www.usatoday.com/sports");
                 break;
             case 18:
-                document18 = readSite("http://www.espnfc.com");
+                document18 = readSite("http://www.chicagotribune.com/sports");
                 break;
             case 19:
-                document19 = readSite("http://www.bbc.com/sport");
+                document19 = readSite("http://www.chron.com/sports");
                 break;
             case 20:
-                document20 = readSite("https://www.theguardian.com/uk/sport");
+                document20 = readSite("http://www.azcentral.com/sports");
                 break;
             case 21:
-                document21 = readSite("http://www.independent.co.uk/sport");
+                document21 = readSite("https://sportsday.dallasnews.com");
                 break;
             case 22:
-                document22 = readSite("http://www.mirror.co.uk/sport");
+                document22 = readSite("http://www.star-telegram.com/sports");
                 break;
             case 23:
-                document23 = readSite("http://www.football365.com");
+                document23 = readSite("http://www.twincities.com/sports");
                 break;
             case 24:
-                document24 = readSite("http://www.tennisnow.com");
+                document24 = readSite("http://www.detroitnews.com/sports");
                 break;
             case 25:
-                document25 = readSite("https://www.reuters.com/news/sports");
+                document25 = readSite("http://www.richmond.com/sports");
                 break;
             case 26:
                 document26 = readSite("https://www.thestar.com/sports.html");
@@ -245,85 +245,85 @@ public class BigDbStorerSport extends BigDbStorer {
                 document31 = readSite("http://edition.cnn.com/sport");
                 break;
             case 32:
-                document32 = readSite("http://www.thenews.mx/sports");
+                document32 = readSite("http://abcnews.go.com/Sports");
                 break;
             case 33:
-                document33 = readSite("http://riotimesonline.com/brazil-news/category/rio-sports");
+                document33 = readSite("http://www.newsday.com/sports");
                 break;
             case 34:
-                document34 = readSite("https://www.thesun.co.uk/sport");
+                document34 = readSite("http://www.sfchronicle.com/sports");
                 break;
             case 35:
-                document35 = readSite("https://www.irishtimes.com/sport");
+                document35 = readSite("https://www.bostonglobe.com/sports");
                 break;
             case 36:
-                document36 = readSite("http://www.telegraph.co.uk/sport");
+                document36 = readSite("http://www.nj.com/sports");
                 break;
             case 37:
-                document37 = readSite("https://www.rt.com/sport");
+                document37 = readSite("http://www.ajc.com/sports");
                 break;
             case 38:
-                document38 = readSite("http://www.dailysun.co.za/sport");
+                document38 = readSite("http://www.startribune.com/sports");
                 break;
             case 39:
-                document39 = readSite("http://www.vanguardngr.com/category/sports");
+                document39 = readSite("http://www.oregonlive.com/sports");
                 break;
             case 40:
-                document40 = readSite("http://gulfnews.com/sport");
+                document40 = readSite("http://www.sandiegouniontribune.com/sports");
                 break;
             case 41:
-                document41 = readSite("https://www.dailysabah.com/sports");
+                document41 = readSite("http://www.ocregister.com/sports");
                 break;
             case 42:
-                document42 = readSite("http://www.tehrantimes.com/service/sports");
+                document42 = readSite("http://www.sacbee.com/sports");
                 break;
             case 43:
-                document43 = readSite("http://timesofoman.com/Sports");
+                document43 = readSite("http://www.stltoday.com/sports");
                 break;
             case 44:
-                document44 = readSite("http://timesofindia.indiatimes.com/sports");
+                document44 = readSite("http://www.miamiherald.com/sports");
                 break;
             case 45:
-                document45 = readSite("http://indianexpress.com/section/sports");
+                document45 = readSite("http://www.indystar.com/sports");
                 break;
             case 46:
-                document46 = readSite("http://www.chinadaily.com.cn/sports");
+                document46 = readSite("http://www.kansascity.com/sports");
                 break;
             case 47:
-                document47 = readSite("http://www.shanghaidaily.com/sports");
+                document47 = readSite("http://www.denverpost.com/sports");
                 break;
             case 48:
-                document48 = readSite("http://www.xinhuanet.com/english/sports");
+                document48 = readSite("http://www.mysanantonio.com/sports");
                 break;
             case 49:
-                document49 = readSite("http://www.globaltimes.cn/sports");
+                document49 = readSite("http://www.baltimoresun.com/sports");
                 break;
             case 51:
-                document51 = readSite("http://www.scmp.com/sport");
+                document51 = readSite("http://www.mercurynews.com/sports");
                 break;
             case 52:
-                document52 = readSite("http://www.abc.net.au/news/sport");
+                document52 = readSite("http://www.jsonline.com/sports");
                 break;
             case 53:
-                document53 = readSite("http://www.theaustralian.com.au/sport");
+                document53 = readSite("http://www.tampabay.com/sports");
                 break;
             case 54:
-                document54 = readSite("http://www.nzherald.co.nz/sport");
+                document54 = readSite("http://www.orlandosentinel.com/sports");
                 break;
             case 55:
-                document55 = readSite("http://www.aljazeera.com/topics/categories/sport.html");
+                document55 = readSite("https://www.seattletimes.com/sports");
                 break;
             case 56:
-                document56 = readSite("http://www.japantimes.co.jp/sports");
+                document56 = readSite("http://www.dispatch.com/sports");
                 break;
             case 57:
-                document57 = readSite("http://www.bangkokpost.com/news/sports");
+                document57 = readSite("http://www.courier-journal.com/sports");
                 break;
             case 58:
-                document58 = readSite("https://japantoday.com/category/sports");
+                document58 = readSite("http://www.charlotteobserver.com/sports");
                 break;
             case 59:
-                document59 = readSite("http://www.express.co.uk/sport");
+                document59 = readSite("http://www.post-gazette.com/sports");
                 break;
             case 60:
                 document60 = readSite("https://www.foxsports.com");
