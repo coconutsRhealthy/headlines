@@ -700,10 +700,10 @@ public class BigDbStorer {
     public void initializeDocuments(int number) throws IOException {
         switch(number) {
             case 1:
-                document1 = readSite("http://www.cbc.ca/news");
+                document1 = readSite("http://nypost.com");
                 break;
             case 2:
-                document2 = readSite("https://www.thestar.com");
+                document2 = readSite("http://www.nydailynews.com");
                 break;
             case 3:
                 document3 = readSite("https://www.nytimes.com");
@@ -736,139 +736,139 @@ public class BigDbStorer {
                 document12 = readSite("http://www.nbcnews.com");
                 break;
             case 13:
-                document13 = readSite("http://www.theyucatantimes.com");
+                document13 = readSite("http://www.chicagotribune.com");
                 break;
             case 14:
-                document14 = readSite("http://www.thenews.mx");
+                document14 = readSite("http://www.chron.com");
                 break;
             case 15:
-                document15 = readSite("http://riotimesonline.com");
+                document15 = readSite("http://www.azcentral.com");
                 break;
             case 16:
-                document16 = readSite("http://www1.folha.uol.com.br/internacional/en");
+                document16 = readSite("https://www.dallasnews.com/");
                 break;
             case 17:
-                document17 = readSite("http://www.buenosairesherald.com/printed-edition");
+                document17 = readSite("https://www.cbsnews.com");
                 break;
             case 18:
-                document18 = readSite("https://www.theguardian.com");
+                document18 = readSite("http://abcnews.go.com");
                 break;
             case 19:
-                document19 = readSite("http://www.bbc.co.uk");
+                document19 = readSite("http://www.newsmax.com");
                 break;
             case 20:
-                document20 = readSite("https://www.ft.com");
+                document20 = readSite("http://observer.com");
                 break;
             case 21:
-                document21 = readSite("https://www.thetimes.co.uk");
+                document21 = readSite("http://www.newsday.com");
                 break;
             case 22:
-                document22 = readSite("https://www.thesun.co.uk");
+                document22 = readSite("http://www.sfchronicle.com");
                 break;
             case 23:
-                document23 = readSite("http://www.irishtimes.com");
+                document23 = readSite("https://www.bostonglobe.com");
                 break;
             case 24:
-                document24 = readSite("http://www.telegraph.co.uk/france/");
+                document24 = readSite("http://www.nj.com/starledger");
                 break;
             case 25:
-                document25 = readSite("https://www.mediapart.fr/en/english");
+                document25 = readSite("http://www.ajc.com");
                 break;
             case 26:
-                document26 = readSite("http://www.spiegel.de/international");
+                document26 = readSite("http://www.startribune.com");
                 break;
             case 27:
-                document27 = readSite("http://www.telegraph.co.uk/germany");
+                document27 = readSite("http://www.oregonlive.com");
                 break;
             case 28:
-                document28 = readSite("http://elpais.com/elpais/inenglish.html");
+                document28 = readSite("http://www.sandiegouniontribune.com");
                 break;
             case 29:
-                document29 = readSite("http://www.ansa.it/english");
+                document29 = readSite("http://www.ocregister.com");
                 break;
             case 30:
-                document30 = readSite("https://www.rt.com");
+                document30 = readSite("http://www.sacbee.com");
                 break;
             case 31:
-                document31 = readSite("https://themoscowtimes.com");
+                document31 = readSite("http://www.stltoday.com");
                 break;
             case 32:
-                document32 = readSite("http://www.dailysun.co.za");
+                document32 = readSite("http://www.miamiherald.com");
                 break;
             case 33:
-                document33 = readSite("http://www.timeslive.co.za");
+                document33 = readSite("http://www.indystar.com");
                 break;
             case 34:
-                document34 = readSite("http://www.vanguardngr.com");
+                document34 = readSite("http://www.kansascity.com");
                 break;
             case 35:
-                document35 = readSite("http://gulfnews.com");
+                document35 = readSite("http://www.denverpost.com");
                 break;
             case 36:
-                document36 = readSite("https://www.dailysabah.com");
+                document36 = readSite("http://rockymountainnews.com");
                 break;
             case 37:
-                document37 = readSite("http://www.tehrantimes.com");
+                document37 = readSite("http://www.mysanantonio.com");
                 break;
             case 38:
-                document38 = readSite("https://www.ynetnews.com");
+                document38 = readSite("http://www.baltimoresun.com");
                 break;
             case 39:
-                document39 = readSite("http://timesofoman.com");
+                document39 = readSite("http://www.mercurynews.com");
                 break;
             case 40:
-                document40 = readSite("http://timesofindia.indiatimes.com/home/headlines");
+                document40 = readSite("http://www.jsonline.com");
                 break;
             case 41:
-                document41 = readSite("http://indianexpress.com");
+                document41 = readSite("http://www.tampabay.com");
                 break;
             case 42:
-                document42 = readSite("http://www.chinadaily.com.cn");
+                document42 = readSite("http://www.orlandosentinel.com");
                 break;
             case 43:
-                document43 = readSite("http://www.shanghaidaily.com");
+                document43 = readSite("https://www.seattletimes.com");
                 break;
             case 44:
-                document44 = readSite("http://www.xinhuanet.com/english");
+                document44 = readSite("http://www.dispatch.com");
                 break;
             case 45:
-                document45 = readSite("http://www.globaltimes.cn");
+                document45 = readSite("http://www.courier-journal.com");
                 break;
             case 46:
-                document46 = readSite("http://www.scmp.com/frontpage/international");
+                document46 = readSite("http://www.charlotteobserver.com");
                 break;
             case 47:
-                document47 = readSite("http://www.japantimes.co.jp");
+                document47 = readSite("http://www.post-gazette.com");
                 break;
             case 48:
-                document48 = readSite("http://the-japan-news.com");
+                document48 = readSite("http://www.star-telegram.com");
                 break;
             case 49:
-                document49 = readSite("https://japantoday.com");
+                document49 = readSite("http://www.detroitnews.com");
                 break;
             case 51:
-                document51 = readSite("https://www.hongkongfp.com");
+                document51 = readSite("http://www.bostonherald.com");
                 break;
             case 52:
-                document52 = readSite("http://www.bangkokpost.com");
+                document52 = readSite("http://www.twincities.com");
                 break;
             case 53:
-                document53 = readSite("http://vietnamnews.vn");
+                document53 = readSite("http://www.richmond.com");
                 break;
             case 54:
-                document54 = readSite("http://www.thejakartapost.com");
+                document54 = readSite("http://www.omaha.com");
                 break;
             case 55:
-                document55 = readSite("http://www.abc.net.au/news");
+                document55 = readSite("https://pilotonline.com");
                 break;
             case 56:
-                document56 = readSite("http://www.theaustralian.com.au");
+                document56 = readSite("http://www.arkansasonline.com");
                 break;
             case 57:
-                document57 = readSite("http://www.nzherald.co.nz");
+                document57 = readSite("http://buffalonews.com");
                 break;
             case 58:
-                document58 = readSite("http://www.aljazeera.com");
+                document58 = readSite("http://www.tennessean.com");
                 break;
             case 59:
                 document59 = readSite("https://www.bloomberg.com");

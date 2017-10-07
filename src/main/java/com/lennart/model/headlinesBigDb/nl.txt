@@ -1,0 +1,228 @@
+    public void initializeDocuments(int number) throws IOException {
+        switch(number) {
+            case 1:
+                document1 = readSite("https://www.telegraaf.nl");
+                break;
+            case 2:
+                document2 = readSite("https://www.metronieuws.nl");
+                break;
+            case 3:
+                document3 = readSite("https://www.ad.nl");
+                break;
+            case 4:
+                document4 = readSite("https://www.volkskrant.nl/cookiewall/accept?url=https%3A%2F%2Fwww.volkskrant.nl%2F");
+                break;
+            case 5:
+                document5 = readSite("https://www.nrc.nl");
+                break;
+            case 6:
+                document6 = readSite("https://www.trouw.nl/cookiewall/accept?url=https://www.trouw.nl/");
+                break;
+            case 7:
+                document7 = readSite("https://fd.nl/");
+                break;
+            case 8:
+                document8 = readSite("https://www.rd.nl/");
+                break;
+            case 9:
+                document9 = readSite("https://www.nd.nl/Default.lynkx");
+                break;
+            case 10:
+                document10 = readSite("https://www.nu.nl/");
+                break;
+            case 11:
+                document11 = readSite("https://www.rtlnieuws.nl/");
+                break;
+            case 12:
+                document12 = readSite("https://nos.nl/");
+                break;
+            case 13:
+                document13 = readSite("https://www.bnr.nl/");
+                break;
+            case 14:
+                document14 = readSite("http://www.limburger.nl/");
+                break;
+            case 15:
+                document15 = readSite("https://www.gelderlander.nl/accept?url=https://www.gelderlander.nl/");
+                break;
+            case 16:
+                document16 = readSite("https://www.noordhollandsdagblad.nl/");
+                break;
+            case 17:
+                document17 = readSite("https://www.destentor.nl/accept?url=https://www.destentor.nl/");
+                break;
+            case 18:
+                document18 = readSite("http://www.dvhn.nl/");
+                break;
+            case 19:
+                document19 = readSite("https://www.bd.nl/accept?url=https://www.bd.nl/");
+                break;
+            case 20:
+                document20 = readSite("https://www.tubantia.nl/accept?url=https://www.tubantia.nl/");
+                break;
+            case 21:
+                document21 = readSite("https://www.ed.nl/accept?url=https://www.ed.nl/");
+                break;
+            case 22:
+                document22 = readSite("https://www.bndestem.nl/accept?url=https://www.bndestem.nl/");
+                break;
+            case 23:
+                document23 = readSite("http://www.lc.nl/");
+                break;
+            case 24:
+                document24 = readSite("https://www.parool.nl/cookiewall/accept?url=https%3A%2F%2Fwww.parool.nl%2F");
+                break;
+            case 25:
+                document25 = readSite("http://www.at5.nl/");
+                break;
+            case 26:
+                document26 = readSite("http://www.rtvnoord.nl/");
+                break;
+            case 27:
+                document27 = readSite("http://www.rtvdrenthe.nl/");
+                break;
+            case 28:
+                document28 = readSite("https://www.rtvoost.nl/");
+                break;
+            case 29:
+                document29 = readSite("http://www.omroepgelderland.nl/");
+                break;
+            case 30:
+                document30 = readSite("http://www.rtvutrecht.nl/");
+                break;
+            case 31:
+                document31 = readSite("http://www.omroepflevoland.nl/");
+                break;
+            case 32:
+                document32 = readSite("http://www.nhnieuws.nl/");
+                break;
+            case 33:
+                document33 = readSite("http://www.rijnmond.nl/");
+                break;
+            case 34:
+                document34 = readSite("https://www.omroepwest.nl/");
+                break;
+            case 35:
+                document35 = readSite("http://www.omroepzeeland.nl/");
+                break;
+            case 36:
+                document36 = readSite("http://www.omroepbrabant.nl/");
+                break;
+            case 37:
+                document37 = null;
+                break;
+            case 38:
+                document38 = null;
+                break;
+            case 39:
+                document39 = null;
+                break;
+            case 40:
+                document40 = null;
+                break;
+            case 41:
+                document41 = null;
+                break;
+            case 42:
+                document42 = null;
+                break;
+            case 43:
+                document43 = null;
+                break;
+            case 44:
+                document44 = null;
+                break;
+            case 45:
+                document45 = null;
+                break;
+            case 46:
+                document46 = null;
+                break;
+            case 47:
+                document47 = null;
+                break;
+            case 48:
+                document48 = null;
+                break;
+            case 49:
+                document49 = null;
+                break;
+            case 51:
+                document51 = null;
+                break;
+            case 52:
+                document52 = null;
+                break;
+            case 53:
+                document53 = null;
+                break;
+            case 54:
+                document54 = null;
+                break;
+            case 55:
+                document55 = null;
+                break;
+            case 56:
+                document56 = null;
+                break;
+            case 57:
+                document57 = null;
+                break;
+            case 58:
+                document58 = null;
+                break;
+            case 59:
+                document59 = null;
+                break;
+            case 60:
+                document60 = null;
+                break;
+        }
+    }
+
+
+    *********************************************************************
+
+
+    blackListWords.add("in");
+    blackListWords.add("van");
+    blackListWords.add("op");
+    blackListWords.add("voor");
+    blackListWords.add("en");
+    blackListWords.add("met");
+    blackListWords.add("de");
+    blackListWords.add("bij");
+    blackListWords.add("om");
+    blackListWords.add("door");
+    blackListWords.add("na");
+    blackListWords.add("is");
+    blackListWords.add("het");
+    blackListWords.add("uit");
+    blackListWords.add("zich");
+    blackListWords.add("wil");
+    blackListWords.add("aan");
+    blackListWords.add("niet");
+    blackListWords.add("te");
+    blackListWords.add("een");
+    blackListWords.add("meer");
+    blackListWords.add("dat");
+    blackListWords.add("geen");
+    blackListWords.add("als");
+    blackListWords.add("naar");
+    blackListWords.add("weer");
+    blackListWords.add("eigen");
+    blackListWords.add("dit");
+    blackListWords.add("gaat");
+    blackListWords.add("maar");
+    blackListWords.add("over");
+    blackListWords.add("er");
+    blackListWords.add("af");
+    blackListWords.add("deze");
+    blackListWords.add("ook");
+    blackListWords.add("die");
+    blackListWords.add("wordt");
+    blackListWords.add("wat");
+    blackListWords.add("alle");
+    blackListWords.add("nog");
+    blackListWords.add("ze");
+    blackListWords.add("dan");
