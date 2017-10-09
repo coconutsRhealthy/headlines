@@ -295,6 +295,35 @@ public class RelatedBuzzwordsIdentifier {
         return relatedHeadlines;
     }
 
+
+//    private Map<String, Integer> updateGroupsBasedOnIdenticalHeadlines(Map<String, Integer> mapUntilNow) {
+//
+//        //je krijgt een woord - groep map binnen
+//
+//
+//        //haal opnieuw alle woorden en headlines op
+//
+//
+//        //voor elk woord, kijk of hij een headline heeft die identiek bij een ander woord voorkomt.
+//            //zoja, voeg jouw woord toe aan de grootste groep - als die daar al niet in zit
+//
+//    }
+//
+//    private Map<String, List<String>> getHeadlinesPerBuzzWordFromDb() {
+//        return new HashMap<>();
+//    }
+//
+//    private List<String> getBuzzWordsThatContainIdenticalHeadline(List<String> headlines) {
+//        return new ArrayList<>();
+//    }
+//
+//    private int getHighestGroupNumberForListOfBuzzWords() {
+//        return 0;
+//    }
+
+
+
+
     private void doDatabaseUpdate(String database, Map<String, Integer> buzzwordGroups) throws Exception {
         initializeDbConnection();
 
