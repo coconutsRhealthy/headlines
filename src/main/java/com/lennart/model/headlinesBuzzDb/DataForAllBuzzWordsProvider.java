@@ -238,7 +238,12 @@ public class DataForAllBuzzWordsProvider {
                 if(headline.contains(entry.getKey())) {
                     for (Map.Entry<String, Integer> entry2 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
                         if(!entry.getKey().equals(entry2.getKey()) && headline.contains(entry2.getKey())) {
-                            continue loop;
+                            for (Map.Entry<String, Integer> entry3 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+                                if(!entry.getKey().equals(entry3.getKey()) && entry2.getKey().equals(entry3.getKey())
+                                        && headline.contains(entry3.getKey())) {
+                                    continue loop;
+                                }
+                            }
                         }
                     }
                 }
