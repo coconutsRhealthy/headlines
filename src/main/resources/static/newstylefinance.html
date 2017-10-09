@@ -34,7 +34,7 @@
                 <nav id="navbar_id" class="navbar navbar-default" role="navigation">
                     <div class="container-fluid">
                         <div class="navbar-header">
-                            <a class="navbar-brand" href="index.html" style="color:rgb(66, 188, 147)">Headl1nes</a>
+                            <a class="navbar-brand" href="newstyleindex.html" style="color:rgb(66, 188, 147)">Headl1nes</a>
                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>
@@ -63,7 +63,7 @@
                                 <a class="no-underline-link" href="" ng-click="testfunctie(topic)">
                                     <img src={{topic.imageLink}}>
                                     <h4>{{topic.headlines[0]}}</h4>
-                                    <small class="text-muted metadata-headline">3 hours ago</small>
+                                    <small class="text-muted metadata-headline">{{topic.dateTime}}</small>
                                 </a>
                             </div>
                             <div class="child-headlines" ng-show="check(topic)">

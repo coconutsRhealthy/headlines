@@ -1,7 +1,11 @@
 package com.lennart.model.headlinesFE;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 /**
  * Created by LennartMac on 02/10/2017.
@@ -86,7 +90,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         return buzzWordsToRetain;
     }
 
-    private Topic getTopicFromBuzzWordGroup(List<BuzzWord> buzzWordGroup) {
+    private Topic getTopicFromBuzzWordGroup(List<BuzzWord> buzzWordGroup) throws Exception {
         String imageLink = getNewestImageLinkFromBuzzWordGroup(buzzWordGroup);
 
         if(imageLink != null) {
@@ -118,8 +122,9 @@ public class RetrieveTopics extends RetrieveBuzzwords {
 
             int entry = getNewestEntryFromBuzzWordList(buzzWordGroup);
             String dateTime = getDateTimeFromBuzzWord(entry, buzzWordGroup);
+            String dateTimeForTopic = getDateTimeForTopic(dateTime);
 
-            return new Topic(entry, dateTime, allHeadlines, allLinks, allSites, imageLink);
+            return new Topic(entry, dateTimeForTopic, allHeadlines, allLinks, allSites, imageLink);
         }
         return null;
     }
@@ -187,8 +192,8 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         return nonGroupBuzzWordsWithImage;
     }
 
-    private Topic getTopicFromNonGroupBuzzWord(BuzzWord buzzWord) {
-        return new Topic(buzzWord.getEntry(), buzzWord.getDateTime(), buzzWord.getHeadlines(), buzzWord.getLinks(),
+    private Topic getTopicFromNonGroupBuzzWord(BuzzWord buzzWord) throws Exception {
+        return new Topic(buzzWord.getEntry(), getDateTimeForTopic(buzzWord.getDateTime()), buzzWord.getHeadlines(), buzzWord.getLinks(),
                 buzzWord.getSites(), buzzWord.getImageLink());
     }
 
@@ -224,8 +229,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
     }
 
     private BuzzWord getBuzzWordFromResultSet(ResultSet rs) throws Exception {
-        String dateTime = rs.getString("date").split(" ")[1];
-        dateTime = getCorrectTimeString(dateTime);
+        String dateTime = rs.getString("date");
         String word = rs.getString("word");
         List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
         headlines = removeEmptyStrings(headlines);
@@ -250,9 +254,72 @@ public class RetrieveTopics extends RetrieveBuzzwords {
             }
         }
 
-        List<Topic> clearedList = new ArrayList<Topic>(imageLinkTopicMap.values());
+        List<Topic> clearedList = new ArrayList<>(imageLinkTopicMap.values());
         Collections.sort(clearedList, getTopicComparator());
         return clearedList;
+    }
+
+    private String getDateTimeForTopic(String dateTimeOfBuzzWord) throws Exception {
+        Date currentDate = new java.util.Date();
+        currentDate = DateUtils.addHours(currentDate, 2);
+        long currentTime = currentDate.getTime();
+
+        long entryTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateTimeOfBuzzWord).getTime();
+        long timeDifference = currentTime - entryTime;
+        double timeDifferenceInHours = timeDifference / (double) 3_600_000;
+
+        String topicTimeString;
+
+        if(timeDifferenceInHours < 1) {
+            topicTimeString = "Less than 1 hour ago";
+        } else if(timeDifferenceInHours < 2) {
+            topicTimeString = "1 hour ago";
+        } else if(timeDifferenceInHours < 3) {
+            topicTimeString = "2 hour ago";
+        } else if(timeDifferenceInHours < 4) {
+            topicTimeString = "3 hour ago";
+        } else if(timeDifferenceInHours < 5) {
+            topicTimeString = "4 hour ago";
+        } else if(timeDifferenceInHours < 6) {
+            topicTimeString = "5 hour ago";
+        } else if(timeDifferenceInHours < 7) {
+            topicTimeString = "6 hour ago";
+        } else if(timeDifferenceInHours < 8) {
+            topicTimeString = "7 hour ago";
+        } else if(timeDifferenceInHours < 9) {
+            topicTimeString = "8 hour ago";
+        } else if(timeDifferenceInHours < 10) {
+            topicTimeString = "9 hour ago";
+        } else if(timeDifferenceInHours < 11) {
+            topicTimeString = "10 hour ago";
+        } else if(timeDifferenceInHours < 12) {
+            topicTimeString = "11 hour ago";
+        } else if(timeDifferenceInHours < 13) {
+            topicTimeString = "12 hour ago";
+        } else if(timeDifferenceInHours < 14) {
+            topicTimeString = "13 hour ago";
+        } else if(timeDifferenceInHours < 15) {
+            topicTimeString = "14 hour ago";
+        } else if(timeDifferenceInHours < 16) {
+            topicTimeString = "15 hour ago";
+        } else if(timeDifferenceInHours < 17) {
+            topicTimeString = "16 hour ago";
+        } else if(timeDifferenceInHours < 18) {
+            topicTimeString = "17 hour ago";
+        } else if(timeDifferenceInHours < 19) {
+            topicTimeString = "18 hour ago";
+        } else if(timeDifferenceInHours < 20) {
+            topicTimeString = "19 hour ago";
+        } else if(timeDifferenceInHours < 21) {
+            topicTimeString = "20 hour ago";
+        } else if(timeDifferenceInHours < 22) {
+            topicTimeString = "21 hour ago";
+        } else if(timeDifferenceInHours < 23) {
+            topicTimeString = "22 hour ago";
+        } else {
+            topicTimeString = "23 hour ago";
+        }
+        return topicTimeString;
     }
 
     public Comparator<Topic> getTopicComparator() {
