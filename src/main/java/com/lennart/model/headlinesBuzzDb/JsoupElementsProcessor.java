@@ -58,7 +58,7 @@ public class JsoupElementsProcessor {
             Document document = Jsoup.connect(entry.getKey()).get();
             Elements elements = document.select("h1");
 
-            if(elements.size() == 1) {
+            if(elements.size() == 1 && !elements.first().text().contains("Barchart, the leading provider")) {
                 headlinesH1.add(elements.first().text());
             } else {
                 headlinesH1.add(entry.getValue());
