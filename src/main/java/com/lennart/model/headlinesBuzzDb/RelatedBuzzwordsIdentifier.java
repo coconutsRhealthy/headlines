@@ -21,6 +21,7 @@ public class RelatedBuzzwordsIdentifier {
         Map<Integer, Set<String>> finalGroupMap = getTheFinalGroupMap(allGroupsSortedBySize);
         Map<String, Integer> buzzWordGroupMap = getBuzzwordGroupMap(database, finalGroupMap);
         Map<String, Integer> correctFinalMap = setCorrectGroupNumbersInBuzzwordMap(buzzWordGroupMap);
+        correctFinalMap = updateGroupsBasedOnIdenticalHeadlines(database, correctFinalMap);
         doDatabaseUpdate(database, correctFinalMap);
     }
 
@@ -295,33 +296,80 @@ public class RelatedBuzzwordsIdentifier {
         return relatedHeadlines;
     }
 
+    private Map<String, Integer> updateGroupsBasedOnIdenticalHeadlines(String database, Map<String, Integer> mapUntilNow) throws Exception {
+        Map<String, List<String>> headlinesPerBuzzWord = getHeadlinesPerBuzzWordFromDb(database);
+        Map<String, List<String>> headlinesPerBuzzWordCopy = new HashMap<>();
+        headlinesPerBuzzWordCopy.putAll(headlinesPerBuzzWord);
 
-//    private Map<String, Integer> updateGroupsBasedOnIdenticalHeadlines(Map<String, Integer> mapUntilNow) {
-//
-//        //je krijgt een woord - groep map binnen
-//
-//
-//        //haal opnieuw alle woorden en headlines op
-//
-//
-//        //voor elk woord, kijk of hij een headline heeft die identiek bij een ander woord voorkomt.
-//            //zoja, voeg jouw woord toe aan de grootste groep - als die daar al niet in zit
-//
-//    }
-//
-//    private Map<String, List<String>> getHeadlinesPerBuzzWordFromDb() {
-//        return new HashMap<>();
-//    }
-//
-//    private List<String> getBuzzWordsThatContainIdenticalHeadline(List<String> headlines) {
-//        return new ArrayList<>();
-//    }
-//
-//    private int getHighestGroupNumberForListOfBuzzWords() {
-//        return 0;
-//    }
+        for (Map.Entry<String, List<String>> entry : headlinesPerBuzzWord.entrySet()) {
+            List<String> buzzWordsThatContainIdenticalHeadline = getBuzzWordsThatContainIdenticalHeadline(entry.getValue(), headlinesPerBuzzWordCopy);
 
+            if(buzzWordsThatContainIdenticalHeadline.size() > 1) {
+                mapUntilNow.put(entry.getKey(), getHighestGroupNumberForListOfBuzzWords(buzzWordsThatContainIdenticalHeadline, mapUntilNow));
+            }
+        }
 
+        mapUntilNow = sortByValueHighToLow(mapUntilNow);
+
+        return mapUntilNow;
+    }
+
+    private Map<String, List<String>> getHeadlinesPerBuzzWordFromDb(String database) throws Exception {
+        Map<String, List<String>> headlinesPerBuzzWord = new HashMap<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + ";");
+
+        while(rs.next()) {
+            String buzzWord = rs.getString("word");
+            List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
+
+            headlinesPerBuzzWord.put(buzzWord, headlines);
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        return headlinesPerBuzzWord;
+    }
+
+    private List<String> getBuzzWordsThatContainIdenticalHeadline(List<String> headlinesOfBuzzWord, Map<String, List<String>> headlinesPerBuzzWord) {
+        List<String> buzzWordsThatContainIdenticalHeadline = new ArrayList<>();
+
+        for(String headlineOfBuzzWord : headlinesOfBuzzWord) {
+            for (Map.Entry<String, List<String>> entry : headlinesPerBuzzWord.entrySet()) {
+                if(entry.getValue().contains(headlineOfBuzzWord) && !buzzWordsThatContainIdenticalHeadline.contains(entry.getKey())) {
+                    buzzWordsThatContainIdenticalHeadline.add(entry.getKey());
+                }
+            }
+        }
+        return buzzWordsThatContainIdenticalHeadline;
+    }
+
+    private int getHighestGroupNumberForListOfBuzzWords(List<String> buzzWords, Map<String, Integer> mapUntilNow) {
+        int highestGroupNumber = 0;
+
+        for(String buzzWord : buzzWords) {
+            if(mapUntilNow.get(buzzWord) != null) {
+                if(mapUntilNow.get(buzzWord) > highestGroupNumber) {
+                    highestGroupNumber = mapUntilNow.get(buzzWord);
+                }
+            }
+        }
+
+        if(highestGroupNumber == 0) {
+            Map<String, Integer> mapUntilNowCopy = new HashMap<>();
+            mapUntilNowCopy.putAll(mapUntilNow);
+            mapUntilNowCopy = sortByValueHighToLow(mapUntilNowCopy);
+            highestGroupNumber = mapUntilNowCopy.entrySet().iterator().next().getValue() + 1;
+        }
+
+        return highestGroupNumber;
+    }
 
 
     private void doDatabaseUpdate(String database, Map<String, Integer> buzzwordGroups) throws Exception {
