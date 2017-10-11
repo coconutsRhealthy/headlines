@@ -243,7 +243,13 @@ public class RelatedBuzzwordsIdentifier {
     }
 
     private Set<String> getGroup(String initialHeadline, List<String> allHeadlines, Set<String> group) {
-        List<String> relatedHeadlines = getRelatedHeadlines(initialHeadline, allHeadlines);
+        String initialHeadlineCorrectedPipe = initialHeadline;
+
+        if(initialHeadline.contains("|")) {
+            initialHeadlineCorrectedPipe = initialHeadline.substring(0, (initialHeadline.indexOf("|")));
+        }
+
+        List<String> relatedHeadlines = getRelatedHeadlines(initialHeadlineCorrectedPipe, allHeadlines);
 
         relatedHeadlines.removeAll(group);
 
