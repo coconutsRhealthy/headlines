@@ -1,5 +1,7 @@
 package com.lennart.model.headlinesFE;
 
+import com.lennart.model.headlinesBuzzDb.DataForAllBuzzWordsProvider;
+import com.lennart.model.twitter.TweetMachine;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.sql.*;
@@ -120,13 +122,40 @@ public class RetrieveTopics extends RetrieveBuzzwords {
                 }
             }
 
-            int entry = getNewestEntryFromBuzzWordList(buzzWordGroup);
-            String dateTime = getDateTimeFromBuzzWord(entry, buzzWordGroup);
-            String dateTimeForTopic = getDateTimeForTopic(dateTime);
+            allHeadlines = retainHeadlinesThatAreTrulyRelatedForTopic(allHeadlines);
 
-            return new Topic(entry, dateTimeForTopic, allHeadlines, allLinks, allSites, imageLink);
+            if(allHeadlines.size() >= 3) {
+                int entry = getNewestEntryFromBuzzWordList(buzzWordGroup);
+                String dateTime = getDateTimeFromBuzzWord(entry, buzzWordGroup);
+                String dateTimeForTopic = getDateTimeForTopic(dateTime);
+
+                return new Topic(entry, dateTimeForTopic, allHeadlines, allLinks, allSites, imageLink);
+            } else {
+                return null;
+            }
         }
         return null;
+    }
+
+    List<String> retainHeadlinesThatAreTrulyRelatedForTopic(List<String> headlines) {
+        Map<String, String> headlinesCorrectFormatKeyRawValue = new LinkedHashMap<>();
+        DataForAllBuzzWordsProvider dataForAllBuzzWordsProvider = new DataForAllBuzzWordsProvider();
+        List<String> correctFormatHeadlines = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
+
+        for(int i = 0; i < headlines.size(); i++) {
+            headlinesCorrectFormatKeyRawValue.put(correctFormatHeadlines.get(i), headlines.get(i));
+        }
+
+        Map<String, Integer> wordsRankedByOccurenceTwoOrMore = dataForAllBuzzWordsProvider.getWordsRankedByOccurrence(correctFormatHeadlines, "", 2);
+        List<String> headlinesToRemove = dataForAllBuzzWordsProvider.getHeadlinesThatAreUnrelated(correctFormatHeadlines, wordsRankedByOccurenceTwoOrMore);
+
+        for(String headlineToRemove : headlinesToRemove) {
+            headlinesCorrectFormatKeyRawValue.remove(headlineToRemove);
+        }
+
+        List<String> headlinesToRetain = new ArrayList<>(headlinesCorrectFormatKeyRawValue.values());
+
+        return headlinesToRetain;
     }
 
     private String getNewestImageLinkFromBuzzWordGroup(List<BuzzWord> buzzWords) {

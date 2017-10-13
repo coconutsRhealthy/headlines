@@ -232,24 +232,7 @@ public class DataForAllBuzzWordsProvider {
     }
 
     private Map<String, List<String>> getRelevantEntries(Map<String, List<String>> dataTotalForWord, Map<String, Integer> wordsRankedByOccurenceTwoOrMore) {
-        List<String> headlinesToRemove = new ArrayList<>();
-        loop: for(String headline : dataTotalForWord.get("correctedHeadlines")) {
-            for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
-                if(headline.contains(entry.getKey())) {
-                    for (Map.Entry<String, Integer> entry2 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
-                        if(!entry.getKey().equals(entry2.getKey()) && headline.contains(entry2.getKey())) {
-                            for (Map.Entry<String, Integer> entry3 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
-                                if(!entry.getKey().equals(entry3.getKey()) && entry2.getKey().equals(entry3.getKey())
-                                        && headline.contains(entry3.getKey())) {
-                                    continue loop;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            headlinesToRemove.add(headline);
-        }
+        List<String> headlinesToRemove = getHeadlinesThatAreUnrelated(dataTotalForWord.get("correctedHeadlines"), wordsRankedByOccurenceTwoOrMore);
 
         List<String> rawHeadlinesToRemove = new ArrayList<>();
         List<String> hrefsToRemove = new ArrayList<>();
@@ -268,6 +251,28 @@ public class DataForAllBuzzWordsProvider {
         dataTotalForWord.get("hrefs").removeAll(hrefsToRemove);
 
         return dataTotalForWord;
+    }
+
+    public List<String> getHeadlinesThatAreUnrelated(List<String> headlines, Map<String, Integer> wordsRankedByOccurenceTwoOrMore) {
+        List<String> headlinesToRemove = new ArrayList<>();
+        loop: for(String headline : headlines) {
+            for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+                if(headline.contains(entry.getKey())) {
+                    for (Map.Entry<String, Integer> entry2 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+                        if(!entry.getKey().equals(entry2.getKey()) && headline.contains(entry2.getKey())) {
+                            for (Map.Entry<String, Integer> entry3 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+                                if(!entry.getKey().equals(entry3.getKey()) && entry2.getKey().equals(entry3.getKey())
+                                        && headline.contains(entry3.getKey())) {
+                                    continue loop;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            headlinesToRemove.add(headline);
+        }
+        return headlinesToRemove;
     }
 
     public Map<String, Integer> getWordsRankedByOccurrence(List<String> correctedHeadlinesForWord, String word,

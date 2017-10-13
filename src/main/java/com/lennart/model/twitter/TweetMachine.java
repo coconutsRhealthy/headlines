@@ -731,7 +731,7 @@ public class TweetMachine {
         return hashTagWordsToReturn;
     }
 
-    private List<String> convertHeadlinesToNonSpecialCharactersAndLowerCase(List<String> headlinesRaw) {
+    public List<String> convertHeadlinesToNonSpecialCharactersAndLowerCase(List<String> headlinesRaw) {
         List<String> headlinesCorrected = new ArrayList<>();
 
         for(String rawHeadline : headlinesRaw) {
@@ -757,7 +757,7 @@ public class TweetMachine {
         return headlinesCorrected;
     }
 
-    private List<String> getWordsSortedByFrequencyFromHeadlines(List<String> headlines, String buzzword) {
+    public List<String> getWordsSortedByFrequencyFromHeadlines(List<String> headlines, String buzzword) {
         List<String> wordsSortedByFrequency = new ArrayList<>();
 
         List<String> correctFormatHeadlines = convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
