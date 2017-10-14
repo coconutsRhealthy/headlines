@@ -89,3 +89,7 @@ h4 {
     text-decoration: none !important;
 }
 
+#inner {
+  display: table;
+  margin: 0 auto;
+}

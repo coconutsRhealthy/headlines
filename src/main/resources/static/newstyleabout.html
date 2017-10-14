@@ -51,9 +51,9 @@
                                     <ul class="nav navbar-nav">
                                         <li><a href="newstyleindex.html">World News</a></li>
                                         <li><a href="newstylefinance.html">Financial News</a></li>
-                                        <li class="active"><a href="newstylesport.html">Sport</a></li>
+                                        <li><a href="newstylesport.html">Sport</a></li>
                                         <li><a href="newstyleentertainment.html">Entertainment</a></li>
-                                        <li><a href="newstyleabout.html">About</a></li>
+                                        <li class="active"><a href="newstyleabout.html">About</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -61,31 +61,8 @@
                     </div>
                 </nav>
 
-                <div class="row" ng-repeat="topic in topics | orderBy : orderType">
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-6" >
-                        <div class="image-headline-block">
-                            <div class="main-headline">
-                                <a class="no-underline-link" href="" ng-click="testfunctie(topic)">
-                                    <img src={{topic.imageLink}}>
-                                    <h4>{{topic.headlines[0]}}</h4>
-                                    <small class="text-muted metadata-headline">{{topic.dateTime}}</small>
-                                </a>
-                            </div>
-                            <div class="child-headlines" ng-show="check(topic)">
-                                <ul class="custom-bullet">
-                                    <div ng-show="check(topic)" ng-repeat="headline in topic.headlines track by $index">
-                                        <li>
-                                            <div><a href={{topic.links[$index]}}>{{headline}}</a></div>
-                                            <div><small class="text-muted">{{topic.sites[$index]}}</small></div>
-                                        </li>
-                                    </div>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3"></div>
-                </div>
+                <p>Hello! I collect headlines. Currently I focus on headlines originating from the United States. Click around and see how you like my collection!</p>
+                <p>If you would like to talk to me, my mail address is: <b>icollectheadlines@gmail.com</b></p>
 
                 <div class="push"></div>
             </div>
