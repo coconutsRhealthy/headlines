@@ -1,7 +1,7 @@
 package com.lennart.model.headlinesBuzzDb;
 
 import com.lennart.model.headlinesBigDb.BigDbStorer;
-import com.lennart.model.headlinesFE.BuzzWord;
+import com.lennart.model.twitter.TweetMachine;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -247,23 +247,23 @@ public class JsoupElementsProcessor {
         return aTexts;
     }
 
-    public List<String> getImageLinkForBuzzwordInList(String buzzword, List<String> hrefs) throws Exception {
+    public List<String> getImageLinkForBuzzwordInList(List<String> hrefs, List<String> headlines) throws Exception {
         List<String> asList = new ArrayList<>();
 
-        String link = getImageLinkForBuzzword(buzzword, hrefs);
+        String link = getImageLinkForBuzzword(hrefs, headlines);
 
         if(link != null) {
-            asList.add(getImageLinkForBuzzword(buzzword, hrefs));
+            asList.add(link);
         } else {
             asList = null;
         }
         return asList;
     }
 
-    private String getImageLinkForBuzzword(String buzzword, List<String> hrefs) throws Exception {
+    private String getImageLinkForBuzzword(List<String> hrefs, List<String> headlines) throws Exception {
         String linkToReturn;
 
-        List<String> imageLinksContainingBuzzword = getImageLinksContainingBuzzword(buzzword, hrefs);
+        List<String> imageLinksContainingBuzzword = getImageLinksContainingKeyWords(hrefs, headlines);
         Map<String, Integer> imageMapSortedBySize = getImgMapSortedBySize(imageLinksContainingBuzzword);
 
         if(imageMapSortedBySize.entrySet().iterator().hasNext()) {
@@ -274,7 +274,7 @@ public class JsoupElementsProcessor {
         return linkToReturn;
     }
 
-    private List<String> getImageLinksContainingBuzzword(String buzzword, List<String> hrefs) throws Exception {
+    private List<String> getImageLinksContainingKeyWords(List<String> hrefs, List<String> headlines) throws Exception {
         List<String> imageLinksContainingBuzzword = new ArrayList<>();
 
         for(String href : hrefs) {
@@ -282,12 +282,34 @@ public class JsoupElementsProcessor {
             Elements elements = document.select("img[src]");
 
             for (Element element : elements) {
-                if (element.attr("abs:src").contains(buzzword)) {
+                String imageLink = element.attr("abs:src");
+
+                if(imageLinkContainsKeyWords(imageLink, headlines)) {
                     imageLinksContainingBuzzword.add(element.attr("abs:src"));
                 }
             }
         }
         return imageLinksContainingBuzzword;
+    }
+
+    private boolean imageLinkContainsKeyWords(String imageLink, List<String> headlines) {
+        boolean imageLinkContainsKeyWords = false;
+
+        List<String> correctFormatHeadlines = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
+        Map<String, Integer> wordsRankedByOccurenceTwoOrMore = new DataForAllBuzzWordsProvider().getWordsRankedByOccurrence(correctFormatHeadlines, "", 2);
+
+        int counter = 0;
+
+        for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+            if(imageLink.contains(entry.getKey())) {
+                counter++;
+            }
+        }
+
+        if(counter >= 3) {
+            imageLinkContainsKeyWords = true;
+        }
+        return imageLinkContainsKeyWords;
     }
 
     private Map<String, Integer> getImgMapSortedBySize(List<String> images) {

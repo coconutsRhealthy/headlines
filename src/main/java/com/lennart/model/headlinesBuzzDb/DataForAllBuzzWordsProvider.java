@@ -46,7 +46,7 @@ public class DataForAllBuzzWordsProvider {
                         dataForBuzzword.put("rawHeadlines", headLinesForWord);
 
                         List<String> imageLinkList = new JsoupElementsProcessor().getImageLinkForBuzzwordInList
-                                (entry.getKey(), dataForBuzzword.get("hrefs"));
+                                (dataForBuzzword.get("hrefs"), dataForBuzzword.get("rawHeadlines"));
 
                         if(imageLinkList != null && imageLinkList.size() == 1) {
                             dataForBuzzword.put("imageLink", imageLinkList);
