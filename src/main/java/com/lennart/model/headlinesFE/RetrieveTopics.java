@@ -147,7 +147,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         }
 
         Map<String, Integer> wordsRankedByOccurenceTwoOrMore = dataForAllBuzzWordsProvider.getWordsRankedByOccurrence(correctFormatHeadlines, "", 2);
-        List<String> headlinesToRemove = dataForAllBuzzWordsProvider.getHeadlinesThatAreUnrelated(correctFormatHeadlines, wordsRankedByOccurenceTwoOrMore);
+        List<String> headlinesToRemove = dataForAllBuzzWordsProvider.getHeadlinesThatAreUnrelated(correctFormatHeadlines, wordsRankedByOccurenceTwoOrMore, 2);
 
         for(String headlineToRemove : headlinesToRemove) {
             headlinesCorrectFormatKeyRawValue.remove(headlineToRemove);
