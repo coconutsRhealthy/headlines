@@ -247,10 +247,10 @@ public class JsoupElementsProcessor {
         return aTexts;
     }
 
-    public List<String> getImageLinkForBuzzwordInList(List<String> hrefs, List<String> headlines) throws Exception {
+    public List<String> getImageLinkForBuzzwordInList(List<String> hrefs, String buzzWord, List<String> headlines) throws Exception {
         List<String> asList = new ArrayList<>();
 
-        String link = getImageLinkForBuzzword(hrefs, headlines);
+        String link = getImageLinkForBuzzword(hrefs, buzzWord, headlines);
 
         if(link != null) {
             asList.add(link);
@@ -260,10 +260,10 @@ public class JsoupElementsProcessor {
         return asList;
     }
 
-    private String getImageLinkForBuzzword(List<String> hrefs, List<String> headlines) throws Exception {
+    private String getImageLinkForBuzzword(List<String> hrefs, String buzzWord, List<String> headlines) throws Exception {
         String linkToReturn;
 
-        List<String> imageLinksContainingBuzzword = getImageLinksContainingKeyWords(hrefs, headlines);
+        List<String> imageLinksContainingBuzzword = getImageLinksContainingKeyWords(hrefs, buzzWord, headlines);
         Map<String, Integer> imageMapSortedBySize = getImgMapSortedBySize(imageLinksContainingBuzzword);
 
         if(imageMapSortedBySize.entrySet().iterator().hasNext()) {
@@ -274,7 +274,7 @@ public class JsoupElementsProcessor {
         return linkToReturn;
     }
 
-    private List<String> getImageLinksContainingKeyWords(List<String> hrefs, List<String> headlines) throws Exception {
+    private List<String> getImageLinksContainingKeyWords(List<String> hrefs, String buzzWord, List<String> headlines) throws Exception {
         List<String> imageLinksContainingBuzzword = new ArrayList<>();
 
         for(String href : hrefs) {
@@ -284,7 +284,7 @@ public class JsoupElementsProcessor {
             for (Element element : elements) {
                 String imageLink = element.attr("abs:src");
 
-                if(imageLinkContainsKeyWords(imageLink, headlines)) {
+                if(imageLinkContainsKeyWords(imageLink, buzzWord, headlines)) {
                     imageLinksContainingBuzzword.add(element.attr("abs:src"));
                 }
             }
@@ -292,23 +292,30 @@ public class JsoupElementsProcessor {
         return imageLinksContainingBuzzword;
     }
 
-    private boolean imageLinkContainsKeyWords(String imageLink, List<String> headlines) {
+    private boolean imageLinkContainsKeyWords(String imageLink, String buzzWord, List<String> headlines) {
         boolean imageLinkContainsKeyWords = false;
 
-        List<String> correctFormatHeadlines = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
-        Map<String, Integer> wordsRankedByOccurenceTwoOrMore = new DataForAllBuzzWordsProvider().getWordsRankedByOccurrence(correctFormatHeadlines, "", 2);
+        if(imageLink.contains(buzzWord)) {
+            List<String> correctFormatHeadlines = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
+            Map<String, Integer> wordsRankedByOccurenceTwoOrMore = new DataForAllBuzzWordsProvider().getWordsRankedByOccurrence(correctFormatHeadlines, buzzWord, 0);
 
-        int counter = 0;
+            int counter = 0;
 
-        for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
-            if(imageLink.contains(entry.getKey())) {
-                counter++;
+            for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+                if(imageLink.contains(entry.getKey())) {
+                    counter++;
+
+                    if(counter >= 1) {
+                        break;
+                    }
+                }
+            }
+
+            if(counter >= 1) {
+                imageLinkContainsKeyWords = true;
             }
         }
 
-        if(counter >= 3) {
-            imageLinkContainsKeyWords = true;
-        }
         return imageLinkContainsKeyWords;
     }
 
