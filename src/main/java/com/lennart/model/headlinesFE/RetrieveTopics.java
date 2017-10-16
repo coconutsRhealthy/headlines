@@ -138,22 +138,37 @@ public class RetrieveTopics extends RetrieveBuzzwords {
     }
 
     List<String> retainHeadlinesThatAreTrulyRelatedForTopic(List<String> headlines) {
-        Map<String, String> headlinesCorrectFormatKeyRawValue = new LinkedHashMap<>();
         DataForAllBuzzWordsProvider dataForAllBuzzWordsProvider = new DataForAllBuzzWordsProvider();
         List<String> correctFormatHeadlines = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
+        List<Map<String, String>> headlinesCorrectFormatKeyRawValueInList = new ArrayList<>();
 
         for(int i = 0; i < headlines.size(); i++) {
-            headlinesCorrectFormatKeyRawValue.put(correctFormatHeadlines.get(i), headlines.get(i));
+            headlinesCorrectFormatKeyRawValueInList.add(new HashMap<>());
+            headlinesCorrectFormatKeyRawValueInList.get(i).put(correctFormatHeadlines.get(i), headlines.get(i));
         }
 
         Map<String, Integer> wordsRankedByOccurenceTwoOrMore = dataForAllBuzzWordsProvider.getWordsRankedByOccurrence(correctFormatHeadlines, "", 2);
         List<String> headlinesToRemove = dataForAllBuzzWordsProvider.getHeadlinesThatAreUnrelated(correctFormatHeadlines, wordsRankedByOccurenceTwoOrMore, 2);
 
+        List<Map<String, String>> listOfMapsToRemove = new ArrayList<>();
+
         for(String headlineToRemove : headlinesToRemove) {
-            headlinesCorrectFormatKeyRawValue.remove(headlineToRemove);
+            for(Map<String, String> map : headlinesCorrectFormatKeyRawValueInList) {
+                String headlineCorrectFormat = map.entrySet().iterator().next().getKey();
+
+                if(headlineToRemove.equals(headlineCorrectFormat)) {
+                    listOfMapsToRemove.add(map);
+                }
+            }
         }
 
-        List<String> headlinesToRetain = new ArrayList<>(headlinesCorrectFormatKeyRawValue.values());
+        headlinesCorrectFormatKeyRawValueInList.removeAll(listOfMapsToRemove);
+
+        List<String> headlinesToRetain = new ArrayList<>();
+
+        for(Map<String, String> map : headlinesCorrectFormatKeyRawValueInList) {
+            headlinesToRetain.add(map.entrySet().iterator().next().getValue());
+        }
 
         return headlinesToRetain;
     }
