@@ -63,6 +63,7 @@ img {
 
 h4 {
     margin-left: 5;
+    margin-right: 5;
     margin-bottom: 3 !important;
 }
 
@@ -83,6 +84,7 @@ h4 {
 .child-headlines {
     margin-top: 5;
     padding-bottom: 7;
+    margin-right: 8px;
 }
 
 .no-underline-link {
@@ -92,4 +94,39 @@ h4 {
 #inner {
   display: table;
   margin: 0 auto;
+}
+
+.about {
+    margin-left: 7px;
+    margin-right: 7px;
+}
+
+@media (max-width: 676px) {
+    .container-fluid {
+      padding:0 !important;
+      margin:0 !important;
+    }
+
+    body {
+      padding:0 !important;
+    }
+
+    #menu-button-xs-margin {
+        margin-right: 25px;
+    }
+
+    #site-title-xs-margin {
+        margin-left: 10px;
+    }
+
+    h4 {
+        margin-left: 10;
+        margin-right: 10;
+        margin-bottom: 3 !important;
+    }
+
+    .metadata-headline {
+        margin-left: 10;
+        color: rgb(100, 100, 100);
+    }
 }
