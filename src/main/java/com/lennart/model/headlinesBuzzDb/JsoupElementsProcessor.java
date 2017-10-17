@@ -51,20 +51,20 @@ public class JsoupElementsProcessor {
         return headlinesPerWord;
     }
 
-    public List<String> replaceRawHeadlinesToH1ifPossible(Map<String, String> hrefAndRawHeadline) throws Exception {
-        List<String> headlinesH1 = new ArrayList<>();
+    public Map<String, String> replaceRawHeadlinesToH1ifPossible(Map<String, String> hrefAndRawHeadline) throws Exception {
+        Map<String, String> hrefsAndRawHeadlinesCorrectToReturn = new LinkedHashMap<>();
 
         for (Map.Entry<String, String> entry : hrefAndRawHeadline.entrySet()) {
             Document document = Jsoup.connect(entry.getKey()).get();
             Elements elements = document.select("h1");
 
             if(elements.size() == 1 && !elements.first().text().contains("Barchart, the leading provider")) {
-                headlinesH1.add(elements.first().text());
+                hrefsAndRawHeadlinesCorrectToReturn.put(entry.getKey(), elements.first().text());
             } else {
-                headlinesH1.add(entry.getValue());
+                hrefsAndRawHeadlinesCorrectToReturn.put(entry.getKey(), entry.getValue());
             }
         }
-        return headlinesH1;
+        return hrefsAndRawHeadlinesCorrectToReturn;
     }
 
     private List<String> getUncorrectedHeadlinesPerWord(List<Element> elementsList) {

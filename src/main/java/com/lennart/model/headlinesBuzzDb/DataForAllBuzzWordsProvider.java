@@ -224,8 +224,13 @@ public class DataForAllBuzzWordsProvider {
         }
 
         if(!hrefsAndRawHeadlines.isEmpty()) {
-            List<String> rawHeadlinesReplacedByH1 = jsoupElementsProcessor.replaceRawHeadlinesToH1ifPossible(hrefsAndRawHeadlines);
-            dataTotalForWord.put("rawHeadlines", rawHeadlinesReplacedByH1);
+            Map<String, String> hrefsAndRawHeadlinesCorrect = jsoupElementsProcessor.replaceRawHeadlinesToH1ifPossible(hrefsAndRawHeadlines);
+
+            List<String> hrefsCorrect = new ArrayList<>(hrefsAndRawHeadlinesCorrect.keySet());
+            List<String> rawHeadlinesCorrectReplacedByH1 = new ArrayList<>(hrefsAndRawHeadlinesCorrect.values());
+
+            dataTotalForWord.put("hrefs", hrefsCorrect);
+            dataTotalForWord.put("rawHeadlines", rawHeadlinesCorrectReplacedByH1);
         }
 
         return dataTotalForWord;
