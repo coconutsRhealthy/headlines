@@ -32,6 +32,7 @@ public class JsoupElementsProcessor {
 
     public List<String> getHeadlinesPerWord(List<Element> elementsPerWord, String word) {
         List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
+        headlinesPerWord = removePipeFromHeadlines(headlinesPerWord);
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlines(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
@@ -39,6 +40,7 @@ public class JsoupElementsProcessor {
 
     public List<String> getRawHeadlinesPerWord(List<Element> elementsPerWord, String word) {
         List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
+        headlinesPerWord = removePipeFromHeadlines(headlinesPerWord);
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForRaw(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
@@ -46,6 +48,7 @@ public class JsoupElementsProcessor {
 
     public List<String> getHrefHeadlinesPerWord(List<Element> elementsPerWord, String word) {
         List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
+        headlinesPerWord = removePipeFromHeadlines(headlinesPerWord);
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForHref(headlinesPerWord, " " + word + " ", elementsPerWord);
         return headlinesPerWord;
@@ -222,6 +225,20 @@ public class JsoupElementsProcessor {
             }
         }
         return trimmedHeadlines;
+    }
+
+    private List<String> removePipeFromHeadlines(List<String> headlines) {
+        List<String> headlinesPipeRemoved = new ArrayList<>();
+
+        for(String headline : headlines) {
+            if(headline.contains("|")) {
+                String pipeRemovedHeadline = headline.substring(0, (headline.indexOf("|")));
+                headlinesPipeRemoved.add(pipeRemovedHeadline);
+            } else {
+                headlinesPipeRemoved.add(headline);
+            }
+        }
+        return headlinesPipeRemoved;
     }
 
     private String removeLastHalfWordFromString(String stringToChange) {
