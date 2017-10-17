@@ -314,7 +314,7 @@ public class JsoupElementsProcessor {
 
         if(imageLink.contains(buzzWord)) {
             List<String> correctFormatHeadlines = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
-            Map<String, Integer> wordsRankedByOccurenceTwoOrMore = new DataForAllBuzzWordsProvider().getWordsRankedByOccurrence(correctFormatHeadlines, buzzWord, 0);
+            Map<String, Integer> wordsRankedByOccurenceTwoOrMore = new DataForAllBuzzWordsProvider().getWordsRankedByOccurrence(correctFormatHeadlines, buzzWord, 1);
 
             int counter = 0;
 
@@ -322,7 +322,7 @@ public class JsoupElementsProcessor {
                 if(imageLink.contains(entry.getKey())) {
                     counter++;
 
-                    if(counter >= 1) {
+                    if(counter >= 2) {
                         break;
                     }
                 }
