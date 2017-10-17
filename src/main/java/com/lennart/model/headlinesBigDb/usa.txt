@@ -179,3 +179,13 @@ public void initializeDocuments(int number) throws IOException {
                 break;
         }
     }
+
+
+
+
+
+    CSS:
+
+    col-sm-3          geen padding
+    navbar-header     geen padding
+    row               geen margin
