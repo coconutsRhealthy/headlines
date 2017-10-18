@@ -227,7 +227,7 @@ public class JsoupElementsProcessor {
         return trimmedHeadlines;
     }
 
-    private List<String> removePipeFromHeadlines(List<String> headlines) {
+    public List<String> removePipeFromHeadlines(List<String> headlines) {
         List<String> headlinesPipeRemoved = new ArrayList<>();
 
         for(String headline : headlines) {
