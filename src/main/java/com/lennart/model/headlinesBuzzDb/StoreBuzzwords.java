@@ -26,7 +26,7 @@ public class StoreBuzzwords {
             if(!isWordInDatabase(database, entry.getKey())) {
                 if(!earlierWordsWithSame3Headlines(database, headlinesForWord)) {
                     addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord, imageLink);
-                    updateGroupsInDb(database);
+                    //updateGroupsInDb(database);
                     //postTweet(entry.getKey(), headlinesForWord, database);
                 }
             } else {
