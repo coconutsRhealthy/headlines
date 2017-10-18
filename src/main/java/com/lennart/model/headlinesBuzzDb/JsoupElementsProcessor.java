@@ -58,10 +58,16 @@ public class JsoupElementsProcessor {
         Map<String, String> hrefsAndRawHeadlinesCorrectToReturn = new LinkedHashMap<>();
 
         for (Map.Entry<String, String> entry : hrefAndRawHeadline.entrySet()) {
-            Document document = Jsoup.connect(entry.getKey()).get();
-            Elements elements = document.select("h1");
+            Elements elements = null;
 
-            if(elements.size() == 1 && !elements.first().text().contains("Barchart, the leading provider")) {
+            try {
+                Document document = Jsoup.connect(entry.getKey()).get();
+                elements = document.select("h1");
+            } catch (Exception e) {
+
+            }
+
+            if(elements != null && elements.size() == 1 && !elements.first().text().contains("Barchart, the leading provider")) {
                 hrefsAndRawHeadlinesCorrectToReturn.put(entry.getKey(), elements.first().text());
             } else {
                 hrefsAndRawHeadlinesCorrectToReturn.put(entry.getKey(), entry.getValue());
@@ -295,14 +301,22 @@ public class JsoupElementsProcessor {
         List<String> imageLinksContainingBuzzword = new ArrayList<>();
 
         for(String href : hrefs) {
-            Document document = Jsoup.connect(href).get();
-            Elements elements = document.select("img[src]");
+            Elements elements = null;
 
-            for (Element element : elements) {
-                String imageLink = element.attr("abs:src");
+            try {
+                Document document = Jsoup.connect(href).get();
+                elements = document.select("img[src]");
+            } catch (Exception e) {
 
-                if(imageLinkContainsKeyWords(imageLink, buzzWord, headlines)) {
-                    imageLinksContainingBuzzword.add(element.attr("abs:src"));
+            }
+
+            if(elements != null) {
+                for (Element element : elements) {
+                    String imageLink = element.attr("abs:src");
+
+                    if(imageLinkContainsKeyWords(imageLink, buzzWord, headlines)) {
+                        imageLinksContainingBuzzword.add(element.attr("abs:src"));
+                    }
                 }
             }
         }
