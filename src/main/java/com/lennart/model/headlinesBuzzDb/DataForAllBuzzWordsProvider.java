@@ -83,9 +83,16 @@ public class DataForAllBuzzWordsProvider {
     }
 
     private List<String> removeIndicesFromList(List<Integer> indicesToRemove, List<String> list) {
+        List<String> entriesToRemove = new ArrayList<>();
+
         for(int i : indicesToRemove) {
-            list.remove(i);
+            entriesToRemove.add(list.get(i));
         }
+
+        for(String s : entriesToRemove) {
+            list.remove(s);
+        }
+
         return list;
     }
 
