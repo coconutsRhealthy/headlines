@@ -73,30 +73,35 @@
                     </div>
                 </nav>
 
-                <div class="row" ng-repeat="topic in topics | orderBy : orderType">
-                    <div class="col-sm-3"></div>
-                    <div class="col-sm-6" >
-                        <div class="image-headline-block">
-                            <div class="main-headline">
-                                <a class="no-underline-link" href="" ng-click="testfunctie(topic)">
-                                    <img src={{topic.imageLink}}>
-                                    <h4>{{topic.headlines[0]}}</h4>
-                                    <small class="text-muted metadata-headline">{{topic.dateTime}}</small>
-                                </a>
-                            </div>
-                            <div class="child-headlines" ng-show="check(topic)">
-                                <ul class="custom-bullet">
-                                    <div ng-show="check(topic)" ng-repeat="headline in topic.headlines track by $index">
-                                        <li>
-                                            <div><a href={{topic.links[$index]}}>{{headline}}</a></div>
-                                            <div><small class="text-muted">{{topic.sites[$index]}}</small></div>
-                                        </li>
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <div ng-repeat="topic in topics | orderBy : orderType">
+                            <div class="clearfix" ng-if="$index % 3 == 0"></div>
+                            <div class="col-sm-4">
+                                <div class="image-headline-block">
+                                    <div class="main-headline">
+                                        <a class="no-underline-link" href="" ng-click="testfunctie(topic)">
+                                            <img src={{topic.imageLink}}>
+                                            <h4>{{topic.headlines[0]}}</h4>
+                                            <small class="text-muted metadata-headline">{{topic.dateTime}}</small>
+                                        </a>
                                     </div>
-                                </ul>
+                                    <div class="child-headlines" ng-show="check(topic)">
+                                        <ul class="custom-bullet">
+                                            <div ng-show="check(topic)" ng-repeat="headline in topic.headlines track by $index">
+                                                <li>
+                                                    <div><a href={{topic.links[$index]}}>{{headline}}</a></div>
+                                                    <div><small class="text-muted">{{topic.sites[$index]}}</small></div>
+                                                </li>
+                                            </div>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-3"></div>
+                    <div class="col-sm-1"></div>
                 </div>
 
                 <div class="push"></div>
