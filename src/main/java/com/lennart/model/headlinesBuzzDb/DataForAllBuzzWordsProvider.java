@@ -246,7 +246,7 @@ public class DataForAllBuzzWordsProvider {
     }
 
     private Map<String, List<String>> getRelevantEntries(Map<String, List<String>> dataTotalForWord, Map<String, Integer> wordsRankedByOccurenceTwoOrMore) {
-        List<String> headlinesToRemove = getHeadlinesThatAreUnrelated(dataTotalForWord.get("correctedHeadlines"), wordsRankedByOccurenceTwoOrMore, 3);
+        List<String> headlinesToRemove = getHeadlinesThatAreUnrelated(dataTotalForWord.get("correctedHeadlines"), wordsRankedByOccurenceTwoOrMore, 2);
 
         List<String> rawHeadlinesToRemove = new ArrayList<>();
         List<String> hrefsToRemove = new ArrayList<>();
@@ -279,7 +279,7 @@ public class DataForAllBuzzWordsProvider {
                                 continue loop;
                             } else {
                                 for (Map.Entry<String, Integer> entry3 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
-                                    if(!entry.getKey().equals(entry3.getKey()) && entry2.getKey().equals(entry3.getKey())
+                                    if(!entry.getKey().equals(entry3.getKey()) && !entry2.getKey().equals(entry3.getKey())
                                             && headline.contains(entry3.getKey())) {
                                         continue loop;
                                     }
