@@ -108,8 +108,8 @@ h4 {
 
 @media (max-width: 676px) {
     .container-fluid {
-      padding:0 !important;
-      margin:0 !important;
+      padding-left: 0px !important;
+      padding-right: 0px !important;
     }
 
     body {
@@ -133,5 +133,34 @@ h4 {
     .metadata-headline {
         margin-left: 10;
         color: rgb(100, 100, 100);
+    }
+
+    .fixed-height-image {
+        width: 100%;
+        height: auto;
+    }
+
+    .col-sm-1 {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
+    .col-sm-4 {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
+    .col-sm-10 {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
+    .navbar-header {
+        width: 100%;
+    }
+
+    .row {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
     }
 }
