@@ -461,8 +461,12 @@ public class RetrieveBuzzwords {
                 } else if(link.contains("seekingalpha")) {
                     newsSites.add("seekingalpha");
                 } else {
-                    String site = link.split("\\.")[1];
-                    newsSites.add(site);
+                    if(link.contains(".")) {
+                        String site = link.split("\\.")[1];
+                        newsSites.add(site);
+                    } else {
+                        newsSites.add("unknown");
+                    }
                 }
             } else {
                 if(link.contains("washpost")) {
