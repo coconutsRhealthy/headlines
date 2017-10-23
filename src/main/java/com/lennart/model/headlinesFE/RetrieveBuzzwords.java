@@ -472,14 +472,18 @@ public class RetrieveBuzzwords {
                 } else if(link.contains("marketwatch")) {
                     newsSites.add("marketwatch");
                 } else {
-                    String site = link.split("\\.")[1];
+                    if(link.contains(".")) {
+                        String site = link.split("\\.")[1];
 
-                    if(site != null && site.contains("/")) {
-                        site = link.split("\\.")[0];
-                        site = site.replaceAll("http://", "");
-                        site = site.replaceAll("https://", "");
+                        if(site != null && site.contains("/")) {
+                            site = link.split("\\.")[0];
+                            site = site.replaceAll("http://", "");
+                            site = site.replaceAll("https://", "");
+                        }
+                        newsSites.add(site);
+                    } else {
+                        newsSites.add("unknown");
                     }
-                    newsSites.add(site);
                 }
             }
         }
