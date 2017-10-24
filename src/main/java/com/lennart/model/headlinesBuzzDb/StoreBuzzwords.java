@@ -24,12 +24,14 @@ public class StoreBuzzwords {
             String imageLink = entry.getValue().get("imageLink").get(0);
 
             if(!isWordInDatabase(database, entry.getKey())) {
-                if(!earlierWordsWithSame3Headlines(database, headlinesForWord)) {
-                    addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord, imageLink);
-                    //updateGroupsInDb(database);
-                    //postTweet(entry.getKey(), headlinesForWord, database);
-                }
+                addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord, imageLink);
+                //updateGroupsInDb(database);
+                //postTweet(entry.getKey(), headlinesForWord, database);
             } else {
+                if(!imageLink.equals("-") && !isImageLinkPresent(database, entry.getKey())) {
+                    addImageLinkToExistingBuzzword(database, entry.getKey(), imageLink);
+                }
+
                 for(int i = 0; i < linksForWord.size(); i++) {
                     if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
                         try {
@@ -100,6 +102,12 @@ public class StoreBuzzwords {
         }
     }
 
+    private void addImageLinkToExistingBuzzword(String database, String word, String imageLink) throws Exception {
+        Statement st = con.createStatement();
+        st.executeUpdate("UPDATE " + database + " SET image_link = '" + imageLink + " WHERE word = '" + word + "'");
+        st.close();
+    }
+
     private boolean linksAlreadyContainLinkOfThisSite(String links, String linkToAdd) {
         String site;
 
@@ -151,6 +159,22 @@ public class StoreBuzzwords {
             }
         }
         return linkIsInDatabase;
+    }
+
+    private boolean isImageLinkPresent(String database, String word) throws Exception {
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE word = '" + word + "';");
+
+        rs.next();
+        String imageLink = rs.getString("image_link");
+
+        rs.close();
+        st.close();
+
+        if(imageLink.equals("-")) {
+            return false;
+        }
+        return true;
     }
 
     private boolean earlierWordsWithSame3Headlines(String database, List<String> headlinesForWord) {
