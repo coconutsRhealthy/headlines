@@ -22,7 +22,11 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         List<BuzzWord> nonGroupBuzzWords = retrieveAllNonGroupBuzzWordsWithImage(database);
 
         for(BuzzWord nonGroupBuzzWord : nonGroupBuzzWords) {
-            allTopics.add(getTopicFromNonGroupBuzzWord(nonGroupBuzzWord));
+            Topic topicFromNonGroupBuzzWord = getTopicFromNonGroupBuzzWord(nonGroupBuzzWord);
+
+            if(topicFromNonGroupBuzzWord != null) {
+                allTopics.add(topicFromNonGroupBuzzWord);
+            }
         }
 
         Map<Integer, List<BuzzWord>> buzzWordGroups = retrieveAllBuzzWordGroups(database);
@@ -148,6 +152,8 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         }
 
         Map<String, Integer> wordsRankedByOccurenceTwoOrMore = dataForAllBuzzWordsProvider.getWordsRankedByOccurrence(correctFormatHeadlines, "", 2);
+
+        //TODO: misschien deze op niveau 4 zetten voor 'entertainment'
         List<String> headlinesToRemove = dataForAllBuzzWordsProvider.getHeadlinesThatAreUnrelated(correctFormatHeadlines, wordsRankedByOccurenceTwoOrMore, 3);
 
         List<Map<String, String>> listOfMapsToRemove = new ArrayList<>();
@@ -237,8 +243,13 @@ public class RetrieveTopics extends RetrieveBuzzwords {
     }
 
     private Topic getTopicFromNonGroupBuzzWord(BuzzWord buzzWord) throws Exception {
-        return new Topic(buzzWord.getEntry(), getDateTimeForTopic(buzzWord.getDateTime()), buzzWord.getHeadlines(), buzzWord.getLinks(),
-                buzzWord.getSites(), buzzWord.getImageLink());
+        List<String> headlines = retainHeadlinesThatAreTrulyRelatedForTopic(buzzWord.getHeadlines());
+
+        if(headlines.size() >= 3) {
+            return new Topic(buzzWord.getEntry(), getDateTimeForTopic(buzzWord.getDateTime()), headlines, buzzWord.getLinks(),
+                    buzzWord.getSites(), buzzWord.getImageLink());
+        }
+        return null;
     }
 
     private List<BuzzWord> getAllGroupBuzzWords(String database) throws Exception {
