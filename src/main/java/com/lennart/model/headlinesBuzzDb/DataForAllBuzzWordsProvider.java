@@ -26,7 +26,6 @@ public class DataForAllBuzzWordsProvider {
                 headLinesForWord.addAll(dataForBuzzword.get("rawHeadlines"));
 
                 if(headLinesForWord.size() >= 3) {
-                    //TODO: dit gaat met nieuwe H1 target page approach niet helemaal goed
                     headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord, bigDbStorer);
                     headLinesForWord = removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(headLinesForWord, bigDbStorer);
 
@@ -45,6 +44,8 @@ public class DataForAllBuzzWordsProvider {
                         }
 
                         dataForBuzzword.put("rawHeadlines", headLinesForWord);
+
+                        dataForBuzzword = replaceHeadlinesByH1TargetPageHeadlines(dataForBuzzword);
 
                         List<String> imageLinkList = new JsoupElementsProcessor().getImageLinkForBuzzwordInList
                                 (dataForBuzzword.get("hrefs"), entry.getKey(), dataForBuzzword.get("rawHeadlines"));
@@ -220,10 +221,17 @@ public class DataForAllBuzzWordsProvider {
         //tot slot verwijder je links die van dezelfde site afkomstig zijn
         dataTotalForWord = removeHeadlinesThatAreFromSameSite(dataTotalForWord);
 
-        //hieronder nieuw, vervang headlines met h1 van target pagina als mogelijk
+        return dataTotalForWord;
+    }
+
+    private Map<String, List<String>> replaceHeadlinesByH1TargetPageHeadlines(Map<String, List<String>> dataTotalForWord)
+            throws Exception {
         Map<String, String> hrefsAndRawHeadlines = new LinkedHashMap<>();
-        List<String> hrefsNow = dataTotalForWord.get("hrefs");
-        List<String> rawHeadlinesNow = dataTotalForWord.get("rawHeadlines");
+        List<String> hrefsNow = new ArrayList<>();
+        hrefsNow.addAll(dataTotalForWord.get("hrefs"));
+
+        List<String> rawHeadlinesNow = new ArrayList<>();
+        rawHeadlinesNow.addAll(dataTotalForWord.get("rawHeadlines"));
 
         if(rawHeadlinesNow.size() == hrefsNow.size()) {
             for(int i = 0; i < hrefsNow.size(); i++) {
@@ -232,6 +240,8 @@ public class DataForAllBuzzWordsProvider {
         }
 
         if(!hrefsAndRawHeadlines.isEmpty()) {
+            JsoupElementsProcessor jsoupElementsProcessor = new JsoupElementsProcessor();
+
             Map<String, String> hrefsAndRawHeadlinesCorrect = jsoupElementsProcessor.replaceRawHeadlinesToH1ifPossible(hrefsAndRawHeadlines);
 
             List<String> hrefsCorrect = new ArrayList<>(hrefsAndRawHeadlinesCorrect.keySet());
