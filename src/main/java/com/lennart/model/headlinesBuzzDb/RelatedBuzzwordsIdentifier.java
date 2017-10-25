@@ -289,6 +289,8 @@ public class RelatedBuzzwordsIdentifier {
 
             wordsFromHeadlineToAnalyseAsSetCopy.retainAll(wordsFromHeadlineAsSet);
 
+            //TODO: mogelijk dit gevoeliger zetten voor sport pagina...
+                //en mogelijk minder gevoelig voor entertainment?
             if(wordsFromHeadlineToAnalyseAsSetCopy.size() >= 4) {
                 relatedHeadlines.add(headline);
             }
