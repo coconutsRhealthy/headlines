@@ -22,7 +22,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         List<BuzzWord> nonGroupBuzzWords = retrieveAllNonGroupBuzzWordsWithImage(database);
 
         for(BuzzWord nonGroupBuzzWord : nonGroupBuzzWords) {
-            Topic topicFromNonGroupBuzzWord = getTopicFromNonGroupBuzzWord(nonGroupBuzzWord);
+            Topic topicFromNonGroupBuzzWord = getTopicFromNonGroupBuzzWord(nonGroupBuzzWord, database);
 
             if(topicFromNonGroupBuzzWord != null) {
                 allTopics.add(topicFromNonGroupBuzzWord);
@@ -33,7 +33,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         buzzWordGroups = retainBuzzWordsWithSameImagesInGroupsMap(buzzWordGroups);
 
         for (Map.Entry<Integer, List<BuzzWord>> entry : buzzWordGroups.entrySet()) {
-            Topic topic = getTopicFromBuzzWordGroup(entry.getValue());
+            Topic topic = getTopicFromBuzzWordGroup(entry.getValue(), database);
 
             if(topic != null) {
                 allTopics.add(topic);
@@ -96,7 +96,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         return buzzWordsToRetain;
     }
 
-    private Topic getTopicFromBuzzWordGroup(List<BuzzWord> buzzWordGroup) throws Exception {
+    private Topic getTopicFromBuzzWordGroup(List<BuzzWord> buzzWordGroup, String database) throws Exception {
         String imageLink = getNewestImageLinkFromBuzzWordGroup(buzzWordGroup);
 
         if(imageLink != null) {
@@ -126,7 +126,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
                 }
             }
 
-            allHeadlines = retainHeadlinesThatAreTrulyRelatedForTopic(allHeadlines);
+            allHeadlines = retainHeadlinesThatAreTrulyRelatedForTopic(allHeadlines, database);
 
             if(allHeadlines.size() >= 3) {
                 int entry = getNewestEntryFromBuzzWordList(buzzWordGroup);
@@ -141,7 +141,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         return null;
     }
 
-    List<String> retainHeadlinesThatAreTrulyRelatedForTopic(List<String> headlines) {
+    List<String> retainHeadlinesThatAreTrulyRelatedForTopic(List<String> headlines, String database) {
         DataForAllBuzzWordsProvider dataForAllBuzzWordsProvider = new DataForAllBuzzWordsProvider();
         List<String> correctFormatHeadlines = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
         List<Map<String, String>> headlinesCorrectFormatKeyRawValueInList = new ArrayList<>();
@@ -153,8 +153,13 @@ public class RetrieveTopics extends RetrieveBuzzwords {
 
         Map<String, Integer> wordsRankedByOccurenceTwoOrMore = dataForAllBuzzWordsProvider.getWordsRankedByOccurrence(correctFormatHeadlines, "", 2);
 
-        //TODO: misschien deze op niveau 4 zetten voor 'entertainment'
-        List<String> headlinesToRemove = dataForAllBuzzWordsProvider.getHeadlinesThatAreUnrelated(correctFormatHeadlines, wordsRankedByOccurenceTwoOrMore, 3);
+        List<String> headlinesToRemove;
+
+        if(database.equals("entertainment_buzzwords_new")) {
+            headlinesToRemove = dataForAllBuzzWordsProvider.getHeadlinesThatAreUnrelated(correctFormatHeadlines, wordsRankedByOccurenceTwoOrMore, 4);
+        } else {
+            headlinesToRemove = dataForAllBuzzWordsProvider.getHeadlinesThatAreUnrelated(correctFormatHeadlines, wordsRankedByOccurenceTwoOrMore, 3);
+        }
 
         List<Map<String, String>> listOfMapsToRemove = new ArrayList<>();
 
@@ -242,8 +247,8 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         return nonGroupBuzzWordsWithImage;
     }
 
-    private Topic getTopicFromNonGroupBuzzWord(BuzzWord buzzWord) throws Exception {
-        List<String> headlines = retainHeadlinesThatAreTrulyRelatedForTopic(buzzWord.getHeadlines());
+    private Topic getTopicFromNonGroupBuzzWord(BuzzWord buzzWord, String database) throws Exception {
+        List<String> headlines = retainHeadlinesThatAreTrulyRelatedForTopic(buzzWord.getHeadlines(), database);
 
         if(headlines.size() >= 3) {
             return new Topic(buzzWord.getEntry(), getDateTimeForTopic(buzzWord.getDateTime()), headlines, buzzWord.getLinks(),
