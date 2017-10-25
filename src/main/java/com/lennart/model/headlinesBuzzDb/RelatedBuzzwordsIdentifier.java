@@ -15,7 +15,7 @@ public class RelatedBuzzwordsIdentifier {
     public void updateGroupsInDb(String database) throws Exception {
         List<String> headlinesFromDb = getAllHeadlinesFromDb(database);
         headlinesFromDb = filterOutDoubleHeadlinesFromList(headlinesFromDb);
-        Map<String, Set<String>> groupPerHeadline = getGroupPerHeadline(headlinesFromDb);
+        Map<String, Set<String>> groupPerHeadline = getGroupPerHeadline(headlinesFromDb, database);
         Set<Set<String>> allGroups = getAllGroups(groupPerHeadline);
         List<Set<String>> allGroupsSortedBySize = sortAllGroupsBySize(allGroups);
         Map<Integer, Set<String>> finalGroupMap = getTheFinalGroupMap(allGroupsSortedBySize);
@@ -183,12 +183,12 @@ public class RelatedBuzzwordsIdentifier {
         return headlines;
     }
 
-    private Map<String, Set<String>> getGroupPerHeadline(List<String> headlines) {
+    private Map<String, Set<String>> getGroupPerHeadline(List<String> headlines, String database) {
         Map<String, Set<String>> groupPerHeadline = new HashMap<>();
 
         for(String headline : headlines) {
             Set<String> group = new HashSet<>();
-            groupPerHeadline.put(headline, getGroup(headline, headlines, group));
+            groupPerHeadline.put(headline, getGroup(headline, headlines, group, database));
         }
         return groupPerHeadline;
     }
@@ -242,14 +242,14 @@ public class RelatedBuzzwordsIdentifier {
         return theFinalGroupMap;
     }
 
-    private Set<String> getGroup(String initialHeadline, List<String> allHeadlines, Set<String> group) {
+    private Set<String> getGroup(String initialHeadline, List<String> allHeadlines, Set<String> group, String database) {
         String initialHeadlineCorrectedPipe = initialHeadline;
 
         if(initialHeadline.contains("|")) {
             initialHeadlineCorrectedPipe = initialHeadline.substring(0, (initialHeadline.indexOf("|")));
         }
 
-        List<String> relatedHeadlines = getRelatedHeadlines(initialHeadlineCorrectedPipe, allHeadlines);
+        List<String> relatedHeadlines = getRelatedHeadlines(initialHeadlineCorrectedPipe, allHeadlines, database);
 
         relatedHeadlines.removeAll(group);
 
@@ -257,12 +257,12 @@ public class RelatedBuzzwordsIdentifier {
         group.addAll(relatedHeadlines);
 
         for(String headline : relatedHeadlines) {
-            getGroup(headline, allHeadlines, group);
+            getGroup(headline, allHeadlines, group, database);
         }
         return group;
     }
 
-    private List<String> getRelatedHeadlines(String headlineToAnalyse, List<String> allHeadlines) {
+    private List<String> getRelatedHeadlines(String headlineToAnalyse, List<String> allHeadlines, String database) {
         List<String> relatedHeadlines = new ArrayList<>();
 
         String headlineToAnalyseCorrectFormat = headlineToAnalyse.toLowerCase();
@@ -289,10 +289,14 @@ public class RelatedBuzzwordsIdentifier {
 
             wordsFromHeadlineToAnalyseAsSetCopy.retainAll(wordsFromHeadlineAsSet);
 
-            //TODO: mogelijk dit gevoeliger zetten voor sport pagina...
-                //en mogelijk minder gevoelig voor entertainment?
-            if(wordsFromHeadlineToAnalyseAsSetCopy.size() >= 4) {
-                relatedHeadlines.add(headline);
+            if(database.equals("sport_buzzwords_new")) {
+                if(wordsFromHeadlineToAnalyseAsSetCopy.size() >= 5) {
+                    relatedHeadlines.add(headline);
+                }
+            } else {
+                if(wordsFromHeadlineToAnalyseAsSetCopy.size() >= 4) {
+                    relatedHeadlines.add(headline);
+                }
             }
         }
 
