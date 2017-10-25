@@ -104,7 +104,7 @@ public class StoreBuzzwords {
 
     private void addImageLinkToExistingBuzzword(String database, String word, String imageLink) throws Exception {
         Statement st = con.createStatement();
-        st.executeUpdate("UPDATE " + database + " SET image_link = '" + imageLink + " WHERE word = '" + word + "'");
+        st.executeUpdate("UPDATE " + database + " SET image_link = '" + imageLink + "' WHERE word = '" + word + "'");
         st.close();
     }
 
