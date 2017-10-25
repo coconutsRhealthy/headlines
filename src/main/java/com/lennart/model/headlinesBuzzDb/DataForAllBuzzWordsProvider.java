@@ -26,6 +26,7 @@ public class DataForAllBuzzWordsProvider {
                 headLinesForWord.addAll(dataForBuzzword.get("rawHeadlines"));
 
                 if(headLinesForWord.size() >= 3) {
+                    //TODO: dit gaat met nieuwe H1 target page approach niet helemaal goed
                     headLinesForWord = removeHeadlinesThatWerePresentInPreviousIteration(headLinesForWord, bigDbStorer);
                     headLinesForWord = removeHeadlinesThatWereCoveredByBuzzWordOlderThan3Hours(headLinesForWord, bigDbStorer);
 
@@ -268,20 +269,29 @@ public class DataForAllBuzzWordsProvider {
     }
 
     public List<String> getHeadlinesThatAreUnrelated(List<String> headlines, Map<String, Integer> wordsRankedByOccurenceTwoOrMore,
-                                                     int level2or3deep) {
+                                                     int level2or3or4deep) {
         List<String> headlinesToRemove = new ArrayList<>();
         loop: for(String headline : headlines) {
             for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
                 if(headline.contains(entry.getKey())) {
                     for (Map.Entry<String, Integer> entry2 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
                         if(!entry.getKey().equals(entry2.getKey()) && headline.contains(entry2.getKey())) {
-                            if(level2or3deep == 2) {
+                            if(level2or3or4deep == 2) {
                                 continue loop;
                             } else {
                                 for (Map.Entry<String, Integer> entry3 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
                                     if(!entry.getKey().equals(entry3.getKey()) && !entry2.getKey().equals(entry3.getKey())
                                             && headline.contains(entry3.getKey())) {
-                                        continue loop;
+                                        if(level2or3or4deep == 3) {
+                                            continue loop;
+                                        } else {
+                                            for (Map.Entry<String, Integer> entry4 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+                                                if(!entry.getKey().equals(entry4.getKey()) && !entry2.getKey().equals(entry4.getKey())
+                                                        &&  !entry3.getKey().equals(entry4.getKey()) && headline.contains(entry4.getKey())) {
+                                                    continue loop;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -313,7 +323,7 @@ public class DataForAllBuzzWordsProvider {
         allWordsCombined = removeTheKeyword(allWordsCombined, word);
 
         Map<String, Integer> wordsRankedByOccurenceAll = new HashMap<>();
-        Map<String, Integer> wordsRankedByOccurenceTwoOrMore = new HashMap<>();
+        Map<String, Integer> wordsRankedByOccurenceMoreThanAmountRestriction = new HashMap<>();
 
         for(String s : allWordsCombined) {
             if(wordsRankedByOccurenceAll.get(s) == null) {
@@ -324,10 +334,10 @@ public class DataForAllBuzzWordsProvider {
 
         for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceAll.entrySet()) {
             if(entry.getValue() > amountRestriction) {
-                wordsRankedByOccurenceTwoOrMore.put(entry.getKey(), entry.getValue());
+                wordsRankedByOccurenceMoreThanAmountRestriction.put(entry.getKey(), entry.getValue());
             }
         }
-        return wordsRankedByOccurenceTwoOrMore;
+        return wordsRankedByOccurenceMoreThanAmountRestriction;
     }
 
     private Map<String, List<String>> removeHeadlinesThatAreFromSameSite(Map<String, List<String>> dataTotalForWord) {
