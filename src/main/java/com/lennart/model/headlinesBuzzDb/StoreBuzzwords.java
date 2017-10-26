@@ -28,16 +28,21 @@ public class StoreBuzzwords {
                 //updateGroupsInDb(database);
                 //postTweet(entry.getKey(), headlinesForWord, database);
             } else {
-                if(!imageLink.equals("-") && !isImageLinkPresent(database, entry.getKey())) {
-                    addImageLinkToExistingBuzzword(database, entry.getKey(), imageLink);
-                }
+                boolean updateOfImageLinkDone = false;
 
                 for(int i = 0; i < linksForWord.size(); i++) {
                     if(!isLinkInDatabase(database, entry.getKey(), linksForWord.get(i))) {
-                        try {
-                            addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
-                        } catch (Exception e) {
+                        if(isNewHeadlineRelatedToHeadlinesAlreadyInDbForThisBuzzWord(entry.getKey(), headlinesForWord.get(i), database)) {
+                            try {
+                                addHeadlineAndLinkToExistingBuzzword(database, entry.getKey(), headlinesForWord.get(i), linksForWord.get(i));
 
+                                if(!updateOfImageLinkDone && !imageLink.equals("-") && !isImageLinkPresent(database, entry.getKey())) {
+                                    addImageLinkToExistingBuzzword(database, entry.getKey(), imageLink);
+                                    updateOfImageLinkDone = true;
+                                }
+                            } catch (Exception e) {
+
+                            }
                         }
                     }
                 }
@@ -145,6 +150,50 @@ public class StoreBuzzwords {
         rs.close();
         st.close();
         return false;
+    }
+
+    private boolean isNewHeadlineRelatedToHeadlinesAlreadyInDbForThisBuzzWord(String word, String newHeadlineCurrentWord, String database) throws Exception {
+        boolean currentWordIsRelated = false;
+
+        String newHeadlineCurrentWordCorrectFormat = convertStringToCorrectCompareFormat(newHeadlineCurrentWord);
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE word = '" + word + "';");
+
+        rs.next();
+        List<String> headlinesForWordFromDb = Arrays.asList(rs.getString("headlines").split(" ---- "));
+
+        rs.close();
+        st.close();
+
+        headlinesForWordFromDb = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlinesForWordFromDb);
+        DataForAllBuzzWordsProvider dataForAllBuzzWordsProvider = new DataForAllBuzzWordsProvider();
+        Map<String, Integer> wordsRankedByOccurenceTwoOrMore = dataForAllBuzzWordsProvider.getWordsRankedByOccurrence(headlinesForWordFromDb, word, 2);
+
+        int counter = 0;
+
+        for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+            if(newHeadlineCurrentWordCorrectFormat.contains(entry.getKey())) {
+                counter++;
+
+                if(counter >= 3) {
+                    break;
+                }
+            }
+        }
+
+        if(counter >= 3) {
+            currentWordIsRelated = true;
+        }
+
+        return currentWordIsRelated;
+    }
+
+    private String convertStringToCorrectCompareFormat(String baseString) {
+        String correctedString = baseString.toLowerCase();
+        correctedString = correctedString.replaceAll("[^A-Za-z0-9 ]", "");
+        correctedString = correctedString.replaceAll("  ", " ");
+        return correctedString;
     }
 
     private boolean isLinkInDatabase(String database, String word, String link) throws Exception {
