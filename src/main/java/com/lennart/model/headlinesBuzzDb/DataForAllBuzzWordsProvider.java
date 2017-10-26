@@ -247,7 +247,7 @@ public class DataForAllBuzzWordsProvider {
             List<String> hrefsCorrect = new ArrayList<>(hrefsAndRawHeadlinesCorrect.keySet());
             List<String> rawHeadlinesCorrectReplacedByH1 = new ArrayList<>(hrefsAndRawHeadlinesCorrect.values());
 
-            rawHeadlinesCorrectReplacedByH1 = jsoupElementsProcessor.removePipeFromHeadlines(rawHeadlinesCorrectReplacedByH1);
+            rawHeadlinesCorrectReplacedByH1 = jsoupElementsProcessor.removeBlackListElementsFromHeadlines(rawHeadlinesCorrectReplacedByH1);
 
             dataTotalForWord.put("hrefs", hrefsCorrect);
             dataTotalForWord.put("rawHeadlines", rawHeadlinesCorrectReplacedByH1);

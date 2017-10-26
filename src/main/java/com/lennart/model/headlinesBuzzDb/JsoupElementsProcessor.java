@@ -32,7 +32,7 @@ public class JsoupElementsProcessor {
 
     public List<String> getHeadlinesPerWord(List<Element> elementsPerWord, String word) {
         List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
-        headlinesPerWord = removePipeFromHeadlines(headlinesPerWord);
+        headlinesPerWord = removeBlackListElementsFromHeadlines(headlinesPerWord);
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlines(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
@@ -40,7 +40,7 @@ public class JsoupElementsProcessor {
 
     public List<String> getRawHeadlinesPerWord(List<Element> elementsPerWord, String word) {
         List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
-        headlinesPerWord = removePipeFromHeadlines(headlinesPerWord);
+        headlinesPerWord = removeBlackListElementsFromHeadlines(headlinesPerWord);
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForRaw(headlinesPerWord, " " + word + " ");
         return headlinesPerWord;
@@ -48,7 +48,7 @@ public class JsoupElementsProcessor {
 
     public List<String> getHrefHeadlinesPerWord(List<Element> elementsPerWord, String word) {
         List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
-        headlinesPerWord = removePipeFromHeadlines(headlinesPerWord);
+        headlinesPerWord = removeBlackListElementsFromHeadlines(headlinesPerWord);
         headlinesPerWord = trimHeadlinesToMax150Characters(headlinesPerWord);
         headlinesPerWord = removeWrongContainsHeadlinesForHref(headlinesPerWord, " " + word + " ", elementsPerWord);
         return headlinesPerWord;
@@ -233,7 +233,14 @@ public class JsoupElementsProcessor {
         return trimmedHeadlines;
     }
 
-    public List<String> removePipeFromHeadlines(List<String> headlines) {
+    public List<String> removeBlackListElementsFromHeadlines(List<String> headlines) {
+        List<String> headlinesBlackListElementsRemoved = removePipeFromHeadlines(headlines);
+        headlinesBlackListElementsRemoved = removeTheLatestFromHeadlines(headlinesBlackListElementsRemoved);
+        headlinesBlackListElementsRemoved = removeLeadingDateTimeFromHeadlines(headlinesBlackListElementsRemoved);
+        return headlinesBlackListElementsRemoved;
+    }
+
+    private List<String> removePipeFromHeadlines(List<String> headlines) {
         List<String> headlinesPipeRemoved = new ArrayList<>();
 
         for(String headline : headlines) {
@@ -245,6 +252,54 @@ public class JsoupElementsProcessor {
             }
         }
         return headlinesPipeRemoved;
+    }
+
+    private List<String> removeTheLatestFromHeadlines(List<String> headlines) {
+        List<String> headlinesTheLatestRemoved = new ArrayList<>();
+
+        for(String headline : headlines) {
+            if(headline.contains("The Latest: ")) {
+                String theLatestRemovedHeadline = headline.replaceAll("The Latest: ", "");
+                headlinesTheLatestRemoved.add(theLatestRemovedHeadline);
+            } else {
+                headlinesTheLatestRemoved.add(headline);
+            }
+        }
+        return headlinesTheLatestRemoved;
+    }
+
+    private List<String> removeLeadingDateTimeFromHeadlines(List<String> headlines) {
+        List<String> headlinesDateTimeRemoved = new ArrayList<>();
+
+        for(String headline : headlines) {
+            if(headline.contains(" AM ") || headline.contains(" PM ")) {
+                if(headline.contains("January") || headline.contains("February") || headline.contains("March")
+                    || headline.contains("April") || headline.contains("May") || headline.contains("June")
+                    || headline.contains("July") || headline.contains("August") || headline.contains("September")
+                    || headline.contains("October") || headline.contains("November") || headline.contains("December")) {
+                    String dateTimeRemovedHeadline;
+
+                    if(headline.contains(" AM ")) {
+                        if(headline.indexOf(" AM ") + 4 <= headline.length()) {
+                            dateTimeRemovedHeadline = headline.substring(headline.indexOf(" AM ") + 4, headline.length());
+                            headlinesDateTimeRemoved.add(dateTimeRemovedHeadline);
+                        } else {
+                            headlinesDateTimeRemoved.add(headline);
+                        }
+                    } else {
+                        if(headline.indexOf(" PM ") + 4 <= headline.length()) {
+                            dateTimeRemovedHeadline = headline.substring(headline.indexOf(" PM ") + 4, headline.length());
+                            headlinesDateTimeRemoved.add(dateTimeRemovedHeadline);
+                        } else {
+                            headlinesDateTimeRemoved.add(headline);
+                        }
+                    }
+                }
+            } else {
+                headlinesDateTimeRemoved.add(headline);
+            }
+        }
+        return headlinesDateTimeRemoved;
     }
 
     private String removeLastHalfWordFromString(String stringToChange) {
