@@ -67,7 +67,8 @@ public class JsoupElementsProcessor {
 
             }
 
-            if(elements != null && elements.size() == 1 && !elements.first().text().contains("Barchart, the leading provider")) {
+            if(elements != null && elements.size() == 1 && !elements.first().text().contains("Barchart, the leading provider")
+                    && !elements.first().text().equals("Local")) {
                 hrefsAndRawHeadlinesCorrectToReturn.put(entry.getKey(), elements.first().text());
             } else {
                 hrefsAndRawHeadlinesCorrectToReturn.put(entry.getKey(), entry.getValue());
