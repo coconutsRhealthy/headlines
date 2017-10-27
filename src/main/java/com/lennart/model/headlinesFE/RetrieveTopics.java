@@ -292,9 +292,9 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         String dateTime = rs.getString("date");
         String word = rs.getString("word");
         List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
-        headlines = removeEmptyStrings(headlines);
+        headlines = replaceEmptyStringByMinus(headlines);
         List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
-        links = removeEmptyStrings(links);
+        links = replaceEmptyStringByMinus(links);
         List<String> sites = getNewsSitesFromLinks(links, null);
 
         int entry = rs.getInt("entry");

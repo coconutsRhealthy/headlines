@@ -275,9 +275,9 @@ public class RetrieveBuzzwords {
         dateTime = getCorrectTimeString(dateTime);
         String word = rs.getString("word");
         List<String> headlines = Arrays.asList(rs.getString("headlines").split(" ---- "));
-        headlines = removeEmptyStrings(headlines);
+        headlines = replaceEmptyStringByMinus(headlines);
         List<String> links = Arrays.asList(rs.getString("links").split(" ---- "));
-        links = removeEmptyStrings(links);
+        links = replaceEmptyStringByMinus(links);
         List<String> sites = getNewsSitesFromLinks(links, page);
 
         int entry = rs.getInt("entry");
@@ -290,15 +290,17 @@ public class RetrieveBuzzwords {
         return buzzWords;
     }
 
-    protected List<String> removeEmptyStrings(List<String> strings) {
-        List<String> nonEmptyStrings = new ArrayList<>();
+    protected List<String> replaceEmptyStringByMinus(List<String> strings) {
+        List<String> correctStrings = new ArrayList<>();
 
         for(String string : strings) {
-            if(!string.isEmpty()) {
-                nonEmptyStrings.add(string);
+            if(string.isEmpty()) {
+                string = "-";
             }
+            correctStrings.add(string);
         }
-        return nonEmptyStrings;
+
+        return correctStrings;
     }
 
     protected String getCorrectTimeString(String rawDateTime) {
