@@ -67,14 +67,28 @@ public class JsoupElementsProcessor {
 
             }
 
-            if(elements != null && elements.size() == 1 && !elements.first().text().contains("Barchart, the leading provider")
-                    && !elements.first().text().equals("Local")) {
+            if(elements != null && elements.size() == 1 && !headlineIsBlacklisted(elements.first().text())) {
                 hrefsAndRawHeadlinesCorrectToReturn.put(entry.getKey(), elements.first().text());
             } else {
                 hrefsAndRawHeadlinesCorrectToReturn.put(entry.getKey(), entry.getValue());
             }
         }
         return hrefsAndRawHeadlinesCorrectToReturn;
+    }
+
+    private boolean headlineIsBlacklisted(String headline) {
+        boolean headlineIsBlacklisted = false;
+
+        if(headline.contains("Barchart, the leading provider")) {
+            headlineIsBlacklisted = true;
+        } else if(headline.equals("Local")) {
+            headlineIsBlacklisted = true;
+        } else if(headline.equals("Sports")) {
+            headlineIsBlacklisted = true;
+        } else if(headline.equals("ohnotheydidnt")) {
+            headlineIsBlacklisted = true;
+        }
+        return headlineIsBlacklisted;
     }
 
     private List<String> getUncorrectedHeadlinesPerWord(List<Element> elementsList) {
