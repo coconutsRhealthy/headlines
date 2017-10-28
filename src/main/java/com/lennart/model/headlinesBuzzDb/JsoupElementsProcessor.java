@@ -398,7 +398,7 @@ public class JsoupElementsProcessor {
                 }
             }
 
-            if(counter >= 1) {
+            if(counter >= 2) {
                 imageLinkContainsKeyWords = true;
             }
         }
@@ -414,11 +414,11 @@ public class JsoupElementsProcessor {
                 BufferedImage bimg = ImageIO.read(new URL(imageLink));
 
                 if(bimg != null) {
-                    int width          = bimg.getWidth();
-                    int height         = bimg.getHeight();
+                    int width = bimg.getWidth();
+                    int height = bimg.getHeight();
                     int size = width * height;
 
-                    if(size > 3000) {
+                    if(height >= 250) {
                         imgSizeMap.put(imageLink, size);
                     }
                 }
