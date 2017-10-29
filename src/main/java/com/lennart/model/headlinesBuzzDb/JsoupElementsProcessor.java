@@ -2,6 +2,7 @@ package com.lennart.model.headlinesBuzzDb;
 
 import com.lennart.model.headlinesBigDb.BigDbStorer;
 import com.lennart.model.twitter.TweetMachine;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -396,9 +397,33 @@ public class JsoupElementsProcessor {
     private boolean imageLinkContainsKeyWords(String imageLink, String buzzWord, List<String> headlines) {
         boolean imageLinkContainsKeyWords = false;
 
-        if(imageLink.contains(buzzWord)) {
-            List<String> correctFormatHeadlines = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
-            Map<String, Integer> wordsRankedByOccurenceTwoOrMore = new DataForAllBuzzWordsProvider().getWordsRankedByOccurrence(correctFormatHeadlines, buzzWord, 1);
+        List<String> correctFormatHeadlines = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
+        Map<String, Integer> wordsRankedByOccurenceTwoOrMore;
+
+        if(!StringUtils.isNumeric(buzzWord)) {
+            if(imageLink.contains(buzzWord)) {
+                wordsRankedByOccurenceTwoOrMore = new DataForAllBuzzWordsProvider().getWordsRankedByOccurrence(correctFormatHeadlines, buzzWord, 1);
+                wordsRankedByOccurenceTwoOrMore = removeNumberStringsFromWordsRankedByOccurence(wordsRankedByOccurenceTwoOrMore);
+
+                int counter = 0;
+
+                for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+                    if(imageLink.contains(entry.getKey())) {
+                        counter++;
+
+                        if(counter >= 2) {
+                            break;
+                        }
+                    }
+                }
+
+                if(counter >= 1) {
+                    imageLinkContainsKeyWords = true;
+                }
+            }
+        } else {
+            wordsRankedByOccurenceTwoOrMore = new DataForAllBuzzWordsProvider().getWordsRankedByOccurrence(correctFormatHeadlines, "", 1);
+            wordsRankedByOccurenceTwoOrMore = removeNumberStringsFromWordsRankedByOccurence(wordsRankedByOccurenceTwoOrMore);
 
             int counter = 0;
 
@@ -406,7 +431,7 @@ public class JsoupElementsProcessor {
                 if(imageLink.contains(entry.getKey())) {
                     counter++;
 
-                    if(counter >= 2) {
+                    if(counter >= 3) {
                         break;
                     }
                 }
@@ -418,6 +443,17 @@ public class JsoupElementsProcessor {
         }
 
         return imageLinkContainsKeyWords;
+    }
+
+    private Map<String, Integer> removeNumberStringsFromWordsRankedByOccurence(Map<String, Integer> wordsRankedByOccurence) {
+        Map<String, Integer> mapWithoutNumberStrings = new LinkedHashMap<>();
+
+        for (Map.Entry<String, Integer> entry : wordsRankedByOccurence.entrySet()) {
+            if(!StringUtils.isNumeric(entry.getKey())) {
+                mapWithoutNumberStrings.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return mapWithoutNumberStrings;
     }
 
     private Map<String, Integer> getImgMapSortedBySize(List<String> images) {
