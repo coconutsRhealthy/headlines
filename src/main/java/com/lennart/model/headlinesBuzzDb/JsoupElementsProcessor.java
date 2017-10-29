@@ -61,11 +61,13 @@ public class JsoupElementsProcessor {
         for (Map.Entry<String, String> entry : hrefAndRawHeadline.entrySet()) {
             Elements elements = null;
 
-            try {
-                Document document = Jsoup.connect(entry.getKey()).get();
-                elements = document.select("h1");
-            } catch (Exception e) {
+            if(!entry.getKey().contains("sfchronicle.")) {
+                try {
+                    Document document = Jsoup.connect(entry.getKey()).get();
+                    elements = document.select("h1");
+                } catch (Exception e) {
 
+                }
             }
 
             if(elements != null && elements.size() == 1 && !headlineIsBlacklisted(elements.first().text())) {
@@ -87,6 +89,12 @@ public class JsoupElementsProcessor {
         } else if(headline.equals("Sports")) {
             headlineIsBlacklisted = true;
         } else if(headline.equals("ohnotheydidnt")) {
+            headlineIsBlacklisted = true;
+        } else if(headline.equals("FOX Sports")) {
+            headlineIsBlacklisted = true;
+        } else if(headline.equals("US & World")) {
+            headlineIsBlacklisted = true;
+        } else if(headline.equals("Top Stories")) {
             headlineIsBlacklisted = true;
         }
         return headlineIsBlacklisted;
