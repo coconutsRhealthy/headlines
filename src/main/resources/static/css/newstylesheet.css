@@ -150,6 +150,11 @@ h4 {
         padding-right: 0px !important;
     }
 
+    .col-sm-6 {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
     .col-sm-10 {
         padding-left: 0px !important;
         padding-right: 0px !important;
