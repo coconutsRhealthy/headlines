@@ -16,129 +16,26 @@ public class RetrieveTopics extends RetrieveBuzzwords {
 
     private Connection con;
 
+    //in the future this could be implementend as a static class variable, which is refreshed every 30 seconds or so
+    //private static List<Topic> allTopics;
+
     public List<Topic> retrieveAllTopicsFromDb(String database) throws Exception {
         List<Topic> allTopics = new ArrayList<>();
 
-        List<BuzzWord> nonGroupBuzzWords = retrieveAllNonGroupBuzzWordsWithImage(database);
+        List<BuzzWord> buzzWordsWithImage = retrieveAllBuzzWordsWithImage(database);
 
-        for(BuzzWord nonGroupBuzzWord : nonGroupBuzzWords) {
-            Topic topicFromNonGroupBuzzWord = getTopicFromNonGroupBuzzWord(nonGroupBuzzWord, database);
+        for(BuzzWord buzzWordWithImage : buzzWordsWithImage) {
+            Topic topicFromBuzzWord = getTopicFromBuzzWord(buzzWordWithImage, database);
 
-            if(topicFromNonGroupBuzzWord != null) {
-                allTopics.add(topicFromNonGroupBuzzWord);
-            }
-        }
-
-        Map<Integer, List<BuzzWord>> buzzWordGroups = retrieveAllBuzzWordGroups(database);
-        buzzWordGroups = retainBuzzWordsWithSameImagesInGroupsMap(buzzWordGroups);
-
-        for (Map.Entry<Integer, List<BuzzWord>> entry : buzzWordGroups.entrySet()) {
-            Topic topic = getTopicFromBuzzWordGroup(entry.getValue(), database);
-
-            if(topic != null) {
-                allTopics.add(topic);
+            if(topicFromBuzzWord != null) {
+                allTopics.add(topicFromBuzzWord);
             }
         }
 
         allTopics = clearTopicListOfDoubleImages(allTopics);
+        allTopics = removeTopicsThatAreSameTopic(allTopics);
 
         return allTopics;
-    }
-
-    private Map<Integer, List<BuzzWord>> retrieveAllBuzzWordGroups(String database) throws Exception {
-        List<BuzzWord> allGroupBuzzWords = getAllGroupBuzzWords(database);
-        return getMapOfGroupBuzzWords(allGroupBuzzWords);
-    }
-
-    private Map<Integer, List<BuzzWord>> retainBuzzWordsWithSameImagesInGroupsMap(Map<Integer, List<BuzzWord>> buzzWordGroupsMap) {
-        Map<Integer, List<BuzzWord>> cleanedMap = new HashMap<>();
-
-        for (Map.Entry<Integer, List<BuzzWord>> entry : buzzWordGroupsMap.entrySet()) {
-            String mostFrequentImageUrlFromGroup = getMostFrequentImageUrlFromGroup(entry.getValue());
-
-            if(mostFrequentImageUrlFromGroup != null) {
-                List<BuzzWord> cleanedGroup = retainBuzzWordsWithSameImageInGroup(entry.getValue(), mostFrequentImageUrlFromGroup);
-                cleanedMap.put(entry.getKey(), cleanedGroup);
-            }
-        }
-        return cleanedMap;
-    }
-
-    private String getMostFrequentImageUrlFromGroup(List<BuzzWord> group) {
-        List<String> allImageLinks = new ArrayList<>();
-
-        for(BuzzWord buzzWord : group) {
-            if(!buzzWord.getImageLink().equals("-")) {
-                allImageLinks.add(buzzWord.getImageLink());
-            }
-        }
-
-        Map<Integer, String> frequencyMap = new TreeMap<>(Collections.reverseOrder());
-
-        for(String imageLink : allImageLinks) {
-            frequencyMap.put(Collections.frequency(allImageLinks, imageLink), imageLink);
-        }
-
-        if(frequencyMap.entrySet().iterator().hasNext()) {
-            return frequencyMap.entrySet().iterator().next().getValue();
-        }
-        return null;
-    }
-
-    private List<BuzzWord> retainBuzzWordsWithSameImageInGroup(List<BuzzWord> group, String imageUrlToRetain) {
-        List<BuzzWord> buzzWordsToRetain = new ArrayList<>();
-
-        for(BuzzWord buzzWord : group) {
-            if(buzzWord.getImageLink().equals(imageUrlToRetain)) {
-                buzzWordsToRetain.add(buzzWord);
-            }
-        }
-        return buzzWordsToRetain;
-    }
-
-    private Topic getTopicFromBuzzWordGroup(List<BuzzWord> buzzWordGroup, String database) throws Exception {
-        String imageLink = getNewestImageLinkFromBuzzWordGroup(buzzWordGroup);
-
-        if(imageLink != null) {
-            List<String> allLinks = new ArrayList<>();
-            List<String> allHeadlines = new ArrayList<>();
-            List<String> allSites = new ArrayList<>();
-
-            for(BuzzWord buzzWord : buzzWordGroup) {
-                List<String> buzzWordLinks = new ArrayList<>();
-                buzzWordLinks.addAll(buzzWord.getLinks());
-                Collections.reverse(buzzWordLinks);
-
-                List<String> buzzWordHeadlines = new ArrayList<>();
-                buzzWordHeadlines.addAll(buzzWord.getHeadlines());
-                Collections.reverse(buzzWordHeadlines);
-
-                List<String> buzzWordSites = new ArrayList<>();
-                buzzWordSites.addAll(buzzWord.getSites());
-                Collections.reverse(buzzWordSites);
-
-                for(int i = 0; i < buzzWordLinks.size(); i++) {
-                    if(!allLinks.contains(buzzWordLinks.get(i))) {
-                        allLinks.add(buzzWordLinks.get(i));
-                        allHeadlines.add(buzzWordHeadlines.get(i));
-                        allSites.add(buzzWordSites.get(i));
-                    }
-                }
-            }
-
-            allHeadlines = retainHeadlinesThatAreTrulyRelatedForTopic(allHeadlines, database);
-
-            if(allHeadlines.size() >= 3) {
-                int entry = getNewestEntryFromBuzzWordList(buzzWordGroup);
-                String dateTime = getDateTimeFromBuzzWord(entry, buzzWordGroup);
-                String dateTimeForTopic = getDateTimeForTopic(dateTime);
-
-                return new Topic(entry, dateTimeForTopic, allHeadlines, allLinks, allSites, imageLink);
-            } else {
-                return null;
-            }
-        }
-        return null;
     }
 
     List<String> retainHeadlinesThatAreTrulyRelatedForTopic(List<String> headlines, String database) {
@@ -184,70 +81,26 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         return headlinesToRetain;
     }
 
-    private String getNewestImageLinkFromBuzzWordGroup(List<BuzzWord> buzzWords) {
-        Map<Integer, String> imageLinksFromBuzzWordGroup = getImageLinksFromBuzzWordGroup(buzzWords);
-
-        if(!imageLinksFromBuzzWordGroup.isEmpty()) {
-            Map.Entry<Integer, String> entry = imageLinksFromBuzzWordGroup.entrySet().iterator().next();
-            return entry.getValue();
-        }
-        return null;
-    }
-
-    private Map<Integer, String> getImageLinksFromBuzzWordGroup(List<BuzzWord> buzzWords) {
-        Map<Integer, String> imageLinksFromBuzzWordGroup = new TreeMap<>(Collections.reverseOrder());
-
-        for(BuzzWord buzzWord : buzzWords) {
-            if(!buzzWord.getImageLink().equals("-")) {
-                imageLinksFromBuzzWordGroup.put(buzzWord.getEntry(), buzzWord.getImageLink());
-            }
-        }
-        return imageLinksFromBuzzWordGroup;
-    }
-
-    private int getNewestEntryFromBuzzWordList(List<BuzzWord> buzzWords) {
-        int highestEntry = 0;
-
-        for(BuzzWord buzzWord : buzzWords) {
-            if(buzzWord.getEntry() > highestEntry) {
-                highestEntry = buzzWord.getEntry();
-            }
-        }
-        return highestEntry;
-    }
-
-    private String getDateTimeFromBuzzWord(int entry, List<BuzzWord> buzzWords) {
-        String dateTime = "";
-
-        for(BuzzWord buzzWord : buzzWords) {
-            if(buzzWord.getEntry() == entry) {
-                dateTime = buzzWord.getDateTime();
-                break;
-            }
-        }
-        return dateTime;
-    }
-
-    private List<BuzzWord> retrieveAllNonGroupBuzzWordsWithImage(String database) throws Exception {
-        List<BuzzWord> nonGroupBuzzWordsWithImage = new ArrayList<>();
+    private List<BuzzWord> retrieveAllBuzzWordsWithImage(String database) throws Exception {
+        List<BuzzWord> buzzWordsWithImage = new ArrayList<>();
 
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE image_link <> '-' AND group_number = 0 ORDER BY entry DESC;");
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE image_link <> '-' ORDER BY entry DESC;");
 
         while(rs.next()) {
-            nonGroupBuzzWordsWithImage.add(getBuzzWordFromResultSet(rs));
+            buzzWordsWithImage.add(getBuzzWordFromResultSet(rs));
         }
 
         rs.close();
         st.close();
         closeDbConnection();
 
-        return nonGroupBuzzWordsWithImage;
+        return buzzWordsWithImage;
     }
 
-    private Topic getTopicFromNonGroupBuzzWord(BuzzWord buzzWord, String database) throws Exception {
+    private Topic getTopicFromBuzzWord(BuzzWord buzzWord, String database) throws Exception {
         List<String> headlines = retainHeadlinesThatAreTrulyRelatedForTopic(buzzWord.getHeadlines(), database);
 
         if(headlines.size() >= 3) {
@@ -257,35 +110,58 @@ public class RetrieveTopics extends RetrieveBuzzwords {
         return null;
     }
 
-    private List<BuzzWord> getAllGroupBuzzWords(String database) throws Exception {
-        List<BuzzWord> allGroupBuzzWords = new ArrayList<>();
+    private List<Topic> removeTopicsThatAreSameTopic(List<Topic> allTopics) {
+        List<Topic> topicsToRemove = new ArrayList<>();
 
-        initializeDbConnection();
+        List<Topic> allTopicsCopyOuter = new ArrayList<>();
+        List<Topic> allTopicsCopyInner = new ArrayList<>();
 
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE group_number <> 0 ORDER BY entry DESC;");
+        allTopicsCopyOuter.addAll(allTopics);
+        allTopicsCopyInner.addAll(allTopics);
 
-        while(rs.next()) {
-            allGroupBuzzWords.add(getBuzzWordFromResultSet(rs));
-        }
+        DataForAllBuzzWordsProvider dataForAllBuzzWordsProvider = new DataForAllBuzzWordsProvider();
 
-        rs.close();
-        st.close();
-        closeDbConnection();
+        for(Topic topicOuter : allTopicsCopyOuter) {
+            List<String> headlines = topicOuter.getHeadlines();
 
-        return allGroupBuzzWords;
-    }
+            List<String> correctFormatHeadlinesOuter = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
+            Map<String, Integer> wordsRankedByOccurenceTwoOrMore = dataForAllBuzzWordsProvider.getWordsRankedByOccurrence(correctFormatHeadlinesOuter, "", 2);
 
-    private Map<Integer, List<BuzzWord>> getMapOfGroupBuzzWords(List<BuzzWord> allGroupBuzzWords) {
-        Map<Integer, List<BuzzWord>> mapOfGroupBuzzWords = new HashMap<>();
+            for(Topic topicInner : allTopicsCopyInner) {
+                if(!topicsToRemove.contains(topicInner)) {
+                    List<String> innerHeadlines = topicInner.getHeadlines();
+                    List<String> correctFormatHeadlinesInner = new TweetMachine().convertHeadlinesToNonSpecialCharactersAndLowerCase(innerHeadlines);
 
-        for(BuzzWord groupBuzzWord : allGroupBuzzWords) {
-            if(mapOfGroupBuzzWords.get(groupBuzzWord.getGroup()) == null) {
-                mapOfGroupBuzzWords.put(groupBuzzWord.getGroup(), new ArrayList<>());
+                    for(String headline : correctFormatHeadlinesInner) {
+                        int counter = 0;
+
+                        for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+                            if(headline.contains(entry.getKey())) {
+                                counter++;
+
+                                if(counter >= 3) {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if(counter >= 3) {
+                            if(topicOuter.getEntry() != topicInner.getEntry()) {
+                                if(topicInner.getEntry() > topicOuter.getEntry()) {
+                                    if(!topicsToRemove.contains(topicOuter)) {
+                                        topicsToRemove.add(topicOuter);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            mapOfGroupBuzzWords.get(groupBuzzWord.getGroup()).add(groupBuzzWord);
         }
-        return mapOfGroupBuzzWords;
+
+        allTopicsCopyOuter.removeAll(topicsToRemove);
+
+        return allTopicsCopyOuter;
     }
 
     private BuzzWord getBuzzWordFromResultSet(ResultSet rs) throws Exception {
@@ -399,7 +275,7 @@ public class RetrieveTopics extends RetrieveBuzzwords {
 
     protected void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words", "root", "Vuurwerk00");
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/words?&serverTimezone=UTC", "root", "");
     }
 
     private void closeDbConnection() throws SQLException {
