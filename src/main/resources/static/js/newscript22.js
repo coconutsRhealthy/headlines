@@ -7,12 +7,12 @@ mainApp.controller('topicsController', function($scope, $http) {
     $scope.showPage = false;
     $scope.orderType = "-entry";
 
-    if(window.location.href.includes("finance")) {
+    if(window.location.href.includes("business")) {
         $http.post('/getFinanceTopics').success(function(data) {
             $scope.topics = data;
             $scope.showPage = true;
         })
-    } else if(window.location.href.includes("sport")) {
+    } else if(window.location.href.includes("sports")) {
         $http.post('/getSportTopics').success(function(data) {
             $scope.topics = data;
             $scope.showPage = true;
