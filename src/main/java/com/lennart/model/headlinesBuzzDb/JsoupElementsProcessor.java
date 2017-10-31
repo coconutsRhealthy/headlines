@@ -409,14 +409,14 @@ public class JsoupElementsProcessor {
         Map<String, Integer> wordsRankedByOccurenceTwoOrMore;
 
         if(!StringUtils.isNumeric(buzzWord)) {
-            if(imageLink.contains(buzzWord)) {
+            if(StringUtils.containsIgnoreCase(imageLink, buzzWord)) {
                 wordsRankedByOccurenceTwoOrMore = new DataForAllBuzzWordsProvider().getWordsRankedByOccurrence(correctFormatHeadlines, buzzWord, 1);
                 wordsRankedByOccurenceTwoOrMore = removeNumberStringsFromWordsRankedByOccurence(wordsRankedByOccurenceTwoOrMore);
 
                 int counter = 0;
 
                 for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
-                    if(imageLink.contains(entry.getKey())) {
+                    if(StringUtils.containsIgnoreCase(imageLink, entry.getKey())) {
                         counter++;
 
                         if(counter >= 2) {
