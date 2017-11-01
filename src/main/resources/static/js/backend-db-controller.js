@@ -8,11 +8,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.get('http://www.newsbuzzwords.com/updateBigDb').success(function(data) {
+            $http.get('http://www.headl1nes.com/updateBigDb').success(function(data) {
                 alert("Done (should not be)");
             })
         } else {
-            $http.get('http://newsbuzzwords.com/updateBigDb').success(function(data) {
+            $http.get('http://headl1nes.com/updateBigDb').success(function(data) {
                 alert("Done (should not be)");
             })
         }
@@ -24,11 +24,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.get('http://www.newsbuzzwords.com/updateBuzzDb').success(function(data) {
+            $http.get('http://www.headl1nes.com/updateBuzzDb').success(function(data) {
                 alert("Done (should not be)");
             })
         } else {
-            $http.get('http://newsbuzzwords.com/updateBuzzDb').success(function(data) {
+            $http.get('http://headl1nes.com/updateBuzzDb').success(function(data) {
                 alert("Done (should not be)");
             })
         }
@@ -40,11 +40,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.get('http://www.newsbuzzwords.com/updateFinanceBigDb').success(function(data) {
+            $http.get('http://www.headl1nes.com/updateFinanceBigDb').success(function(data) {
                 alert("Done (should not be)");
             })
         } else {
-            $http.get('http://newsbuzzwords.com/updateFinanceBigDb').success(function(data) {
+            $http.get('http://headl1nes.com/updateFinanceBigDb').success(function(data) {
                 alert("Done (should not be)");
             })
         }
@@ -56,11 +56,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.get('http://www.newsbuzzwords.com/updateFinanceBuzzDb').success(function(data) {
+            $http.get('http://www.headl1nes.com/updateFinanceBuzzDb').success(function(data) {
                 alert("Done (should not be)");
             })
         } else {
-            $http.get('http://newsbuzzwords.com/updateFinanceBuzzDb').success(function(data) {
+            $http.get('http://headl1nes.com/updateFinanceBuzzDb').success(function(data) {
                 alert("Done (should not be)");
             })
         }
@@ -72,11 +72,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.get('http://www.newsbuzzwords.com/updateSportBigDb').success(function(data) {
+            $http.get('http://www.headl1nes.com/updateSportBigDb').success(function(data) {
                 alert("Done (should not be)");
             })
         } else {
-            $http.get('http://newsbuzzwords.com/updateSportBigDb').success(function(data) {
+            $http.get('http://headl1nes.com/updateSportBigDb').success(function(data) {
                 alert("Done (should not be)");
             })
         }
@@ -88,11 +88,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.get('http://www.newsbuzzwords.com/updateSportBuzzDb').success(function(data) {
+            $http.get('http://www.headl1nes.com/updateSportBuzzDb').success(function(data) {
                 alert("Done (should not be)");
             })
         } else {
-            $http.get('http://newsbuzzwords.com/updateSportBuzzDb').success(function(data) {
+            $http.get('http://headl1nes.com/updateSportBuzzDb').success(function(data) {
                 alert("Done (should not be)");
             })
         }
@@ -104,11 +104,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.get('http://www.newsbuzzwords.com/updateEntertainmentBigDb').success(function(data) {
+            $http.get('http://www.headl1nes.com/updateEntertainmentBigDb').success(function(data) {
                 alert("Done (should not be)");
             })
         } else {
-            $http.get('http://newsbuzzwords.com/updateEntertainmentBigDb').success(function(data) {
+            $http.get('http://headl1nes.com/updateEntertainmentBigDb').success(function(data) {
                 alert("Done (should not be)");
             })
         }
@@ -120,11 +120,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.get('http://www.newsbuzzwords.com/updateEntertainmentBuzzDb').success(function(data) {
+            $http.get('http://www.headl1nes.com/updateEntertainmentBuzzDb').success(function(data) {
                 alert("Done (should not be)");
             })
         } else {
-            $http.get('http://newsbuzzwords.com/updateEntertainmentBuzzDb').success(function(data) {
+            $http.get('http://headl1nes.com/updateEntertainmentBuzzDb').success(function(data) {
                 alert("Done (should not be)");
             })
         }
@@ -136,11 +136,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
         var currentUrl = window.location.href;
 
         if(currentUrl.includes("www.")) {
-            $http.get('http://www.newsbuzzwords.com/postTweets').success(function(data) {
+            $http.get('http://www.headl1nes.com/postTweets').success(function(data) {
                 alert("Done (should not be)");
             })
         } else {
-            $http.get('http://newsbuzzwords.com/postTweets').success(function(data) {
+            $http.get('http://headl1nes.com/postTweets').success(function(data) {
                 alert("Done (should not be)");
             })
         }
