@@ -2,11 +2,13 @@ package com.lennart.model.twitter;
 
 import com.lennart.model.headlinesBuzzDb.DataForAllBuzzWordsProvider;
 import org.apache.commons.lang3.time.DateUtils;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -296,7 +298,16 @@ public class TweetMachine {
         deleteEntriesOlderThan24Hours(database);
     }
 
+    private void readAndSaveImageToDisc(String imageUrl) throws Exception {
+        BufferedImage bimg = ImageIO.read(new URL(imageUrl));
+
+        File outputfile = new File("./src/main/java/com/lennart/model/twitter/tweetimage.jpg");
+        ImageIO.write(bimg, "png", outputfile);
+    }
+
     private void postTweet(String tweetText, String database) {
+        File imagefile = new File("./src/main/java/com/lennart/model/twitter/tweetimage.jpg");
+
         String consumerKey = getConsumerKey(database);
         String consumerSecret = getConsumerSecret(database);
         String accessToken = getAccessToken(database);
@@ -312,7 +323,13 @@ public class TweetMachine {
         try {
             TwitterFactory factory = new TwitterFactory(cb.build());
             Twitter twitter = factory.getInstance();
-            twitter.updateStatus(tweetText);
+
+            UploadedMedia media = twitter.uploadMedia(imagefile);
+            long mediaId = media.getMediaId();
+
+            StatusUpdate statusUpdate = new StatusUpdate(tweetText);
+            statusUpdate.setMediaIds(mediaId);
+            twitter.updateStatus(statusUpdate);
         } catch (TwitterException te) {
 
         }
