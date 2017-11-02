@@ -128,7 +128,7 @@ public class StoreBuzzwords {
         return false;
     }
 
-    private String createOneStringOfList(List<String> list) {
+    public static String createOneStringOfList(List<String> list) {
         StringBuilder stringBuilder = new StringBuilder();
 
         for(String s : list) {
@@ -287,7 +287,7 @@ public class StoreBuzzwords {
         return 0;
     }
 
-    private String getCurrentDateTime() {
+    public static String getCurrentDateTime() {
         java.util.Date date = new java.util.Date();
         date = DateUtils.addHours(date, 2);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
