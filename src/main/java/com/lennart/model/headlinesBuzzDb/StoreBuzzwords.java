@@ -81,7 +81,7 @@ public class StoreBuzzwords {
         st.close();
     }
 
-    private String doStringReplacementsForDb(String string) {
+    public static String doStringReplacementsForDb(String string) {
         String correctString = string.replace("'", "''");
         correctString = correctString.replace("\"", "\\\"");
         return correctString;

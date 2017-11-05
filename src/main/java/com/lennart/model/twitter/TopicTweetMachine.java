@@ -5,6 +5,10 @@ import com.lennart.model.headlinesFE.RetrieveTopics;
 import com.lennart.model.headlinesFE.Topic;
 import org.apache.commons.lang3.time.DateUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.net.URL;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -14,48 +18,144 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by LennartMac on 02/11/2017.
  */
-public class TopicTweetMachine {
+public class TopicTweetMachine extends TweetMachine {
 
     private Connection con;
 
-    private void getTopics(String database) {
-        RetrieveTopics retrieveTopics = new RetrieveTopics();
-
+    @Override
+    public void overallMethodServer() {
         while(true) {
+            String buzzWordDb = "buzzwords_new";
+            String tweetDb = "tweet_topics";
+
             try {
-                List<Topic> topicsFromBuzzDb = retrieveTopics.retrieveAllTopicsFromDb("buzzwords_new");
-                List<Topic> topicsFromTwitterTopicsDb = retrieveAllTopicsFromTwitterTopicsDb(database);
+                List<Topic> topicsFromBuzzDb = new RetrieveTopics().retrieveAllTopicsFromDb(buzzWordDb);
+                List<Topic> topicsFromTwitterTopicsDb = retrieveAllTopicsFromTwitterTopicsDb(tweetDb);
                 List<Topic> newTopics = getNewTopics(topicsFromBuzzDb, topicsFromTwitterTopicsDb);
-                postTopicTweets(newTopics);
-                storeNewTopicsInTwitterTopicsDb(database, newTopics);
-                deleteEntriesOlderThan24Hours(database);
-                TimeUnit.SECONDS.sleep(30);
+                postTopicTweets(newTopics, buzzWordDb);
+                storeNewTopicsInTwitterTopicsDb(tweetDb, newTopics);
+                deleteEntriesOlderThan24Hours(tweetDb);
+            } catch (Exception e) {
+
+            }
+
+            buzzWordDb = "sport_buzzwords_new";
+            tweetDb = "sport_tweet_topics";
+
+            try {
+                List<Topic> topicsFromBuzzDb = new RetrieveTopics().retrieveAllTopicsFromDb(buzzWordDb);
+                List<Topic> topicsFromTwitterTopicsDb = retrieveAllTopicsFromTwitterTopicsDb(tweetDb);
+                List<Topic> newTopics = getNewTopics(topicsFromBuzzDb, topicsFromTwitterTopicsDb);
+                postTopicTweets(newTopics, buzzWordDb);
+                storeNewTopicsInTwitterTopicsDb(tweetDb, newTopics);
+                deleteEntriesOlderThan24Hours(tweetDb);
+                TimeUnit.SECONDS.sleep(20);
             } catch (Exception e) {
 
             }
         }
     }
 
-    private void postTopicTweets(List<Topic> newTopics) {
-        //to implement
+    private void postTopicTweets(List<Topic> newTopics, String database) {
+        for(Topic topic : newTopics) {
+            postTopicTweet(topic, database);
+        }
+    }
+
+    private void postTopicTweet(Topic topic, String database) {
+        try {
+            readAndSaveImageToDisc(topic.getImageLink());
+        } catch (Exception e) {
+            return;
+        }
+
+        String topicTweetText = getTopicTweetText(topic.getHeadlines(), database);
+
+        if(topicTweetText != null && topicTweetText.length() > 5 && topicTweetText.length() < 135) {
+            postTweet(topicTweetText, database);
+        }
+    }
+
+    private String getTopicTweetText(List<String> headlines, String database) {
+        String headlineToUse = getHeadlineToUse(headlines);
+        String hashTags = getHashTags(headlines);
+        String lastLine = getLastLine(database);
+
+        String tweetText = headlineToUse + "\n" + hashTags + "\n" + "\n" + lastLine;
+        return tweetText;
+    }
+
+    private String getHeadlineToUse(List<String> headlines) {
+        String headlineToUse = "";
+
+        for(String headline : headlines) {
+            if(headline.length() <= 75) {
+                headlineToUse = headline;
+                break;
+            }
+        }
+
+        return headlineToUse;
+    }
+
+    private String getHashTags(List<String> headlines) {
+        StringBuilder hashTags = new StringBuilder();
+
+        List<String> wordsSortedByFrequencyFromHeadlines = getWordsSortedByFrequencyFromHeadlines(headlines, "");
+        wordsSortedByFrequencyFromHeadlines = clearNumbersAndEmptyStringsFromHashTagWords(wordsSortedByFrequencyFromHeadlines);
+
+        int counter = 0;
+
+        for(String hashTagWord : wordsSortedByFrequencyFromHeadlines) {
+            if(counter < 4) {
+                if(hashTags.length() + hashTagWord.length() <= 25) {
+                    hashTags.append("#");
+                    hashTags.append(hashTagWord);
+                    hashTags.append(" ");
+                    counter++;
+                }
+            }
+        }
+
+        String hashTagsAsString = hashTags.toString();
+        hashTagsAsString = hashTagsAsString.substring(0, hashTagsAsString.length() - 1);
+
+        return hashTagsAsString;
+    }
+
+    private String getLastLine(String database) {
+        String lastLine = "";
+
+        if(database.equals("buzzwords_new")) {
+            lastLine = "headl1nes.com";
+        } else if(database.equals("finance_buzzwords_new")) {
+            lastLine = "headl1nes.com/business.html";
+        } else if(database.equals("sport_buzzwords_new")) {
+            lastLine = "headl1nes.com/sports.html";
+        } else if(database.equals("entertainment_buzzwords_new")) {
+            lastLine = "headl1nes.com/entertainment.html";
+        }
+        return lastLine;
     }
 
     private List<Topic> getNewTopics(List<Topic> topicsFromBuzzDb, List<Topic> topicsFromTwitterTopicsDb) {
         List<Topic> newTopics = new ArrayList<>();
 
-        for(Topic topicFromBuzzDb : topicsFromBuzzDb) {
+        loop: for(Topic topicFromBuzzDb : topicsFromBuzzDb) {
             for(Topic topicFromTwitterDb : topicsFromTwitterTopicsDb) {
-                if(!topicFromBuzzDb.getImageLink().equals(topicFromTwitterDb.getImageLink())) {
-                    List<String> headlinesBuzzDbTopic = topicFromBuzzDb.getHeadlines();
-                    List<String> headlinesTwitterDbTopic = topicFromTwitterDb.getHeadlines();
+                if(topicFromBuzzDb.getImageLink().equals(topicFromTwitterDb.getImageLink())) {
+                    continue loop;
+                }
 
-                    if(Collections.disjoint(headlinesBuzzDbTopic, headlinesTwitterDbTopic)) {
-                        newTopics.add(topicFromBuzzDb);
-                    }
+                List<String> headlinesBuzzDbTopic = topicFromBuzzDb.getHeadlines();
+                List<String> headlinesTwitterDbTopic = topicFromTwitterDb.getHeadlines();
+
+                if(!Collections.disjoint(headlinesBuzzDbTopic, headlinesTwitterDbTopic)) {
+                    continue loop;
                 }
             }
+            newTopics.add(topicFromBuzzDb);
         }
-
         return newTopics;
     }
 
@@ -63,8 +163,10 @@ public class TopicTweetMachine {
         for(Topic topic : newTopics) {
             int entry = topic.getEntry();
             String headlinesAsOneString = StoreBuzzwords.createOneStringOfList(topic.getHeadlines());
+            headlinesAsOneString = StoreBuzzwords.doStringReplacementsForDb(headlinesAsOneString);
             String imageLink = topic.getImageLink();
 
+            initializeDbConnection();
             Statement st = con.createStatement();
 
             st.executeUpdate("INSERT INTO " + database + " (entry, date, headlines, image_link) VALUES ('" +
@@ -72,6 +174,7 @@ public class TopicTweetMachine {
                     headlinesAsOneString + "', '" + imageLink + "')");
 
             st.close();
+            closeDbConnection();
         }
     }
 
@@ -108,7 +211,7 @@ public class TopicTweetMachine {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM tweet_topics;");
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + ";");
 
         while(rs.next()) {
             String s = rs.getString("date");
@@ -126,6 +229,13 @@ public class TopicTweetMachine {
         st.close();
         rs.close();
         closeDbConnection();
+    }
+
+    private void readAndSaveImageToDisc(String imageUrl) throws Exception {
+        BufferedImage bimg = ImageIO.read(new URL(imageUrl));
+
+        File outputfile = new File("./src/main/java/com/lennart/model/twitter/tweetimage.jpg");
+        ImageIO.write(bimg, "png", outputfile);
     }
 
     private void initializeDbConnection() throws Exception {

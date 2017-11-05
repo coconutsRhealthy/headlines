@@ -298,14 +298,7 @@ public class TweetMachine {
         deleteEntriesOlderThan24Hours(database);
     }
 
-    private void readAndSaveImageToDisc(String imageUrl) throws Exception {
-        BufferedImage bimg = ImageIO.read(new URL(imageUrl));
-
-        File outputfile = new File("./src/main/java/com/lennart/model/twitter/tweetimage.jpg");
-        ImageIO.write(bimg, "png", outputfile);
-    }
-
-    private void postTweet(String tweetText, String database) {
+    protected void postTweet(String tweetText, String database) {
         File imagefile = new File("./src/main/java/com/lennart/model/twitter/tweetimage.jpg");
 
         String consumerKey = getConsumerKey(database);
@@ -339,11 +332,11 @@ public class TweetMachine {
         String consumerKey = "";
 
         if(database.equals("buzzwords_new")) {
-            consumerKey = "i9Rkxihee7YFLhBbBdIyvIrdA";
+            consumerKey = "Hig2msvOUlhdGPEAz8nLHeZ3w";
         } else if(database.equals("finance_buzzwords_new")) {
             consumerKey = "dB1cpsM6d4UJmYBC4Xu3eZz7a";
         } else if(database.equals("sport_buzzwords_new")) {
-            consumerKey = "Yqo4ciNiAPJEFkojhu0wLiXpj";
+            consumerKey = "dDySXH1ZKqBTPdocu7XL2ovz4";
         } else if(database.equals("entertainment_buzzwords_new")) {
             consumerKey = "wBAxIuT7hKwhECsBTM3VHwkjS";
         }
@@ -354,11 +347,11 @@ public class TweetMachine {
         String consumerSecret = "";
 
         if(database.equals("buzzwords_new")) {
-            consumerSecret = "EHhxP4TSE81G4Dn15uaHcPQOE2fOrTLFsppz1PIrliplR3WqYU";
+            consumerSecret = "9f98SygJO87Pe9sQq4uaqkMUMVzIvFby55ZOULnvVo12PqG3Ts";
         } else if(database.equals("finance_buzzwords_new")) {
             consumerSecret = "fmUa0v6959ftkYRpc1WQjry6iM17TqvH71z1YidQAvlLcDMTP3";
         } else if(database.equals("sport_buzzwords_new")) {
-            consumerSecret = "M9A8XesBdE1Tc4OROp7qitl3DK23UJ2D9LLeRxIXNpMPVtW4sH";
+            consumerSecret = "wrx82er9k7vzFjZyMQPrldiDdtBuEPdDG8Gj7vxEhFhGrv2ga6";
         } else if(database.equals("entertainment_buzzwords_new")) {
             consumerSecret = "od5q7BKzv5iNEWbm7JCsvh3LfPQcDDOIkLCNtKZzNXnXqmnikY";
         }
@@ -369,11 +362,11 @@ public class TweetMachine {
         String accessToken = "";
 
         if(database.equals("buzzwords_new")) {
-            accessToken = "892103185606877185-9eN7Sj2buwRynB6iYSBHe7JpVyMnMSz";
+            accessToken = "927177830936563712-gB6KGXsKl52m0GSosQnNDsHNn6HbDti";
         } else if(database.equals("finance_buzzwords_new")) {
             accessToken = "907314515175505921-c0NC52yxL9x0eVypVnqaIkx05jdyIYP";
         } else if(database.equals("sport_buzzwords_new")) {
-            accessToken = "907324019682267136-PQh1O5C9tXKauzE3A8BAVCZcalXEszF";
+            accessToken = "927186780125884416-2fNzfjmvofPvnKTZ7eVXSpqyQNokMRO";
         } else if(database.equals("entertainment_buzzwords_new")) {
             accessToken = "907326731001966593-8U914IvxGcsmZoXgFrpN4D1oNjn1pLo";
         }
@@ -384,11 +377,11 @@ public class TweetMachine {
         String accessSecret = "";
 
         if(database.equals("buzzwords_new")) {
-            accessSecret = "GPtbDjVXWML1Nlda2D7EsFQxZbZbLalvOsCTLXQqMh6Rd";
+            accessSecret = "ZzjKRigz5iltv6DQxVZO9ZfaiZHHZmjFT8sG1OaikKaPm";
         } else if(database.equals("finance_buzzwords_new")) {
             accessSecret = "GKAUZfwWS0EmAYlKsKHvMPxRWGPqUKyRa3AEN1j4fphat";
         } else if(database.equals("sport_buzzwords_new")) {
-            accessSecret = "OhAMbrKk3hPk5ALQ3mlp9B3URvzTNWbtJ0W7sdkZQxVzb";
+            accessSecret = "fueDoV8yFGLQsAz7j8WjAXrajS5ho03G7fJolwtkWhy8g";
         } else if(database.equals("entertainment_buzzwords_new")) {
             accessSecret = "NfWSS7McTIqdTAXOFTWWS5gWvRIksP4EGPePxVESD7aES";
         }
@@ -737,7 +730,7 @@ public class TweetMachine {
         return headline;
     }
 
-    private List<String> clearNumbersAndEmptyStringsFromHashTagWords(List<String> hashTagWords) {
+    protected List<String> clearNumbersAndEmptyStringsFromHashTagWords(List<String> hashTagWords) {
         List<String> hashTagWordsToReturn = new ArrayList<>();
 
         for(String hashTagWord : hashTagWords) {
