@@ -299,7 +299,7 @@ public class TweetMachine {
     }
 
     protected void postTweet(String tweetText, String database) {
-        File imagefile = new File("./src/main/java/com/lennart/model/twitter/tweetimage.jpg");
+        File imagefile = new File(System.getProperty("user.home") + "/output22.png");
 
         String consumerKey = getConsumerKey(database);
         String consumerSecret = getConsumerSecret(database);

@@ -3,6 +3,7 @@ package com.lennart.model.twitter;
 import com.lennart.model.headlinesBuzzDb.StoreBuzzwords;
 import com.lennart.model.headlinesFE.RetrieveTopics;
 import com.lennart.model.headlinesFE.Topic;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import javax.imageio.ImageIO;
@@ -36,7 +37,7 @@ public class TopicTweetMachine extends TweetMachine {
                 storeNewTopicsInTwitterTopicsDb(tweetDb, newTopics);
                 deleteEntriesOlderThan24Hours(tweetDb);
             } catch (Exception e) {
-
+                storeStackTraceInDb(ExceptionUtils.getStackTrace(e));
             }
 
             buzzWordDb = "sport_buzzwords_new";
@@ -51,8 +52,22 @@ public class TopicTweetMachine extends TweetMachine {
                 deleteEntriesOlderThan24Hours(tweetDb);
                 TimeUnit.SECONDS.sleep(20);
             } catch (Exception e) {
-
+                storeStackTraceInDb(ExceptionUtils.getStackTrace(e));
             }
+        }
+    }
+
+    private void storeStackTraceInDb(String stackTrace) {
+        try {
+            initializeDbConnection();
+            Statement st = con.createStatement();
+
+            st.executeUpdate("INSERT INTO tweet_stacktraces (stacktrace) VALUES ('" + stackTrace + "')");
+
+            st.close();
+            closeDbConnection();
+        } catch (Exception e) {
+            storeStackTraceInDb(ExceptionUtils.getStackTrace(e));
         }
     }
 
@@ -66,6 +81,7 @@ public class TopicTweetMachine extends TweetMachine {
         try {
             readAndSaveImageToDisc(topic.getImageLink());
         } catch (Exception e) {
+            storeStackTraceInDb(ExceptionUtils.getStackTrace(e));
             return;
         }
 
@@ -233,9 +249,11 @@ public class TopicTweetMachine extends TweetMachine {
 
     private void readAndSaveImageToDisc(String imageUrl) throws Exception {
         BufferedImage bimg = ImageIO.read(new URL(imageUrl));
+        File outputfile = new File(System.getProperty("user.home") + "/output22.png");
 
-        File outputfile = new File("./src/main/java/com/lennart/model/twitter/tweetimage.jpg");
-        ImageIO.write(bimg, "png", outputfile);
+        if(bimg != null) {
+            ImageIO.write(bimg, "png", outputfile);
+        }
     }
 
     private void initializeDbConnection() throws Exception {
