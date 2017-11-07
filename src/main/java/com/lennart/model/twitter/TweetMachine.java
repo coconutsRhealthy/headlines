@@ -334,11 +334,11 @@ public class TweetMachine {
         if(database.equals("buzzwords_new")) {
             consumerKey = "Hig2msvOUlhdGPEAz8nLHeZ3w";
         } else if(database.equals("finance_buzzwords_new")) {
-            consumerKey = "dB1cpsM6d4UJmYBC4Xu3eZz7a";
+            consumerKey = "xoWF7uruxZztzCQZq44fxIZ90";
         } else if(database.equals("sport_buzzwords_new")) {
             consumerKey = "dDySXH1ZKqBTPdocu7XL2ovz4";
         } else if(database.equals("entertainment_buzzwords_new")) {
-            consumerKey = "wBAxIuT7hKwhECsBTM3VHwkjS";
+            consumerKey = "VFDFkHRE6amyiDlZLoDl6vPi8";
         }
         return consumerKey;
     }
@@ -349,11 +349,11 @@ public class TweetMachine {
         if(database.equals("buzzwords_new")) {
             consumerSecret = "9f98SygJO87Pe9sQq4uaqkMUMVzIvFby55ZOULnvVo12PqG3Ts";
         } else if(database.equals("finance_buzzwords_new")) {
-            consumerSecret = "fmUa0v6959ftkYRpc1WQjry6iM17TqvH71z1YidQAvlLcDMTP3";
+            consumerSecret = "9VcRz0iZmfe21q2puuoOb3Qg6PNm9ld0b09bjL2kfR9HT9Vjl5";
         } else if(database.equals("sport_buzzwords_new")) {
             consumerSecret = "wrx82er9k7vzFjZyMQPrldiDdtBuEPdDG8Gj7vxEhFhGrv2ga6";
         } else if(database.equals("entertainment_buzzwords_new")) {
-            consumerSecret = "od5q7BKzv5iNEWbm7JCsvh3LfPQcDDOIkLCNtKZzNXnXqmnikY";
+            consumerSecret = "AKxR68eVSz1H5OimFWNUz9k6pbAUt1vL5dMGASxAyQJlxWoCak";
         }
         return consumerSecret;
     }
@@ -364,11 +364,11 @@ public class TweetMachine {
         if(database.equals("buzzwords_new")) {
             accessToken = "927177830936563712-gB6KGXsKl52m0GSosQnNDsHNn6HbDti";
         } else if(database.equals("finance_buzzwords_new")) {
-            accessToken = "907314515175505921-c0NC52yxL9x0eVypVnqaIkx05jdyIYP";
+            accessToken = "927959694454476800-maHKk6TAuSaosExARl7mshAdIyxl7sX";
         } else if(database.equals("sport_buzzwords_new")) {
             accessToken = "927186780125884416-2fNzfjmvofPvnKTZ7eVXSpqyQNokMRO";
         } else if(database.equals("entertainment_buzzwords_new")) {
-            accessToken = "907326731001966593-8U914IvxGcsmZoXgFrpN4D1oNjn1pLo";
+            accessToken = "927958288351842304-r7C4xXJtLBD6vEfpv4S89NSDpqjJKrw";
         }
         return accessToken;
     }
@@ -379,11 +379,11 @@ public class TweetMachine {
         if(database.equals("buzzwords_new")) {
             accessSecret = "ZzjKRigz5iltv6DQxVZO9ZfaiZHHZmjFT8sG1OaikKaPm";
         } else if(database.equals("finance_buzzwords_new")) {
-            accessSecret = "GKAUZfwWS0EmAYlKsKHvMPxRWGPqUKyRa3AEN1j4fphat";
+            accessSecret = "SUZBcpXiwiCPjxiDgN2ACkzGYaqmCPSb5dt9q4SQlxPko";
         } else if(database.equals("sport_buzzwords_new")) {
             accessSecret = "fueDoV8yFGLQsAz7j8WjAXrajS5ho03G7fJolwtkWhy8g";
         } else if(database.equals("entertainment_buzzwords_new")) {
-            accessSecret = "NfWSS7McTIqdTAXOFTWWS5gWvRIksP4EGPePxVESD7aES";
+            accessSecret = "f6QmyHlWyqnTQi7tstS4RGMy5Kgp3ocp3D7ShP55tWUSL";
         }
         return accessSecret;
     }

@@ -50,6 +50,34 @@ public class TopicTweetMachine extends TweetMachine {
                 postTopicTweets(newTopics, buzzWordDb);
                 storeNewTopicsInTwitterTopicsDb(tweetDb, newTopics);
                 deleteEntriesOlderThan24Hours(tweetDb);
+            } catch (Exception e) {
+                storeStackTraceInDb(ExceptionUtils.getStackTrace(e));
+            }
+
+            buzzWordDb = "entertainment_buzzwords_new";
+            tweetDb = "entertainment_tweet_topics";
+
+            try {
+                List<Topic> topicsFromBuzzDb = new RetrieveTopics().retrieveAllTopicsFromDb(buzzWordDb);
+                List<Topic> topicsFromTwitterTopicsDb = retrieveAllTopicsFromTwitterTopicsDb(tweetDb);
+                List<Topic> newTopics = getNewTopics(topicsFromBuzzDb, topicsFromTwitterTopicsDb);
+                postTopicTweets(newTopics, buzzWordDb);
+                storeNewTopicsInTwitterTopicsDb(tweetDb, newTopics);
+                deleteEntriesOlderThan24Hours(tweetDb);
+            } catch (Exception e) {
+                storeStackTraceInDb(ExceptionUtils.getStackTrace(e));
+            }
+
+            buzzWordDb = "finance_buzzwords_new";
+            tweetDb = "finance_tweet_topics";
+
+            try {
+                List<Topic> topicsFromBuzzDb = new RetrieveTopics().retrieveAllTopicsFromDb(buzzWordDb);
+                List<Topic> topicsFromTwitterTopicsDb = retrieveAllTopicsFromTwitterTopicsDb(tweetDb);
+                List<Topic> newTopics = getNewTopics(topicsFromBuzzDb, topicsFromTwitterTopicsDb);
+                postTopicTweets(newTopics, buzzWordDb);
+                storeNewTopicsInTwitterTopicsDb(tweetDb, newTopics);
+                deleteEntriesOlderThan24Hours(tweetDb);
                 TimeUnit.SECONDS.sleep(20);
             } catch (Exception e) {
                 storeStackTraceInDb(ExceptionUtils.getStackTrace(e));
@@ -233,7 +261,7 @@ public class TopicTweetMachine extends TweetMachine {
             String s = rs.getString("date");
             Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
 
-            if(parsedDateTime.getTime() < currentDate - TimeUnit.HOURS.toMillis(24)) {
+            if(parsedDateTime.getTime() < currentDate - TimeUnit.HOURS.toMillis(30)) {
                 int entryToRemove = rs.getInt("entry");
 
                 Statement st2 = con.createStatement();
