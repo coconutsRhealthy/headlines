@@ -1,0 +1,108 @@
+<html>
+<head>
+    <title>News Buzzwords</title>
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
+    <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="js/script22.js"></script>
+
+    <title>Newsbuzzwords - Live tracking of trending words in news</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-104362522-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div ng-app = "mainApp" ng-controller = "buzzwordsController">
+        <div ng-show=showPage>
+
+            <div class="wrapper">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="/" style="color:rgb(66, 188, 147)">News Buzzwords</a>
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                        </div>
+
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav">
+                                <li class="active"><a href="">World News</a></li>
+                                <li><a href="nbwfinance.html">Financial News</a></li>
+                                <li><a href="nbwsport.html">Sport</a></li>
+                                <li><a href="nbwentertainment.html">Entertainment</a></li>
+                                <li><a href="nbwcrypto.html">Crypto</a></li>
+                                <li><a href="about.html">About</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                <div id="hour-restriction-buttons" class="btn-group">
+                    <button class={{hour3buttonclass}} ng-click="loadInitialWordsHoursRestriction(3)" type="button"><font size="1">Last 3 hours</font></button>
+                    <button class={{hour6buttonclass}} ng-click="loadInitialWordsHoursRestriction(6)" type="button"><font size="1">Last 6 hours</font></button>
+                    <button class={{hour12buttonclass}} ng-click="loadInitialWordsHoursRestriction(12)" type="button"><font size="1">Last 12 hours</font></button>
+                    <button class={{hour24buttonclass}} ng-click="loadInitialWordsHoursRestriction(24)" type="button"><font size="1">Last 24 hours</font></button>
+                </div>
+
+                <div class="row">
+                    <a href="" ng-click="changeOrderType('word')" id="firstRow2" class="col-xs-2"><font size="1"><b>Buzzword</b></font></a>
+                    <a href="" ng-click="changeOrderType('group')" id="firstRowXx" class="col-xs-3"><font size="1"><b>Related<br> words</b></font></a>
+                    <a href="" ng-click="changeOrderType('headlines.length')" id="firstRow3" class="col-xs-3"><font size="1"><b>Buzzing<br> strength</b></font></a>
+                </div>
+
+                <div class="row" ng-repeat="buzzWord in buzzWords | orderBy : orderType">
+                    <div class="col-xs-2"><a href="" ng-click="testfunctie(buzzWord)">{{buzzWord.word}}</a></div>
+
+                    <div class="col-xs-3">
+                        <span style="{{getGroupColour(buzzWord.group)}}">■</span>
+                    </div>
+
+                    <div class="col-xs-3">
+                        <span ng-repeat="i in [1, 2, 3, 4]" style="{{getBulletColour(buzzWord.headlines, i)}}">●</span>
+                    </div>
+
+                    <div ng-show="check(buzzWord)" class="col-xs-12">
+                        <ul class="custom-bullet">
+                            <div ng-show="check(buzzWord)" ng-repeat="headline in buzzWord.headlines track by $index">
+                                <li>
+                                    <div><a href={{buzzWord.links[$index]}}>{{headline}}</a></div>
+                                    <div><small class="text-muted">{{buzzWord.sites[$index]}}</small></div>
+                                </li>
+                            </div>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <button ng-show=showMoreButton class="btn btn-default" ng-click="loadMoreBuzzWords()">More</button>
+                </div>
+
+                <div class="push"></div>
+            </div>
+
+            <div class="footer">
+                <p class="footer-text">Copyright (c) 2017, newsbuzzwords.com</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
