@@ -82,19 +82,25 @@ public class BigDbStorer {
         while(true) {
             if(page.equals("finance")) {
                 try {
-                    TimeUnit.MINUTES.sleep(15);
+                    TimeUnit.MINUTES.sleep(12);
                 } catch (Exception e) {
 
                 }
             } else if(page.equals("sport")) {
                 try {
-                    TimeUnit.MINUTES.sleep(30);
+                    TimeUnit.MINUTES.sleep(24);
                 } catch (Exception e) {
 
                 }
             } else if(page.equals("entertainment")) {
                 try {
-                    TimeUnit.MINUTES.sleep(45);
+                    TimeUnit.MINUTES.sleep(36);
+                } catch (Exception e) {
+
+                }
+            } else if(page.equals("crypto")) {
+                try {
+                    TimeUnit.MINUTES.sleep(48);
                 } catch (Exception e) {
 
                 }
@@ -150,19 +156,25 @@ public class BigDbStorer {
                 }
             } else if(page.equals("finance")) {
                 try {
-                    TimeUnit.MINUTES.sleep(38);
+                    TimeUnit.MINUTES.sleep(41);
                 } catch (Exception e) {
 
                 }
             } else if(page.equals("sport")) {
                 try {
-                    TimeUnit.MINUTES.sleep(23);
+                    TimeUnit.MINUTES.sleep(29);
                 } catch (Exception e) {
 
                 }
             } else if(page.equals("entertainment")) {
                 try {
-                    TimeUnit.MINUTES.sleep(8);
+                    TimeUnit.MINUTES.sleep(17);
+                } catch (Exception e) {
+
+                }
+            } else if(page.equals("crypto")) {
+                try {
+                    TimeUnit.MINUTES.sleep(5);
                 } catch (Exception e) {
 
                 }
