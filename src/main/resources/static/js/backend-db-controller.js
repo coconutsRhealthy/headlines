@@ -130,6 +130,38 @@ mainApp.controller('backendDbController', function($scope, $http) {
         }
     }
 
+    $scope.updateCryptoBigDb = function() {
+        alert("Starting crypto big db update");
+
+        var currentUrl = window.location.href;
+
+        if(currentUrl.includes("www.")) {
+            $http.get('http://www.headl1nes.com/updateCryptoBigDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        } else {
+            $http.get('http://headl1nes.com/updateCryptoBigDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        }
+    }
+
+    $scope.updateCryptoBuzzDb = function() {
+        alert("Starting crypto buzz db update");
+
+        var currentUrl = window.location.href;
+
+        if(currentUrl.includes("www.")) {
+            $http.get('http://www.headl1nes.com/updateCryptoBuzzDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        } else {
+            $http.get('http://headl1nes.com/updateCryptoBuzzDb').success(function(data) {
+                alert("Done (should not be)");
+            })
+        }
+    }
+
     $scope.postTweets = function() {
         alert("Starting tweet posting");
 

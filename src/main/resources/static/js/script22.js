@@ -51,6 +51,18 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
             $scope.headline = "News Buzzwords";
             $scope.showPage = true;
         })
+    } else if(window.location.href.includes("crypto")) {
+        $http.post('/getCryptoBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
+            if(data.length === 21) {
+                data.pop();
+                $scope.showMoreButton = true;
+            } else {
+                $scope.showMoreButton = false;
+            }
+            $scope.buzzWords = data;
+            $scope.headline = "News Buzzwords";
+            $scope.showPage = true;
+        })
     } else {
         $http.post('/getBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
             if(data.length === 21) {
@@ -100,6 +112,18 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
                 }
                 $scope.buzzWords = data;
                 $scope.numberOfHoursToShow = numberOfHours;
+            })
+        } else if(window.location.href.includes("crypto")) {
+            $http.post('/getCryptoBuzzWords', $scope.numberOfHoursToShow).success(function(data) {
+                if(data.length === 21) {
+                    data.pop();
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
+                $scope.buzzWords = data;
+                $scope.headline = "News Buzzwords";
+                $scope.showPage = true;
             })
         } else {
             $http.post('/getBuzzWords', numberOfHours).success(function(data) {
@@ -176,6 +200,17 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
             })
         } else if(currentUrl.includes("entertainment")) {
             $http.post('/loadMoreEntertainmentBuzzWords', combinedDataToSend).success(function(data) {
+                data.pop();
+                if(data.length % 20 === 0) {
+                    $scope.showMoreButton = true;
+                } else {
+                    $scope.showMoreButton = false;
+                }
+
+                $scope.buzzWords = data;
+            })
+        } else if(currentUrl.includes("crypto")) {
+            $http.post('/loadMoreCryptoBuzzWords', combinedDataToSend).success(function(data) {
                 data.pop();
                 if(data.length % 20 === 0) {
                     $scope.showMoreButton = true;
