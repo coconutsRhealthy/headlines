@@ -1,10 +1,12 @@
 package com.lennart.controller;
 
 import com.lennart.model.headlinesBigDb.BigDbStorer;
+import com.lennart.model.headlinesBigDb.headlinesBigDbCrypto.BigDbStorerCrypto;
 import com.lennart.model.headlinesBigDb.headlinesBigDbEntertainment.BigDbStorerEntertainment;
 import com.lennart.model.headlinesBigDb.headlinesBigDbFinance.BigDbStorerFinance;
 import com.lennart.model.headlinesBigDb.headlinesBigDbSport.BigDbStorerSport;
 import com.lennart.model.headlinesBuzzDb.BuzzWordsManager;
+import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbCrypto.BuzzWordsManagerCrypto;
 import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbEntertainment.BuzzWordsManagerEntertainment;
 import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbFinance.BuzzWordsManagerFinance;
 import com.lennart.model.headlinesBuzzDb.headlinesBuzzDbSport.BuzzWordsManagerSport;
@@ -77,6 +79,17 @@ public class Controller extends SpringBootServletInitializer {
         new BuzzWordsManagerEntertainment().overallMethodServer("entertainment_buzzwords_new");
     }
 
+    @RequestMapping(value = "/updateCryptoBigDb", method = RequestMethod.GET)
+    private void updateCryptoBigDb() throws Exception {
+        new BigDbStorerCrypto().overallMethodServer("crypto");
+    }
+
+    @RequestMapping(value = "/updateCryptoBuzzDb", method = RequestMethod.GET)
+    private void updateCryptoBuzzDb() throws Exception {
+        new BuzzWordsManagerCrypto().overallMethodServer("crypto_buzzwords_new");
+    }
+
+
     @RequestMapping(value = "/postTweets", method = RequestMethod.GET)
     private void postTweets() throws Exception {
         new TopicTweetMachine().overallMethodServer();
@@ -147,6 +160,23 @@ public class Controller extends SpringBootServletInitializer {
 
         List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber
                 ("entertainment_buzzwords_new", numberOfHours, "entertainment", numberOfWordsPresentOnSite);
+        return buzzWords;
+    }
+
+    @RequestMapping(value = "/getCryptoBuzzWords", method = RequestMethod.POST)
+    public @ResponseBody List<BuzzWord> sendCryptoBuzzWordsToClient(@RequestBody int numberOfHours) throws Exception {
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialNewByHeadlineNumber("crypto_buzzwords_new", numberOfHours, "crypto");
+        return buzzWords;
+    }
+
+    @RequestMapping(value = "/loadMoreCryptoBuzzWords", method = RequestMethod.POST)
+    public @ResponseBody List<BuzzWord> sendMoreCryptoBuzzWordsToClient(@RequestBody String combinedData) throws Exception {
+        String[] combinedDataAsArray = combinedData.split(" ---- ");
+        int numberOfHours = Integer.valueOf(combinedDataAsArray[0]);
+        int numberOfWordsPresentOnSite = Integer.valueOf(combinedDataAsArray[1]);
+
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber
+                ("crypto_buzzwords_new", numberOfHours, "crypto", numberOfWordsPresentOnSite);
         return buzzWords;
     }
 
