@@ -281,22 +281,22 @@ public class BigDbStorerCrypto extends BigDbStorer {
                 document43 = readSite("https://coingeek.com");
                 break;
             case 44:
-                document44 = readSite("https://bitcointalk.org/index.php?board=67.0");
+                document44 = null;
                 break;
             case 45:
-                document45 = readSite("https://bitcointalk.org/index.php?board=1.0");
+                document45 = null;
                 break;
             case 46:
-                document46 = readSite("https://bitcointalk.org/index.php?board=8.0");
+                document46 = null;
                 break;
             case 47:
-                document47 = readSite("https://bitcointalk.org/index.php?board=7.0");
+                document47 = null;
                 break;
             case 48:
-                document48 = readSite("https://bitcointalk.org/index.php?board=159.0");
+                document48 = null;
                 break;
             case 49:
-                document49 = readSite("https://bitcointalk.org/index.php?board=5.0");
+                document49 = null;
                 break;
             case 51:
                 document51 = readSite("http://coinmarketcal.com/");
@@ -305,10 +305,10 @@ public class BigDbStorerCrypto extends BigDbStorer {
                 document52 = readSite("https://tokenmarket.net/");
                 break;
             case 53:
-                document53 = readSite("https://bitcointalk.org/index.php?board=6.0");
+                document53 = null;
                 break;
             case 54:
-                document54 = readSite("https://bitcointalk.org/index.php?board=14.0");
+                document54 = null;
                 break;
             case 55:
                 document55 = readSite("https://usethebitcoin.com");
