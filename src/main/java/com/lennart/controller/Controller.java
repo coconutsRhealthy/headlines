@@ -15,6 +15,7 @@ import com.lennart.model.headlinesFE.RetrieveBuzzwords;
 import com.lennart.model.headlinesFE.RetrieveTopics;
 import com.lennart.model.headlinesFE.Topic;
 import com.lennart.model.twitter.TopicTweetMachine;
+import com.lennart.model.twitter.TweetMachine;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -93,6 +94,11 @@ public class Controller extends SpringBootServletInitializer {
     @RequestMapping(value = "/postTweets", method = RequestMethod.GET)
     private void postTweets() throws Exception {
         new TopicTweetMachine().overallMethodServer();
+    }
+
+    @RequestMapping(value = "/postCryptoTweets", method = RequestMethod.GET)
+    private void postCryptoTweets() throws Exception {
+        new TweetMachine().overallMethodServer();
     }
 
     @RequestMapping(value = "/getBuzzWords", method = RequestMethod.POST)

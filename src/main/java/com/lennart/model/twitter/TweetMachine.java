@@ -5,10 +5,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.net.URL;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -139,25 +136,7 @@ public class TweetMachine {
 
     private void postTweet1Hour() {
         try {
-            postTweetNewStyle("buzzwords_new", 1);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("finance_buzzwords_new", 1);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("sport_buzzwords_new", 1);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("entertainment_buzzwords_new", 1);
+            postTweetNewStyle("crypto_buzzwords_new", 1);
         } catch (Exception e) {
 
         }
@@ -165,25 +144,7 @@ public class TweetMachine {
 
     private void postTweet3Hour() {
         try {
-            postTweetNewStyle("buzzwords_new", 3);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("finance_buzzwords_new", 3);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("sport_buzzwords_new", 3);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("entertainment_buzzwords_new", 3);
+            postTweetNewStyle("crypto_buzzwords_new", 3);
         } catch (Exception e) {
 
         }
@@ -191,25 +152,7 @@ public class TweetMachine {
 
     private void postTweet6Hour() {
         try {
-            postTweetNewStyle("buzzwords_new", 6);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("finance_buzzwords_new", 6);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("sport_buzzwords_new", 6);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("entertainment_buzzwords_new", 6);
+            postTweetNewStyle("crypto_buzzwords_new", 6);
         } catch (Exception e) {
 
         }
@@ -217,25 +160,7 @@ public class TweetMachine {
 
     private void postTweet12Hour() {
         try {
-            postTweetNewStyle("buzzwords_new", 12);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("finance_buzzwords_new", 12);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("sport_buzzwords_new", 12);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("entertainment_buzzwords_new", 12);
+            postTweetNewStyle("crypto_buzzwords_new", 12);
         } catch (Exception e) {
 
         }
@@ -243,25 +168,7 @@ public class TweetMachine {
 
     private void postTweet24Hour() {
         try {
-            postTweetNewStyle("buzzwords_new", 24);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("finance_buzzwords_new", 24);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("sport_buzzwords_new", 24);
-        } catch (Exception e) {
-
-        }
-
-        try {
-            postTweetNewStyle("entertainment_buzzwords_new", 24);
+            postTweetNewStyle("crypto_buzzwords_new", 24);
         } catch (Exception e) {
 
         }
@@ -298,7 +205,29 @@ public class TweetMachine {
         deleteEntriesOlderThan24Hours(database);
     }
 
-    protected void postTweet(String tweetText, String database) {
+    private void postTweet(String tweetText, String database) {
+        String consumerKey = getConsumerKey(database);
+        String consumerSecret = getConsumerSecret(database);
+        String accessToken = getAccessToken(database);
+        String accessSecret = getAccessSecret(database);
+
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
+                .setOAuthConsumerKey(consumerKey)
+                .setOAuthConsumerSecret(consumerSecret)
+                .setOAuthAccessToken(accessToken)
+                .setOAuthAccessTokenSecret(accessSecret);
+
+        try {
+            TwitterFactory factory = new TwitterFactory(cb.build());
+            Twitter twitter = factory.getInstance();
+            twitter.updateStatus(tweetText);
+        } catch (TwitterException te) {
+
+        }
+    }
+
+    protected void postTopicTweet(String tweetText, String database) {
         File imagefile = new File(System.getProperty("user.home") + "/output22.png");
 
         String consumerKey = getConsumerKey(database);
@@ -339,6 +268,8 @@ public class TweetMachine {
             consumerKey = "dDySXH1ZKqBTPdocu7XL2ovz4";
         } else if(database.equals("entertainment_buzzwords_new")) {
             consumerKey = "VFDFkHRE6amyiDlZLoDl6vPi8";
+        } else if(database.equals("crypto_buzzwords_new")) {
+            consumerKey = "1eYTjOuwDEbUXWbQRqJsHSRzt";
         }
         return consumerKey;
     }
@@ -354,6 +285,8 @@ public class TweetMachine {
             consumerSecret = "wrx82er9k7vzFjZyMQPrldiDdtBuEPdDG8Gj7vxEhFhGrv2ga6";
         } else if(database.equals("entertainment_buzzwords_new")) {
             consumerSecret = "AKxR68eVSz1H5OimFWNUz9k6pbAUt1vL5dMGASxAyQJlxWoCak";
+        } else if(database.equals("crypto_buzzwords_new")) {
+            consumerSecret = "B3J7Vn8olAzmMKph0BDdUB3mI01U6BTcgNENXXctCh9UZeR2wt";
         }
         return consumerSecret;
     }
@@ -369,6 +302,8 @@ public class TweetMachine {
             accessToken = "927186780125884416-2fNzfjmvofPvnKTZ7eVXSpqyQNokMRO";
         } else if(database.equals("entertainment_buzzwords_new")) {
             accessToken = "927958288351842304-r7C4xXJtLBD6vEfpv4S89NSDpqjJKrw";
+        } else if(database.equals("crypto_buzzwords_new")) {
+            accessToken = "931807475837358080-F36MKT4DYRuRA99H3OKXXuQsFNVZ1cr";
         }
         return accessToken;
     }
@@ -384,6 +319,8 @@ public class TweetMachine {
             accessSecret = "fueDoV8yFGLQsAz7j8WjAXrajS5ho03G7fJolwtkWhy8g";
         } else if(database.equals("entertainment_buzzwords_new")) {
             accessSecret = "f6QmyHlWyqnTQi7tstS4RGMy5Kgp3ocp3D7ShP55tWUSL";
+        } else if(database.equals("crypto_buzzwords_new")) {
+            accessSecret = "KsMpGzw5P267JtZ0inM761ZVgWhHAzsK4GIFFMovyWcDw";
         }
         return accessSecret;
     }
@@ -470,8 +407,13 @@ public class TweetMachine {
         List<String> wordsList = getMax5WordsOfLastXHoursFromDb(database, numberOfHours);
 
         if(!wordsList.isEmpty()) {
-            tweetText = getFirstLine(database, numberOfHours, wordsList.size()) + getWordsBelowEachOther(wordsList) +
-                    getLastLine(database);
+            if(!database.contains("crypto")) {
+                tweetText = getFirstLine(database, numberOfHours, wordsList.size()) + getWordsBelowEachOther(wordsList, true) +
+                        getLastLine(database);
+            } else {
+                tweetText = getFirstLine(database, numberOfHours, wordsList.size()) + getWordsBelowEachOther(wordsList, false) +
+                        getCryptoHashTags() + getLastLine(database);
+            }
         } else {
             tweetText = null;
         }
@@ -513,21 +455,31 @@ public class TweetMachine {
             } else {
                 firstLine = "#Trending gossip " + wordOrWords + " of last " + numberOfHours + " hours:\n\n";
             }
+        } else if(database.equals("crypto_buzzwords_new")) {
+            if(numberOfHours == 1) {
+                firstLine = "Trending crypto " + wordOrWords + " of last hour:\n\n";
+            } else {
+                firstLine = "Trending crypto " + wordOrWords + " of last " + numberOfHours + " hours:\n\n";
+            }
         }
         return firstLine;
     }
 
-    private String getWordsBelowEachOther(List<String> wordsList) throws Exception {
+    private String getWordsBelowEachOther(List<String> wordsList, boolean isCrypto) throws Exception {
         StringBuilder wordsBelowEachOther = new StringBuilder();
 
         if(!wordsList.isEmpty()) {
             for(int i = 0; i < wordsList.size(); i++) {
                 if(i == 0) {
-                    wordsBelowEachOther.append("#");
+                    if(!isCrypto) {
+                        wordsBelowEachOther.append("#");
+                    }
                     wordsBelowEachOther.append(wordsList.get(i));
                 } else {
                     wordsBelowEachOther.append("\n");
-                    wordsBelowEachOther.append("#");
+                    if(!isCrypto) {
+                        wordsBelowEachOther.append("#");
+                    }
                     wordsBelowEachOther.append(wordsList.get(i));
                 }
             }
@@ -546,8 +498,14 @@ public class TweetMachine {
             lastLine = "\n\nnewsbuzzwords.com/sport.html";
         } else if(database.equals("entertainment_buzzwords_new")) {
             lastLine = "\n\nnewsbuzzwords.com/entertainment.html";
+        } else if(database.equals("crypto_buzzwords_new")) {
+            lastLine = "\n\ncryptobuzzwords.com";
         }
         return lastLine;
+    }
+
+    private String getCryptoHashTags() {
+        return "\n\n#crypto #btc #bitcoin #blockchain";
     }
 
     private List<String> getMax5WordsOfLastXHoursFromDb(String database, int numberOfHours) throws Exception {

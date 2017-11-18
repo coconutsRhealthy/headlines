@@ -177,4 +177,20 @@ mainApp.controller('backendDbController', function($scope, $http) {
             })
         }
     }
+
+        $scope.postCryptoTweets = function() {
+            alert("Starting crypto tweet posting");
+
+            var currentUrl = window.location.href;
+
+            if(currentUrl.includes("www.")) {
+                $http.get('http://www.cryptobuzzwords.com/postCryptoTweets').success(function(data) {
+                    alert("Done (should not be)");
+                })
+            } else {
+                $http.get('http://cryptobuzzwords.com/postCryptoTweets').success(function(data) {
+                    alert("Done (should not be)");
+                })
+            }
+        }
 });
