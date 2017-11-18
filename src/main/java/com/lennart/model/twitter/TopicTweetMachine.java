@@ -116,7 +116,7 @@ public class TopicTweetMachine extends TweetMachine {
         String topicTweetText = getTopicTweetText(topic.getHeadlines(), database);
 
         if(topicTweetText != null && topicTweetText.length() > 5 && topicTweetText.length() < 135) {
-            postTopicTweet(topicTweetText, database);
+            postImageTweet(topicTweetText, database, "/output22.png");
         }
     }
 

@@ -5,7 +5,10 @@ import org.apache.commons.lang3.time.DateUtils;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -190,14 +193,21 @@ public class TweetMachine {
         }
     }
 
-    public void postTweetForNewBuzzwordCrypto(String word, List<String> headlines, String database) throws Exception {
+    public void postTweetForNewBuzzwordCrypto(String word, List<String> headlines, String database, String imageLink)
+            throws Exception {
         if(wordIsFromNewGroup(database, word)) {
             if(!word.matches("[0-9]+")) {
                 String tweetText = getTweetTextCrypto(headlines);
 
                 if(tweetText != null && tweetText.length() > 30 && tweetText.length() < 155) {
                     try {
-                        postTweet(tweetText, database);
+                        if(imageLink != null && imageLink.length() > 3) {
+                            readAndSaveImageToDiscCrypto(imageLink);
+                            postImageTweet(tweetText, database, "/output-crypto.png");
+                        } else {
+                            postTweet(tweetText, database);
+                        }
+
                         addWordToTweetedWordsDb(word, database);
                     } catch (Exception e) {
 
@@ -231,8 +241,8 @@ public class TweetMachine {
         }
     }
 
-    protected void postTopicTweet(String tweetText, String database) {
-        File imagefile = new File(System.getProperty("user.home") + "/output22.png");
+    protected void postImageTweet(String tweetText, String database, String imageName) {
+        File imagefile = new File(System.getProperty("user.home") + imageName);
 
         String consumerKey = getConsumerKey(database);
         String consumerSecret = getConsumerSecret(database);
@@ -258,6 +268,15 @@ public class TweetMachine {
             twitter.updateStatus(statusUpdate);
         } catch (TwitterException te) {
 
+        }
+    }
+
+    private void readAndSaveImageToDiscCrypto(String imageUrl) throws Exception {
+        BufferedImage bimg = ImageIO.read(new URL(imageUrl));
+        File outputfile = new File(System.getProperty("user.home") + "/output-crypto.png");
+
+        if(bimg != null) {
+            ImageIO.write(bimg, "png", outputfile);
         }
     }
 
