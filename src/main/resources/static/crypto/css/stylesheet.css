@@ -1,0 +1,119 @@
+@import url('//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css');
+
+.custom-bullet li {
+    display: block;
+}
+
+.custom-bullet li:before
+{
+    /*Using a Bootstrap glyphicon as the bullet point*/
+    content: "\e080";
+    font-family: 'Glyphicons Halflings';
+    font-size: 9px;
+    float: left;
+    margin-top: 4px;
+    margin-left: -17px;
+    color: #CCCCCC;
+}
+
+.custom-bullet {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.btn-group {
+    margin-top: 10;
+}
+
+div.col-xs-1 {
+    width: 87px;
+}
+
+div.col-xs-2 {
+    width: 188px;
+}
+
+a.col-xs-1 {
+    width: 87px;
+}
+
+a.col-xs-2 {
+    width: 188px;
+}
+
+a.col-xs-3 {
+    width: 60px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+
+div.col-xs-3 {
+    width: 60px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+div.col-xs-12 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#firstRow1 {
+    padding-bottom: 6px;
+    width: 73px;
+}
+
+#firstRow2 {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#firstRow3 {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#firstRowXx {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0px auto -50px; /* the bottom margin is the negative value of the footer's height */
+}
+.push {
+    height: 50px;
+}
+.footer {
+    height: 38px; /* .push must be the same height as .footer */
+    background-color: #f5f5f5;
+    margin-top: 12px;
+}
+
+.footer-text {
+    padding-left: 10px;
+    padding-top: 9px;
+    color:rgb(66, 188, 147);
+}
+
+#navbar_id {
+    margin-bottom: 25px;
+}
+
+#hour-restriction-buttons {
+    margin-top: 0px;
+}
+
+.underline_link {
+    text-decoration: underline
+}
