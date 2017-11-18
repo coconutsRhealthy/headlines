@@ -190,14 +190,18 @@ public class TweetMachine {
         }
     }
 
-    public void postTweetForNewBuzzword(String word, List<String> headlines, String database) throws Exception {
+    public void postTweetForNewBuzzwordCrypto(String word, List<String> headlines, String database) throws Exception {
         if(wordIsFromNewGroup(database, word)) {
             if(!word.matches("[0-9]+")) {
-                String tweetText = getTweetText(word, headlines);
+                String tweetText = getTweetTextCrypto(headlines);
 
-                if(tweetText != null && tweetText.length() > 50 && tweetText.length() < 135) {
-                    postTweet(tweetText, database);
-                    addWordToTweetedWordsDb(word, database);
+                if(tweetText != null && tweetText.length() > 30 && tweetText.length() < 155) {
+                    try {
+                        postTweet(tweetText, database);
+                        addWordToTweetedWordsDb(word, database);
+                    } catch (Exception e) {
+
+                    }
                 }
             }
         }
@@ -544,34 +548,29 @@ public class TweetMachine {
         return wordsOfLastXHours;
     }
 
-    private String getTweetText(String word, List<String> headlines) throws Exception {
-        String headlineToUse = getHeadlineToUse(headlines, word);
+    private String getTweetTextCrypto(List<String> headlines) throws Exception {
+        String headlineToUse = getHeadlineToUseCrypto(headlines);
         String tweetText;
 
         if(!headlineToUse.isEmpty()) {
-            tweetText = headlineToUse + "\n" + "\n" + "Buzzword: " + word + "\n" + "\n" + "newsbuzzwords.com";
+            tweetText = headlineToUse + "\n" + "\n" + "cryptobuzzwords.com" + "\n" + "\n" +
+                    "#crypto #btc #bitcoin #blockchain";
         } else {
             tweetText = null;
         }
         return tweetText;
     }
 
-    private String getHeadlineToUse(List<String> headlines, String buzzWord) throws Exception {
-        headlines = convertHeadlinesToNonSpecialCharactersAndLowerCase(headlines);
-        headlines = removeSpecificWordsFromHeadlines(headlines);
-
+    private String getHeadlineToUseCrypto(List<String> headlines) throws Exception {
         String headlineToUse = "";
 
-        if(!headlines.isEmpty()) {
-            List<String> headlinesToChooseFrom = getHeadlinesBetween40and76Chars(headlines);
-            headlinesToChooseFrom = getHeadlinesThatContainBuzzword(headlinesToChooseFrom, buzzWord);
-
-            if(!headlinesToChooseFrom.isEmpty()) {
-                headlineToUse = getHeadlineWithBestHashTagWords(headlines, headlinesToChooseFrom, buzzWord);
-            } else {
-                headlineToUse = getHeadlineWithBestHashTagWords(headlines, headlines, buzzWord);
+        for(String headline : headlines) {
+            if(!headline.contains("..") && headline.length() < 90) {
+                headlineToUse = headline;
+                break;
             }
         }
+
         return headlineToUse;
     }
 
@@ -769,6 +768,8 @@ public class TweetMachine {
             tweetDbName = "sport_tweet_words";
         } else if(buzzDbName.equals("entertainment_buzzwords_new")) {
             tweetDbName = "entertainment_tweet_words";
+        } else if(buzzDbName.equals("crypto_buzzwords_new")) {
+            tweetDbName = "crypto_tweet_words";
         }
         return tweetDbName;
     }

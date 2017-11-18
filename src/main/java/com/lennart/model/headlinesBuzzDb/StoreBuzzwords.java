@@ -25,8 +25,10 @@ public class StoreBuzzwords {
 
             if(!isWordInDatabase(database, entry.getKey())) {
                 addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord, imageLink);
-                //updateGroupsInDb(database);
-                //postTweet(entry.getKey(), headlinesForWord, database);
+                if(database.equals("crypto_buzzwords_new")) {
+                    updateGroupsInDb(database);
+                    postCryptoTweet(entry.getKey(), headlinesForWord, database);
+                }
             } else {
                 boolean updateOfImageLinkDone = false;
 
@@ -51,13 +53,13 @@ public class StoreBuzzwords {
         closeDbConnection();
     }
 
-//    private void postTweet(String buzzWord, List<String> headlines, String database) {
-//        try {
-//            new TweetMachine().postTweetForNewBuzzword(buzzWord, headlines, database);
-//        } catch (Exception e) {
-//
-//        }
-//    }
+    private void postCryptoTweet(String buzzWord, List<String> headlines, String database) {
+        try {
+            new TweetMachine().postTweetForNewBuzzwordCrypto(buzzWord, headlines, database);
+        } catch (Exception e) {
+
+        }
+    }
 
     private void updateGroupsInDb(String database) {
         try {
