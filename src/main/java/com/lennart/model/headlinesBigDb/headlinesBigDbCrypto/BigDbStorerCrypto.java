@@ -17,12 +17,6 @@ public class BigDbStorerCrypto extends BigDbStorer {
 
     private double numberOfSites = 59.0;
 
-
-    public static void main(String[] args) throws Exception {
-        new BigDbStorerCrypto().updateDatabase(0);
-    }
-
-
     @Override
     protected void updateDatabase(int number) throws Exception {
         for(int i = 1; i <= 60; i++) {

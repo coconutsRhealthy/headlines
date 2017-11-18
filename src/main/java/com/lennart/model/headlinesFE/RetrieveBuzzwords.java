@@ -55,6 +55,36 @@ public class RetrieveBuzzwords {
         return buzzWords;
     }
 
+    public List<BuzzWord> retrieveBuzzWordsFromDbInitialCrypto(String database, int numberOfHours) throws Exception {
+        List<BuzzWord> buzzWords = new ArrayList<>();
+
+        Date date = new Date();
+        date = DateUtils.addHours(date, 2);
+        long currentDate = date.getTime();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " ORDER BY no_of_headlines DESC;");
+
+        while(rs.next()) {
+            String s = rs.getString("date");
+            Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
+
+            if(parsedDateTime.getTime() > currentDate - TimeUnit.HOURS.toMillis(numberOfHours)) {
+                buzzWords = addBuzzWordToListFromResultSet(buzzWords, rs, null);
+            }
+        }
+
+        rs.close();
+        st.close();
+        closeDbConnection();
+
+        buzzWords = new RelatedBuzzwordsIdentifier().setCorrectGroupsInRetrievingPhase(buzzWords);
+
+        return buzzWords;
+    }
+
     private List<BuzzWord> retainOnlyOneWordPerGroup(List<BuzzWord> buzzWords) {
         List<BuzzWord> buzzWordsOnePerGroup = new ArrayList<>();
 

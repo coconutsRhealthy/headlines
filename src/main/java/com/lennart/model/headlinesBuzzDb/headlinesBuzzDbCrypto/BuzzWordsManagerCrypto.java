@@ -19,21 +19,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class BuzzWordsManagerCrypto extends BuzzWordsManager {
 
-
-    public static void main(String[] args) throws Exception {
-        new BuzzWordsManagerCrypto().theMethod("crypto_buzzwords_new");
-    }
-
-    private void theMethod(String database) throws Exception {
-        Map<String, Map<String, List<String>>> dataForAllBuzzWords = compareCurrentWithLastDbEntry();
-
-        if(dataForAllBuzzWords != null) {
-            new StoreBuzzwords().storeBuzzwordsInDb(database, dataForAllBuzzWords);
-        }
-    }
-
-
-
     @Override
     protected void deleteEntriesOlderThan24Hours() throws Exception {
         Date date = new Date();

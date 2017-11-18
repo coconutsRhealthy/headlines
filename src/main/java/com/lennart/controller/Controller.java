@@ -165,18 +165,7 @@ public class Controller extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/getCryptoBuzzWords", method = RequestMethod.POST)
     public @ResponseBody List<BuzzWord> sendCryptoBuzzWordsToClient(@RequestBody int numberOfHours) throws Exception {
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialNewByHeadlineNumber("crypto_buzzwords_new", numberOfHours, "crypto");
-        return buzzWords;
-    }
-
-    @RequestMapping(value = "/loadMoreCryptoBuzzWords", method = RequestMethod.POST)
-    public @ResponseBody List<BuzzWord> sendMoreCryptoBuzzWordsToClient(@RequestBody String combinedData) throws Exception {
-        String[] combinedDataAsArray = combinedData.split(" ---- ");
-        int numberOfHours = Integer.valueOf(combinedDataAsArray[0]);
-        int numberOfWordsPresentOnSite = Integer.valueOf(combinedDataAsArray[1]);
-
-        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveExtraBuzzWordsFromDbNewByHeadlineNumber
-                ("crypto_buzzwords_new", numberOfHours, "crypto", numberOfWordsPresentOnSite);
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDbInitialCrypto("crypto_buzzwords_new", numberOfHours);
         return buzzWords;
     }
 

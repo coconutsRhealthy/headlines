@@ -113,3 +113,7 @@ html, body {
 #hour-restriction-buttons {
     margin-top: 0px;
 }
+
+.underline_link {
+    text-decoration: underline
+}
