@@ -184,11 +184,11 @@ mainApp.controller('backendDbController', function($scope, $http) {
             var currentUrl = window.location.href;
 
             if(currentUrl.includes("www.")) {
-                $http.get('http://www.cryptobuzzwords.com/postCryptoTweets').success(function(data) {
+                $http.get('http://www.headl1nes.com/postCryptoTweets').success(function(data) {
                     alert("Done (should not be)");
                 })
             } else {
-                $http.get('http://cryptobuzzwords.com/postCryptoTweets').success(function(data) {
+                $http.get('http://headl1nes.com/postCryptoTweets').success(function(data) {
                     alert("Done (should not be)");
                 })
             }
