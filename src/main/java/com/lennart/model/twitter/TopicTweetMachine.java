@@ -115,25 +115,30 @@ public class TopicTweetMachine extends TweetMachine {
 
         String topicTweetText = getTopicTweetText(topic.getHeadlines(), database);
 
-        if(topicTweetText != null && topicTweetText.length() > 5 && topicTweetText.length() < 135) {
+        if(topicTweetText != null && topicTweetText.length() > 5 && topicTweetText.length() < 275) {
             postImageTweet(topicTweetText, database, "/output22.png");
         }
     }
 
     private String getTopicTweetText(List<String> headlines, String database) {
         String headlineToUse = getHeadlineToUse(headlines);
-        String hashTags = getHashTags(headlines);
-        String lastLine = getLastLine(database);
 
-        String tweetText = headlineToUse + "\n" + hashTags + "\n" + "\n" + lastLine;
-        return tweetText;
+        if(!headlineToUse.isEmpty()) {
+            String hashTags = getHashTagsGeneric(database);
+            String lastLine = getLastLine(database);
+
+            String tweetText = headlineToUse + "\n" + "\n" + lastLine + "\n" + "\n" + hashTags;
+            return tweetText;
+        } else {
+            return null;
+        }
     }
 
     private String getHeadlineToUse(List<String> headlines) {
         String headlineToUse = "";
 
         for(String headline : headlines) {
-            if(headline.length() <= 75) {
+            if(headline.length() <= 125) {
                 headlineToUse = headline;
                 break;
             }
@@ -159,6 +164,48 @@ public class TopicTweetMachine extends TweetMachine {
                     counter++;
                 }
             }
+        }
+
+        String hashTagsAsString = hashTags.toString();
+        hashTagsAsString = hashTagsAsString.substring(0, hashTagsAsString.length() - 1);
+
+        return hashTagsAsString;
+    }
+
+    private String getHashTagsGeneric(String database) {
+        StringBuilder hashTags = new StringBuilder();
+
+        if(database.equals("buzzwords_new")) {
+            hashTags.append("#news ");
+            hashTags.append("#breakingnews ");
+            hashTags.append("#breaking ");
+            hashTags.append("#latest ");
+            hashTags.append("#worldnews ");
+        } else if(database.equals("finance_buzzwords_new")) {
+            hashTags.append("#news ");
+            hashTags.append("#finance ");
+            hashTags.append("#business ");
+            hashTags.append("#breakingnews ");
+            hashTags.append("#breaking ");
+            hashTags.append("#latest ");
+            hashTags.append("#worldnews ");
+        } else if(database.equals("sport_buzzwords_new")) {
+            hashTags.append("#NFL ");
+            hashTags.append("#NHL ");
+            hashTags.append("#MLB ");
+            hashTags.append("#NBA ");
+            hashTags.append("#MLB ");
+            hashTags.append("#NCAAB ");
+            hashTags.append("#NCAAF ");
+        } else if(database.equals("entertainment_buzzwords_new")) {
+            hashTags.append("#gossip ");
+            hashTags.append("#news ");
+            hashTags.append("#breaking ");
+            hashTags.append("#entertainment ");
+            hashTags.append("#hollywood ");
+            hashTags.append("#celebs ");
+            hashTags.append("#tmz ");
+            hashTags.append("#glamour ");
         }
 
         String hashTagsAsString = hashTags.toString();
