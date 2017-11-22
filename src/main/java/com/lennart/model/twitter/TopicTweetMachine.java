@@ -125,6 +125,7 @@ public class TopicTweetMachine extends TweetMachine {
 
         if(!headlineToUse.isEmpty()) {
             String hashTags = getHashTagsGeneric(database);
+            hashTags = addSpecificHashTagsToGenericHashTags(hashTags, headlines);
             String lastLine = getLastLine(database);
 
             String tweetText = headlineToUse + "\n" + "\n" + lastLine + "\n" + "\n" + hashTags;
@@ -195,8 +196,8 @@ public class TopicTweetMachine extends TweetMachine {
             hashTags.append("#MLB ");
             hashTags.append("#NBA ");
             hashTags.append("#MLB ");
-            hashTags.append("#NCAAB ");
-            hashTags.append("#NCAAF ");
+            hashTags.append("#sports ");
+            hashTags.append("#news ");
         } else if(database.equals("entertainment_buzzwords_new")) {
             hashTags.append("#gossip ");
             hashTags.append("#news ");
@@ -212,6 +213,21 @@ public class TopicTweetMachine extends TweetMachine {
         hashTagsAsString = hashTagsAsString.substring(0, hashTagsAsString.length() - 1);
 
         return hashTagsAsString;
+    }
+
+    private String addSpecificHashTagsToGenericHashTags(String genericHashTags, List<String> headlines) {
+        List<String> wordsSortedByFrequencyFromHeadlines = getWordsSortedByFrequencyFromHeadlines(headlines, "");
+        wordsSortedByFrequencyFromHeadlines = clearNumbersAndEmptyStringsFromHashTagWords(wordsSortedByFrequencyFromHeadlines);
+
+        int counter = 0;
+
+        for(String hashTagWord : wordsSortedByFrequencyFromHeadlines) {
+            if(counter < 3) {
+                genericHashTags = genericHashTags + " #" + hashTagWord;
+                counter++;
+            }
+        }
+        return genericHashTags;
     }
 
     private String getLastLine(String database) {
